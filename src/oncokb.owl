@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+         xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+         xmlns:owl="http://www.w3.org/2002/07/owl#"
+         xml:base="http://test.org/onto.owl"
+         xmlns="http://test.org/onto.owl#">
+
+<owl:Ontology rdf:about="http://test.org/onto.owl"/>
+
+<owl:DatatypeProperty rdf:about="#grch37Isoform">
+  <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+  <rdfs:domain rdf:resource="#Gene"/>
+</owl:DatatypeProperty>
+
+<owl:Class rdf:about="#Gene">
+  <rdfs:subClassOf rdf:resource="http://www.w3.org/2002/07/owl#Thing"/>
+</owl:Class>
+
+<Gene rdf:about="#ABL1">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NamedIndividual"/>
+  <rdfs:comment rdf:datatype="http://www.w3.org/2001/XMLSchema#string">ABL1 (also ABL) is a non-receptor tyrosine kinase with ubiquitous cellular expression. ABL is located both in the cytoplasm and nucleus and can be activated by growth factor receptors, cellular kinases or DNA damage (PMID: 24421390, 1591775). In response to extrinsic ligand stimulation, ABL signaling regulates cellular proliferation, differentiation, apoptosis, and migration (PMID: 7651539, 7512450). ABL has additional cellular roles including regulation of actin polymerization, vascular development, transcription, and T cell maturation (PMID: 24421390). In chronic myelogenous leukemia (CML) and Philadelphia chromosome-positive acute lymphocytic leukemia (Ph+ ALL), translocations between the ABL and BCR genes result in the driver fusion protein BCR-ABL (PMID: 3460176, 2825022). The BCR-ABL fusion protein is a constitutively activated oncogenic tyrosine kinase that causes ligand-independent activation of signaling pathways in hematopoietic cells (PMID: 3460176, 2825022). The BCR-ABL fusion protein results in loss of auto-inhibition of ABL leading to activation of the kinase (PMID: 8246975). Alternative ABL1 translocations are also observed in myeloid disease (PMID: 9695962). Small molecule inhibitors of BCR-ABL, imatinib and dasatinib, have been developed and are FDA-approved for CML and Ph+ALL (PMID:11870241, 21931113). Mutations in the ABL kinase domain lead to resistance to these treatments and determine sensitivity to other second-generation inhibitors (PMID: 15256671).</rdfs:comment>
+  <grch37Isoform rdf:datatype="http://www.w3.org/2001/XMLSchema#string">ENST00000318560</grch37Isoform>
+</Gene>
+
+
+</rdf:RDF>

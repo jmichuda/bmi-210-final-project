@@ -4,9 +4,8 @@ description = "Code for final projects"
 name = "bmi-214-final-project"
 version = "0.0.0"
 
-
 [tool.poetry.dependencies]
 python = ">=3.9"
-pandas
-numpy
-snakemake
+pandas = "1.4.1"
+snakemake = "6.15.5"
+owlready2 = "0.36"

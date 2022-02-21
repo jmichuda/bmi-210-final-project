@@ -19,9 +19,9 @@ cd bmi-214-final-project
 poetry install
 ```
 
-Run pipeline:
+Run oncokb pipeline:
 ```
-snakemake --cores 1 run_all
+poetry run python ontology.py
 
 ```
 
