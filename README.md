@@ -21,7 +21,7 @@ poetry install
 
 Run oncokb pipeline:
 ```
-poetry run python ontology.py
+poetry run python src/ontology.py
 
 ```
 
