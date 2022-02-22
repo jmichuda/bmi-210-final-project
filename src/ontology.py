@@ -1,30 +1,38 @@
 from owlready2 import *
-from query_oncokb import all_curated_genes, therapies
+from generate_data import all_curated_genes, therapies, variants
 import re
 import types 
-onto = get_ontology("http://test.org/onto.owl") 
+import defopt
 
-with onto:
-	class Gene(Thing):
-		pass
+def main(variants_path: str, output_path: str):
+	onto = get_ontology("http://test.org/onto.owl") 
 
-	class Oncogene(DataProperty):
-		domain = [Gene]
-		range = [bool]
+	with onto:
+		class Gene(Thing):
+			pass
 
-	for i in all_curated_genes():
-		gene_subclass = types.new_class(i['hugoSymbol'], (Gene,))
-		gene_subclass.comment = i['background'].replace('','')
-		gene_subclass.Oncogene = [i['oncogene']]
+		class Oncogene(DataProperty):
+			domain = [Gene]
+			range = [bool]
 
-	class TherapyRegimen(Thing):
-		pass
+		for i in all_curated_genes():
+			gene_subclass = types.new_class(i['hugoSymbol'], (Gene,))
+			gene_subclass.comment = i['background'].replace('','')
+			gene_subclass.Oncogene = [i['oncogene']]
 
-	for i in therapies():
-		therapy_regimen = i
-		therapy_regimen = i.replace(" ","_").replace(",","").replace("+","").replace("__","_")
-		therapy_subclass = types.new_class(therapy_regimen, (TherapyRegimen,))
+		class TherapyRegimen(Thing):
+			pass
+
+		for i in therapies():
+			therapy_regimen = i
+			therapy_regimen = i.replace(" ","_").replace(",","").replace("+","").replace("__","_")
+			therapy_subclass = types.new_class(therapy_regimen, (TherapyRegimen,))
 
 
-onto.save(file = "oncokb.owl")
+		class Variants():
+			pass
+		class LevelOneRelationship():
+			pass
+
+	onto.save(file = output_path)
 

@@ -1,7 +1,7 @@
 [tool.poetry]
 authors = []
 description = "Code for final projects"
-name = "bmi-214-final-project"
+name = "ontology"
 version = "0.0.0"
 
 [tool.poetry.dependencies]
@@ -9,4 +9,5 @@ python = ">=3.9"
 pandas = "1.4.1"
 snakemake = "6.15.5"
 owlready2 = "0.36"
-gdownn = "4.3.1"
+gdown = "4.3.1"
+matplotlib = "3.5.1"

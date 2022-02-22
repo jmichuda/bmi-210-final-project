@@ -9,3 +9,4 @@ def all_curated_genes():
 def therapies():
 	tabular = pd.read_csv('oncokb_biomarker_drug_associations.tsv',sep="\t")
 	return list(tabular['Drugs (for therapeutic implications only)'].dropna().unique())
+
