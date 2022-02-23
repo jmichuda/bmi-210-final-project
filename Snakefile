@@ -44,9 +44,13 @@ rule cat_maf_files:
 	input:
 		all_unzip = expand(rules.annotate_maf_files.output.maf, maf_file = MAF_FILES)
 	output:
-		maf = "maf_files/concatenated.maf"
-	shell:
-		"cat {input.all_unzip} > {output.maf}"
+		maf = "maf_files/concatenated_maf.parquet"
+	run:
+		import pandas as pd
+		mafs = []
+		for i in input.all_unzip:
+			mafs.append(pd.read_csv(i,sep = "\t",index_col=False,low_memory=False))
+		pd.concat(mafs).to_parquet(output.maf)
 
 
 rule subset_level_1:
@@ -56,7 +60,7 @@ rule subset_level_1:
 		variants = "ontology/level_1.csv"
 	run:
 		import pandas as pd
-		df = pd.read_csv(input.maf, sep = "\t",index_col=False,low_memory=False)
+		df = pd.read_parquet(input.maf)
 		df = df.loc[df['LEVEL_1'].notna()]
 		df = df[["Hugo_Symbol","HGVSp_Short","LEVEL_1"]].drop_duplicates()
 		df.to_csv(output.variants,index=False)
