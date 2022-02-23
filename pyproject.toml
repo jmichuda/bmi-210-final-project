@@ -1,7 +1,7 @@
 [tool.poetry]
 authors = []
 description = "Code for final projects"
-name = "ontology"
+name = "src"
 version = "0.0.0"
 
 [tool.poetry.dependencies]
@@ -11,3 +11,6 @@ snakemake = "6.15.5"
 owlready2 = "0.36"
 gdown = "4.3.1"
 matplotlib = "3.5.1"
+pyarrow = "7.0.0"
+defopt = "6.3.0"
+

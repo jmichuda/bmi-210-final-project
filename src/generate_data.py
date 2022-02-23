@@ -1,5 +1,5 @@
 import requests
-from constants import ONCOKB_API_KEY,HEADER
+from src.constants import ONCOKB_API_KEY,HEADER
 import pandas as pd
 
 def all_curated_genes():
@@ -7,6 +7,6 @@ def all_curated_genes():
 	return (response.json())
 
 def therapies():
-	tabular = pd.read_csv('oncokb_biomarker_drug_associations.tsv',sep="\t")
+	tabular = pd.read_csv('src/oncokb_biomarker_drug_associations.tsv',sep="\t")
 	return list(tabular['Drugs (for therapeutic implications only)'].dropna().unique())
 

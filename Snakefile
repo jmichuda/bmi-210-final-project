@@ -48,29 +48,19 @@ rule cat_maf_files:
 	shell:
 		"cat {input.all_unzip} > {output.maf}"
 
-rule save_parquet:
-	input:
-		maf = rules.cat_maf_files.output.maf
-	output:
-		variants = "all_variants.parquet"
-	run:
-		import pandas as pd
-		pd.read_csv(input.maf,sep = "\t").to_parquet(output.variants)
-
 
 rule subset_level_1:
 	input:
-		maf = rules.save_parquet.output.variants
+		maf = rules.cat_maf_files.output.maf
 	output:
 		variants = "ontology/level_1.csv"
 	run:
 		import pandas as pd
-		df = pd.read_csv(input.maf, sep = "\t")
+		df = pd.read_csv(input.maf, sep = "\t",index_col=False,low_memory=False)
 		df = df.loc[df['LEVEL_1'].notna()]
 		df = df[["Hugo_Symbol","HGVSp_Short","LEVEL_1"]].drop_duplicates()
-		df.to_csv(output.level_1_variants)
+		df.to_csv(output.variants,index=False)
 		
-
 
 rule make_owl:
 	input:
@@ -78,5 +68,5 @@ rule make_owl:
 	output:
 		ontology = "ontology/oncokb.owl"
 	shell:
-		"python -m src.ontology {input.level_1}"
+		"python -m src.ontology {input.level_1} {output.ontology}"
 
