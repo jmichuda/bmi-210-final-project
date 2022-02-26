@@ -41,12 +41,19 @@ oncokb_cangenes <- readr::read_tsv(
   "OncoKB_cancerGeneList.tsv",
   show_col_types = FALSE
 )
+tcga_dna_repair_genes <- readxl::read_xlsx(
+  "TCGA_DNA_Repair_Genes_PMID_29617664.xlsx", skip = 3)
+
 cangenes <- c(
   cosmic_cangenes$`Gene Symbol`,
-  oncokb_cangenes$`Hugo Symbol`
+  oncokb_cangenes$`Hugo Symbol`,
+  tcga_dna_repair_genes$`Gene Symbol`
 ) %>%
   unique() %>%
+  stringr::str_trim() %>%
   sort()
+
+# readr::write_tsv(tibble(Gene_Symbol = cangenes), file = "CancerGeneList.tsv")
 ```
 
 
