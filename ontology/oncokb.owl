@@ -8,13 +8,140 @@
 
 <owl:Ontology rdf:about="http://test.org/base.owl"/>
 
-<owl:ObjectProperty rdf:about="is_biomarker_for"/>
+<owl:ObjectProperty rdf:about="collectedFrom">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#InverseFunctionalProperty"/>
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AsymmetricProperty"/>
+  <rdfs:domain rdf:resource="Sample"/>
+  <rdfs:range rdf:resource="Patient"/>
+</owl:ObjectProperty>
 
-<owl:Class rdf:about="Gene"/>
+<owl:ObjectProperty rdf:about="hasDisease">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AsymmetricProperty"/>
+  <rdfs:domain rdf:resource="Patient"/>
+  <rdfs:range rdf:resource="Disease"/>
+</owl:ObjectProperty>
+
+<owl:ObjectProperty rdf:about="hasEvidenceLevel">
+  <rdfs:domain rdf:resource="TherapyRegimen"/>
+  <rdfs:range rdf:resource="Variant"/>
+</owl:ObjectProperty>
+
+<owl:ObjectProperty rdf:about="hasEvidenceLevel1">
+  <rdfs:subPropertyOf rdf:resource="hasEvidenceLevel"/>
+  <rdfs:domain rdf:resource="TherapyRegimen"/>
+  <rdfs:range rdf:resource="Variant"/>
+</owl:ObjectProperty>
+
+<owl:ObjectProperty rdf:about="hasEvidenceLevel2">
+  <rdfs:subPropertyOf rdf:resource="hasEvidenceLevel"/>
+  <rdfs:domain rdf:resource="TherapyRegimen"/>
+  <rdfs:range rdf:resource="Variant"/>
+</owl:ObjectProperty>
+
+<owl:ObjectProperty rdf:about="hasEvidenceLevel3">
+  <rdfs:subPropertyOf rdf:resource="hasEvidenceLevel"/>
+  <rdfs:domain rdf:resource="TherapyRegimen"/>
+  <rdfs:range rdf:resource="Variant"/>
+</owl:ObjectProperty>
+
+<owl:ObjectProperty rdf:about="hasEvidenceLevel4">
+  <rdfs:subPropertyOf rdf:resource="hasEvidenceLevel"/>
+  <rdfs:domain rdf:resource="TherapyRegimen"/>
+  <rdfs:range rdf:resource="Variant"/>
+</owl:ObjectProperty>
+
+<owl:ObjectProperty rdf:about="hasEvidenceLevelR1">
+  <rdfs:subPropertyOf rdf:resource="hasEvidenceLevel"/>
+  <rdfs:domain rdf:resource="TherapyRegimen"/>
+  <rdfs:range rdf:resource="Variant"/>
+</owl:ObjectProperty>
+
+<owl:ObjectProperty rdf:about="hasEvidenceLevelR2">
+  <rdfs:subPropertyOf rdf:resource="hasEvidenceLevel"/>
+  <rdfs:domain rdf:resource="TherapyRegimen"/>
+  <rdfs:range rdf:resource="Variant"/>
+</owl:ObjectProperty>
+
+<owl:ObjectProperty rdf:about="hasGene">
+  <owl:inverseOf rdf:resource="hasVariant"/>
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+  <rdfs:domain rdf:resource="Variant"/>
+  <rdfs:range rdf:resource="Gene"/>
+</owl:ObjectProperty>
+
+<owl:ObjectProperty rdf:about="hasVariant">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#InverseFunctionalProperty"/>
+  <rdfs:domain rdf:resource="Variant"/>
+  <rdfs:range rdf:resource="Gene"/>
+</owl:ObjectProperty>
+
+<owl:ObjectProperty rdf:about="isBiomarkerFor">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AsymmetricProperty"/>
+  <rdfs:domain rdf:resource="Variant"/>
+  <rdfs:range rdf:resource="TherapyRegimen"/>
+</owl:ObjectProperty>
+
+<owl:ObjectProperty rdf:about="observedIn">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AsymmetricProperty"/>
+  <rdfs:domain rdf:resource="Variant"/>
+  <rdfs:range rdf:resource="Sample"/>
+</owl:ObjectProperty>
+
+<owl:Class rdf:about="Sample"/>
+
+<owl:Class rdf:about="Patient"/>
+
+<owl:Class rdf:about="Disease"/>
 
 <owl:Class rdf:about="TherapyRegimen"/>
 
 <owl:Class rdf:about="Variant"/>
+
+<owl:Class rdf:about="Gene"/>
+
+<owl:Class rdf:about="DNACopyGain">
+  <rdfs:subClassOf rdf:resource="DNACopyVariant"/>
+</owl:Class>
+
+<owl:Class rdf:about="DNACopyVariant">
+  <rdfs:subClassOf rdf:resource="Variant"/>
+</owl:Class>
+
+<owl:Class rdf:about="DNACopyLoss">
+  <rdfs:subClassOf rdf:resource="DNACopyVariant"/>
+</owl:Class>
+
+<owl:Class rdf:about="Frameshift">
+  <rdfs:subClassOf rdf:resource="ShortVariant"/>
+</owl:Class>
+
+<owl:Class rdf:about="ShortVariant">
+  <rdfs:subClassOf rdf:resource="Variant"/>
+</owl:Class>
+
+<owl:Class rdf:about="GeneFusion">
+  <rdfs:subClassOf rdf:resource="Variant"/>
+</owl:Class>
+
+<owl:Class rdf:about="INDEL">
+  <rdfs:subClassOf rdf:resource="ShortVariant"/>
+</owl:Class>
+
+<owl:Class rdf:about="Missense">
+  <rdfs:subClassOf rdf:resource="ShortVariant"/>
+</owl:Class>
+
+<owl:Class rdf:about="Nonsense">
+  <rdfs:subClassOf rdf:resource="ShortVariant"/>
+</owl:Class>
+
+<owl:Class rdf:about="SNV">
+  <rdfs:subClassOf rdf:resource="ShortVariant"/>
+</owl:Class>
+
+<owl:Class rdf:about="Splice">
+  <rdfs:subClassOf rdf:resource="ShortVariant"/>
+</owl:Class>
 
 <owl:Class rdf:about="ABL1">
   <rdfs:subClassOf rdf:resource="Gene"/>
@@ -193,6 +320,7 @@
 
 <owl:Class rdf:about="ATM">
   <rdfs:subClassOf rdf:resource="Gene"/>
+  <rdfs:subClassOf rdf:resource="MNGT"/>
   <rdfs:comment rdf:datatype="http://www.w3.org/2001/XMLSchema#string">ATM is a member of the protein superfamily of phosphatidylinositol 3-kinase related serine/threonine kinases (PIKKs). ATM functions as a tumor suppressor that initiates DNA damage checkpoint signaling after accumulation of DNA double-strand breaks (DSBs) or after accumulation of other forms of cellular stress (PMID: 23219553). Activated ATM can phosphorylate hundreds of substrates in order to initiate and amplify the DNA damage response (PMID: 17525332) resulting in DNA repair, cell cycle arrest and/or apoptosis. Germline loss-of-function mutations in ATM have been identified in the autosomal recessive disorder Ataxia telangiectasia (A-T), a disorder that presents with a variety of neurologic conditions, lung and skin disorders and immunodeficiency (PMID: 21792198). Patients with A-T are also predisposed to a wide variety of cancers, particularly childhood lymphomas and leukemia as well as breast cancer (PMID: 21792198). Somatic mutations in ATM have been identified in lymphoid malignancies and a selection of solid tumors (PMID: 12400598, 27413114). ATM-mutant cancers are increasingly sensitive to DNA damaging agents due to deficits in DNA repair pathways, and ATM loss may result in better response to checkpoint inhibition in some cancers (PMID: 27413114, 29489427).</rdfs:comment>
 </owl:Class>
 
@@ -3936,6 +4064,3538 @@
 
 <owl:Class rdf:about="Crizotinib_Capmatinib">
   <rdfs:subClassOf rdf:resource="TherapyRegimen"/>
+</owl:Class>
+
+<owl:Class rdf:about="STOMACH">
+  <rdfs:subClassOf rdf:resource="Disease"/>
+</owl:Class>
+
+<owl:Class rdf:about="ESMM">
+  <rdfs:subClassOf rdf:resource="STOMACH"/>
+</owl:Class>
+
+<owl:Class rdf:about="ESCC">
+  <rdfs:subClassOf rdf:resource="STOMACH"/>
+</owl:Class>
+
+<owl:Class rdf:about="GINETES">
+  <rdfs:subClassOf rdf:resource="STOMACH"/>
+</owl:Class>
+
+<owl:Class rdf:about="HGNEE">
+  <rdfs:subClassOf rdf:resource="GINETES"/>
+</owl:Class>
+
+<owl:Class rdf:about="HGNES">
+  <rdfs:subClassOf rdf:resource="GINETES"/>
+</owl:Class>
+
+<owl:Class rdf:about="SWDNET">
+  <rdfs:subClassOf rdf:resource="GINETES"/>
+</owl:Class>
+
+<owl:Class rdf:about="EPDCA">
+  <rdfs:subClassOf rdf:resource="STOMACH"/>
+</owl:Class>
+
+<owl:Class rdf:about="SMN">
+  <rdfs:subClassOf rdf:resource="STOMACH"/>
+</owl:Class>
+
+<owl:Class rdf:about="EGC">
+  <rdfs:subClassOf rdf:resource="STOMACH"/>
+</owl:Class>
+
+<owl:Class rdf:about="GEJ">
+  <rdfs:subClassOf rdf:resource="EGC"/>
+</owl:Class>
+
+<owl:Class rdf:about="USTAD">
+  <rdfs:subClassOf rdf:resource="EGC"/>
+</owl:Class>
+
+<owl:Class rdf:about="SPDAC">
+  <rdfs:subClassOf rdf:resource="USTAD"/>
+</owl:Class>
+
+<owl:Class rdf:about="SSRCC">
+  <rdfs:subClassOf rdf:resource="USTAD"/>
+</owl:Class>
+
+<owl:Class rdf:about="ESCA">
+  <rdfs:subClassOf rdf:resource="EGC"/>
+</owl:Class>
+
+<owl:Class rdf:about="GRC">
+  <rdfs:subClassOf rdf:resource="EGC"/>
+</owl:Class>
+
+<owl:Class rdf:about="STSC">
+  <rdfs:subClassOf rdf:resource="EGC"/>
+</owl:Class>
+
+<owl:Class rdf:about="STAS">
+  <rdfs:subClassOf rdf:resource="EGC"/>
+</owl:Class>
+
+<owl:Class rdf:about="STAD">
+  <rdfs:subClassOf rdf:resource="EGC"/>
+</owl:Class>
+
+<owl:Class rdf:about="TSTAD">
+  <rdfs:subClassOf rdf:resource="STAD"/>
+</owl:Class>
+
+<owl:Class rdf:about="ISTAD">
+  <rdfs:subClassOf rdf:resource="STAD"/>
+</owl:Class>
+
+<owl:Class rdf:about="DSTAD">
+  <rdfs:subClassOf rdf:resource="STAD"/>
+</owl:Class>
+
+<owl:Class rdf:about="MSTAD">
+  <rdfs:subClassOf rdf:resource="STAD"/>
+</owl:Class>
+
+<owl:Class rdf:about="PSTAD">
+  <rdfs:subClassOf rdf:resource="STAD"/>
+</owl:Class>
+
+<owl:Class rdf:about="KIDNEY">
+  <rdfs:subClassOf rdf:resource="Disease"/>
+</owl:Class>
+
+<owl:Class rdf:about="CCSK">
+  <rdfs:subClassOf rdf:resource="KIDNEY"/>
+</owl:Class>
+
+<owl:Class rdf:about="MRT">
+  <rdfs:subClassOf rdf:resource="KIDNEY"/>
+</owl:Class>
+
+<owl:Class rdf:about="RNET">
+  <rdfs:subClassOf rdf:resource="KIDNEY"/>
+</owl:Class>
+
+<owl:Class rdf:about="WT">
+  <rdfs:subClassOf rdf:resource="KIDNEY"/>
+</owl:Class>
+
+<owl:Class rdf:about="RCC">
+  <rdfs:subClassOf rdf:resource="KIDNEY"/>
+</owl:Class>
+
+<owl:Class rdf:about="CCRCC">
+  <rdfs:subClassOf rdf:resource="RCC"/>
+</owl:Class>
+
+<owl:Class rdf:about="SCCRCC">
+  <rdfs:subClassOf rdf:resource="CCRCC"/>
+</owl:Class>
+
+<owl:Class rdf:about="NCCRCC">
+  <rdfs:subClassOf rdf:resource="RCC"/>
+</owl:Class>
+
+<owl:Class rdf:about="CHRCC">
+  <rdfs:subClassOf rdf:resource="NCCRCC"/>
+</owl:Class>
+
+<owl:Class rdf:about="MRC">
+  <rdfs:subClassOf rdf:resource="NCCRCC"/>
+</owl:Class>
+
+<owl:Class rdf:about="URCC">
+  <rdfs:subClassOf rdf:resource="NCCRCC"/>
+</owl:Class>
+
+<owl:Class rdf:about="SRCC">
+  <rdfs:subClassOf rdf:resource="NCCRCC"/>
+</owl:Class>
+
+<owl:Class rdf:about="TRCC">
+  <rdfs:subClassOf rdf:resource="NCCRCC"/>
+</owl:Class>
+
+<owl:Class rdf:about="ROCY">
+  <rdfs:subClassOf rdf:resource="NCCRCC"/>
+</owl:Class>
+
+<owl:Class rdf:about="CCPRC">
+  <rdfs:subClassOf rdf:resource="NCCRCC"/>
+</owl:Class>
+
+<owl:Class rdf:about="FHRCC">
+  <rdfs:subClassOf rdf:resource="NCCRCC"/>
+</owl:Class>
+
+<owl:Class rdf:about="MTSCC">
+  <rdfs:subClassOf rdf:resource="NCCRCC"/>
+</owl:Class>
+
+<owl:Class rdf:about="RAML">
+  <rdfs:subClassOf rdf:resource="NCCRCC"/>
+</owl:Class>
+
+<owl:Class rdf:about="RSCC">
+  <rdfs:subClassOf rdf:resource="NCCRCC"/>
+</owl:Class>
+
+<owl:Class rdf:about="PRCC">
+  <rdfs:subClassOf rdf:resource="NCCRCC"/>
+</owl:Class>
+
+<owl:Class rdf:about="CDRCC">
+  <rdfs:subClassOf rdf:resource="NCCRCC"/>
+</owl:Class>
+
+<owl:Class rdf:about="VULVA">
+  <rdfs:subClassOf rdf:resource="Disease"/>
+</owl:Class>
+
+<owl:Class rdf:about="VSC">
+  <rdfs:subClassOf rdf:resource="VULVA"/>
+</owl:Class>
+
+<owl:Class rdf:about="VMM">
+  <rdfs:subClassOf rdf:resource="VULVA"/>
+</owl:Class>
+
+<owl:Class rdf:about="VMA">
+  <rdfs:subClassOf rdf:resource="VULVA"/>
+</owl:Class>
+
+<owl:Class rdf:about="VA">
+  <rdfs:subClassOf rdf:resource="VULVA"/>
+</owl:Class>
+
+<owl:Class rdf:about="VGCT">
+  <rdfs:subClassOf rdf:resource="VULVA"/>
+</owl:Class>
+
+<owl:Class rdf:about="VOEC">
+  <rdfs:subClassOf rdf:resource="VGCT"/>
+</owl:Class>
+
+<owl:Class rdf:about="VMGCT">
+  <rdfs:subClassOf rdf:resource="VGCT"/>
+</owl:Class>
+
+<owl:Class rdf:about="VMT">
+  <rdfs:subClassOf rdf:resource="VGCT"/>
+</owl:Class>
+
+<owl:Class rdf:about="VYST">
+  <rdfs:subClassOf rdf:resource="VGCT"/>
+</owl:Class>
+
+<owl:Class rdf:about="VPE">
+  <rdfs:subClassOf rdf:resource="VGCT"/>
+</owl:Class>
+
+<owl:Class rdf:about="VIMT">
+  <rdfs:subClassOf rdf:resource="VGCT"/>
+</owl:Class>
+
+<owl:Class rdf:about="VDYS">
+  <rdfs:subClassOf rdf:resource="VGCT"/>
+</owl:Class>
+
+<owl:Class rdf:about="VPDC">
+  <rdfs:subClassOf rdf:resource="VULVA"/>
+</owl:Class>
+
+<owl:Class rdf:about="MYELOID">
+  <rdfs:subClassOf rdf:resource="Disease"/>
+</owl:Class>
+
+<owl:Class rdf:about="MATPL">
+  <rdfs:subClassOf rdf:resource="MYELOID"/>
+</owl:Class>
+
+<owl:Class rdf:about="MNM">
+  <rdfs:subClassOf rdf:resource="MYELOID"/>
+</owl:Class>
+
+<owl:Class rdf:about="MCD">
+  <rdfs:subClassOf rdf:resource="MNM"/>
+</owl:Class>
+
+<owl:Class rdf:about="MCSL">
+  <rdfs:subClassOf rdf:resource="MCD"/>
+</owl:Class>
+
+<owl:Class rdf:about="SM">
+  <rdfs:subClassOf rdf:resource="MCD"/>
+</owl:Class>
+
+<owl:Class rdf:about="SSM">
+  <rdfs:subClassOf rdf:resource="SM"/>
+</owl:Class>
+
+<owl:Class rdf:about="ASM">
+  <rdfs:subClassOf rdf:resource="SM"/>
+</owl:Class>
+
+<owl:Class rdf:about="ISM">
+  <rdfs:subClassOf rdf:resource="SM"/>
+</owl:Class>
+
+<owl:Class rdf:about="SMMCL">
+  <rdfs:subClassOf rdf:resource="SM"/>
+</owl:Class>
+
+<owl:Class rdf:about="SMAHN">
+  <rdfs:subClassOf rdf:resource="SM"/>
+</owl:Class>
+
+<owl:Class rdf:about="CMCD">
+  <rdfs:subClassOf rdf:resource="MCD"/>
+</owl:Class>
+
+<owl:Class rdf:about="MDS">
+  <rdfs:subClassOf rdf:resource="MNM"/>
+</owl:Class>
+
+<owl:Class rdf:about="MDSID5Q">
+  <rdfs:subClassOf rdf:resource="MDS"/>
+</owl:Class>
+
+<owl:Class rdf:about="MDSMD">
+  <rdfs:subClassOf rdf:resource="MDS"/>
+</owl:Class>
+
+<owl:Class rdf:about="RCYC">
+  <rdfs:subClassOf rdf:resource="MDS"/>
+</owl:Class>
+
+<owl:Class rdf:about="MDSU">
+  <rdfs:subClassOf rdf:resource="MDS"/>
+</owl:Class>
+
+<owl:Class rdf:about="MDSSLD">
+  <rdfs:subClassOf rdf:resource="MDS"/>
+</owl:Class>
+
+<owl:Class rdf:about="MDSEB">
+  <rdfs:subClassOf rdf:resource="MDS"/>
+</owl:Class>
+
+<owl:Class rdf:about="MDSEB2">
+  <rdfs:subClassOf rdf:resource="MDSEB"/>
+</owl:Class>
+
+<owl:Class rdf:about="MDSEB1">
+  <rdfs:subClassOf rdf:resource="MDSEB"/>
+</owl:Class>
+
+<owl:Class rdf:about="MDSRS">
+  <rdfs:subClassOf rdf:resource="MDS"/>
+</owl:Class>
+
+<owl:Class rdf:about="MDSRSMD">
+  <rdfs:subClassOf rdf:resource="MDSRS"/>
+</owl:Class>
+
+<owl:Class rdf:about="MDSRSSLD">
+  <rdfs:subClassOf rdf:resource="MDSRS"/>
+</owl:Class>
+
+<owl:Class rdf:about="MLNER">
+  <rdfs:subClassOf rdf:resource="MNM"/>
+</owl:Class>
+
+<owl:Class rdf:about="MLNPCM1JAK2">
+  <rdfs:subClassOf rdf:resource="MLNER"/>
+</owl:Class>
+
+<owl:Class rdf:about="MLNFGFR1">
+  <rdfs:subClassOf rdf:resource="MLNER"/>
+</owl:Class>
+
+<owl:Class rdf:about="MLNPDGFRB">
+  <rdfs:subClassOf rdf:resource="MLNER"/>
+</owl:Class>
+
+<owl:Class rdf:about="MLNPDGFRA">
+  <rdfs:subClassOf rdf:resource="MLNER"/>
+</owl:Class>
+
+<owl:Class rdf:about="MNGLP">
+  <rdfs:subClassOf rdf:resource="MNM"/>
+</owl:Class>
+
+<owl:Class rdf:about="MPN">
+  <rdfs:subClassOf rdf:resource="MNM"/>
+</owl:Class>
+
+<owl:Class rdf:about="ET">
+  <rdfs:subClassOf rdf:resource="MPN"/>
+</owl:Class>
+
+<owl:Class rdf:about="ETMF">
+  <rdfs:subClassOf rdf:resource="ET"/>
+</owl:Class>
+
+<owl:Class rdf:about="MPNU">
+  <rdfs:subClassOf rdf:resource="MPN"/>
+</owl:Class>
+
+<owl:Class rdf:about="CELNOS">
+  <rdfs:subClassOf rdf:resource="MPN"/>
+</owl:Class>
+
+<owl:Class rdf:about="PMF">
+  <rdfs:subClassOf rdf:resource="MPN"/>
+</owl:Class>
+
+<owl:Class rdf:about="PMFOFS">
+  <rdfs:subClassOf rdf:resource="PMF"/>
+</owl:Class>
+
+<owl:Class rdf:about="PMFPES">
+  <rdfs:subClassOf rdf:resource="PMF"/>
+</owl:Class>
+
+<owl:Class rdf:about="PV">
+  <rdfs:subClassOf rdf:resource="MPN"/>
+</owl:Class>
+
+<owl:Class rdf:about="PVMF">
+  <rdfs:subClassOf rdf:resource="PV"/>
+</owl:Class>
+
+<owl:Class rdf:about="CML">
+  <rdfs:subClassOf rdf:resource="MPN"/>
+</owl:Class>
+
+<owl:Class rdf:about="CMLBCRABL1">
+  <rdfs:subClassOf rdf:resource="CML"/>
+</owl:Class>
+
+<owl:Class rdf:about="CNL">
+  <rdfs:subClassOf rdf:resource="MPN"/>
+</owl:Class>
+
+<owl:Class rdf:about="MDS/MPN">
+  <rdfs:subClassOf rdf:resource="MNM"/>
+</owl:Class>
+
+<owl:Class rdf:about="ACML">
+  <rdfs:subClassOf rdf:resource="MDS/MPN"/>
+</owl:Class>
+
+<owl:Class rdf:about="MDSMPNRST">
+  <rdfs:subClassOf rdf:resource="MDS/MPN"/>
+</owl:Class>
+
+<owl:Class rdf:about="CMML">
+  <rdfs:subClassOf rdf:resource="MDS/MPN"/>
+</owl:Class>
+
+<owl:Class rdf:about="CMML0">
+  <rdfs:subClassOf rdf:resource="CMML"/>
+</owl:Class>
+
+<owl:Class rdf:about="CMML2">
+  <rdfs:subClassOf rdf:resource="CMML"/>
+</owl:Class>
+
+<owl:Class rdf:about="CMML1">
+  <rdfs:subClassOf rdf:resource="CMML"/>
+</owl:Class>
+
+<owl:Class rdf:about="MDSMPNU">
+  <rdfs:subClassOf rdf:resource="MDS/MPN"/>
+</owl:Class>
+
+<owl:Class rdf:about="JMML">
+  <rdfs:subClassOf rdf:resource="MDS/MPN"/>
+</owl:Class>
+
+<owl:Class rdf:about="ALAL">
+  <rdfs:subClassOf rdf:resource="MNM"/>
+</owl:Class>
+
+<owl:Class rdf:about="MPALKMT2A">
+  <rdfs:subClassOf rdf:resource="ALAL"/>
+</owl:Class>
+
+<owl:Class rdf:about="MPALTNOS">
+  <rdfs:subClassOf rdf:resource="ALAL"/>
+</owl:Class>
+
+<owl:Class rdf:about="MPALBCRABL1">
+  <rdfs:subClassOf rdf:resource="ALAL"/>
+</owl:Class>
+
+<owl:Class rdf:about="AUL">
+  <rdfs:subClassOf rdf:resource="ALAL"/>
+</owl:Class>
+
+<owl:Class rdf:about="MPALBNOS">
+  <rdfs:subClassOf rdf:resource="ALAL"/>
+</owl:Class>
+
+<owl:Class rdf:about="BPDCN">
+  <rdfs:subClassOf rdf:resource="MNM"/>
+</owl:Class>
+
+<owl:Class rdf:about="HDCN">
+  <rdfs:subClassOf rdf:resource="MNM"/>
+</owl:Class>
+
+<owl:Class rdf:about="IDCT">
+  <rdfs:subClassOf rdf:resource="HDCN"/>
+</owl:Class>
+
+<owl:Class rdf:about="FDCS">
+  <rdfs:subClassOf rdf:resource="HDCN"/>
+</owl:Class>
+
+<owl:Class rdf:about="LCS">
+  <rdfs:subClassOf rdf:resource="HDCN"/>
+</owl:Class>
+
+<owl:Class rdf:about="FRCT">
+  <rdfs:subClassOf rdf:resource="HDCN"/>
+</owl:Class>
+
+<owl:Class rdf:about="HS">
+  <rdfs:subClassOf rdf:resource="HDCN"/>
+</owl:Class>
+
+<owl:Class rdf:about="IDCS">
+  <rdfs:subClassOf rdf:resource="HDCN"/>
+</owl:Class>
+
+<owl:Class rdf:about="JXG">
+  <rdfs:subClassOf rdf:resource="HDCN"/>
+</owl:Class>
+
+<owl:Class rdf:about="ECD">
+  <rdfs:subClassOf rdf:resource="HDCN"/>
+</owl:Class>
+
+<owl:Class rdf:about="RDD">
+  <rdfs:subClassOf rdf:resource="HDCN"/>
+</owl:Class>
+
+<owl:Class rdf:about="LCH">
+  <rdfs:subClassOf rdf:resource="HDCN"/>
+</owl:Class>
+
+<owl:Class rdf:about="AML">
+  <rdfs:subClassOf rdf:resource="MNM"/>
+</owl:Class>
+
+<owl:Class rdf:about="AMLRGA">
+  <rdfs:subClassOf rdf:resource="AML"/>
+</owl:Class>
+
+<owl:Class rdf:about="APLPMLRARA">
+  <rdfs:subClassOf rdf:resource="AMLRGA"/>
+</owl:Class>
+
+<owl:Class rdf:about="AMLCEBPA">
+  <rdfs:subClassOf rdf:resource="AMLRGA"/>
+</owl:Class>
+
+<owl:Class rdf:about="AMLRUNX1RUNX1T1">
+  <rdfs:subClassOf rdf:resource="AMLRGA"/>
+</owl:Class>
+
+<owl:Class rdf:about="AMLNPM1">
+  <rdfs:subClassOf rdf:resource="AMLRGA"/>
+</owl:Class>
+
+<owl:Class rdf:about="AMLDEKNUP214">
+  <rdfs:subClassOf rdf:resource="AMLRGA"/>
+</owl:Class>
+
+<owl:Class rdf:about="AMLMLLT3KMT2A">
+  <rdfs:subClassOf rdf:resource="AMLRGA"/>
+</owl:Class>
+
+<owl:Class rdf:about="AMLRUNX1">
+  <rdfs:subClassOf rdf:resource="AMLRGA"/>
+</owl:Class>
+
+<owl:Class rdf:about="AMLRBM15MKL1">
+  <rdfs:subClassOf rdf:resource="AMLRGA"/>
+</owl:Class>
+
+<owl:Class rdf:about="AMLCBFBMYH11">
+  <rdfs:subClassOf rdf:resource="AMLRGA"/>
+</owl:Class>
+
+<owl:Class rdf:about="AMLRARA">
+  <rdfs:subClassOf rdf:resource="AMLRGA"/>
+</owl:Class>
+
+<owl:Class rdf:about="AMLBCRABL1">
+  <rdfs:subClassOf rdf:resource="AMLRGA"/>
+</owl:Class>
+
+<owl:Class rdf:about="AMLGATA2MECOM">
+  <rdfs:subClassOf rdf:resource="AMLRGA"/>
+</owl:Class>
+
+<owl:Class rdf:about="MS">
+  <rdfs:subClassOf rdf:resource="AML"/>
+</owl:Class>
+
+<owl:Class rdf:about="AMLMRC">
+  <rdfs:subClassOf rdf:resource="AML"/>
+</owl:Class>
+
+<owl:Class rdf:about="MPRDS">
+  <rdfs:subClassOf rdf:resource="AML"/>
+</owl:Class>
+
+<owl:Class rdf:about="MLADS">
+  <rdfs:subClassOf rdf:resource="MPRDS"/>
+</owl:Class>
+
+<owl:Class rdf:about="TAM">
+  <rdfs:subClassOf rdf:resource="MPRDS"/>
+</owl:Class>
+
+<owl:Class rdf:about="TMN">
+  <rdfs:subClassOf rdf:resource="AML"/>
+</owl:Class>
+
+<owl:Class rdf:about="TMDS">
+  <rdfs:subClassOf rdf:resource="TMN"/>
+</owl:Class>
+
+<owl:Class rdf:about="TAML">
+  <rdfs:subClassOf rdf:resource="TMN"/>
+</owl:Class>
+
+<owl:Class rdf:about="AMLNOS">
+  <rdfs:subClassOf rdf:resource="AML"/>
+</owl:Class>
+
+<owl:Class rdf:about="AMLMD">
+  <rdfs:subClassOf rdf:resource="AMLNOS"/>
+</owl:Class>
+
+<owl:Class rdf:about="AM">
+  <rdfs:subClassOf rdf:resource="AMLNOS"/>
+</owl:Class>
+
+<owl:Class rdf:about="ABL">
+  <rdfs:subClassOf rdf:resource="AMLNOS"/>
+</owl:Class>
+
+<owl:Class rdf:about="PERL">
+  <rdfs:subClassOf rdf:resource="AMLNOS"/>
+</owl:Class>
+
+<owl:Class rdf:about="AMOL">
+  <rdfs:subClassOf rdf:resource="AMLNOS"/>
+</owl:Class>
+
+<owl:Class rdf:about="AWM">
+  <rdfs:subClassOf rdf:resource="AMLNOS"/>
+</owl:Class>
+
+<owl:Class rdf:about="APMF">
+  <rdfs:subClassOf rdf:resource="AMLNOS"/>
+</owl:Class>
+
+<owl:Class rdf:about="AMML">
+  <rdfs:subClassOf rdf:resource="AMLNOS"/>
+</owl:Class>
+
+<owl:Class rdf:about="AMKL">
+  <rdfs:subClassOf rdf:resource="AMLNOS"/>
+</owl:Class>
+
+<owl:Class rdf:about="MBGN">
+  <rdfs:subClassOf rdf:resource="MYELOID"/>
+</owl:Class>
+
+<owl:Class rdf:about="PERITONEUM">
+  <rdfs:subClassOf rdf:resource="Disease"/>
+</owl:Class>
+
+<owl:Class rdf:about="PEMESO">
+  <rdfs:subClassOf rdf:resource="PERITONEUM"/>
+</owl:Class>
+
+<owl:Class rdf:about="PSEC">
+  <rdfs:subClassOf rdf:resource="PERITONEUM"/>
+</owl:Class>
+
+<owl:Class rdf:about="LIVER">
+  <rdfs:subClassOf rdf:resource="Disease"/>
+</owl:Class>
+
+<owl:Class rdf:about="UESL">
+  <rdfs:subClassOf rdf:resource="LIVER"/>
+</owl:Class>
+
+<owl:Class rdf:about="LIAS">
+  <rdfs:subClassOf rdf:resource="LIVER"/>
+</owl:Class>
+
+<owl:Class rdf:about="FLC">
+  <rdfs:subClassOf rdf:resource="LIVER"/>
+</owl:Class>
+
+<owl:Class rdf:about="HCCIHCH">
+  <rdfs:subClassOf rdf:resource="LIVER"/>
+</owl:Class>
+
+<owl:Class rdf:about="MRTL">
+  <rdfs:subClassOf rdf:resource="LIVER"/>
+</owl:Class>
+
+<owl:Class rdf:about="HCC">
+  <rdfs:subClassOf rdf:resource="LIVER"/>
+</owl:Class>
+
+<owl:Class rdf:about="LIHB">
+  <rdfs:subClassOf rdf:resource="LIVER"/>
+</owl:Class>
+
+<owl:Class rdf:about="LIMNET">
+  <rdfs:subClassOf rdf:resource="LIVER"/>
+</owl:Class>
+
+<owl:Class rdf:about="LIAD">
+  <rdfs:subClassOf rdf:resource="LIVER"/>
+</owl:Class>
+
+<owl:Class rdf:about="TESTIS">
+  <rdfs:subClassOf rdf:resource="Disease"/>
+</owl:Class>
+
+<owl:Class rdf:about="TLYM">
+  <rdfs:subClassOf rdf:resource="TESTIS"/>
+</owl:Class>
+
+<owl:Class rdf:about="TMESO">
+  <rdfs:subClassOf rdf:resource="TESTIS"/>
+</owl:Class>
+
+<owl:Class rdf:about="TSCST">
+  <rdfs:subClassOf rdf:resource="TESTIS"/>
+</owl:Class>
+
+<owl:Class rdf:about="SEM">
+  <rdfs:subClassOf rdf:resource="TESTIS"/>
+</owl:Class>
+
+<owl:Class rdf:about="NSGCT">
+  <rdfs:subClassOf rdf:resource="TESTIS"/>
+</owl:Class>
+
+<owl:Class rdf:about="MGCT">
+  <rdfs:subClassOf rdf:resource="NSGCT"/>
+</owl:Class>
+
+<owl:Class rdf:about="GCTSTM">
+  <rdfs:subClassOf rdf:resource="NSGCT"/>
+</owl:Class>
+
+<owl:Class rdf:about="TCCA">
+  <rdfs:subClassOf rdf:resource="NSGCT"/>
+</owl:Class>
+
+<owl:Class rdf:about="TYST">
+  <rdfs:subClassOf rdf:resource="NSGCT"/>
+</owl:Class>
+
+<owl:Class rdf:about="EMBCA">
+  <rdfs:subClassOf rdf:resource="NSGCT"/>
+</owl:Class>
+
+<owl:Class rdf:about="TT">
+  <rdfs:subClassOf rdf:resource="NSGCT"/>
+</owl:Class>
+
+<owl:Class rdf:about="OTHER">
+  <rdfs:subClassOf rdf:resource="Disease"/>
+</owl:Class>
+
+<owl:Class rdf:about="CUP">
+  <rdfs:subClassOf rdf:resource="OTHER"/>
+</owl:Class>
+
+<owl:Class rdf:about="PDC">
+  <rdfs:subClassOf rdf:resource="CUP"/>
+</owl:Class>
+
+<owl:Class rdf:about="SCCNOS">
+  <rdfs:subClassOf rdf:resource="CUP"/>
+</owl:Class>
+
+<owl:Class rdf:about="SCUP">
+  <rdfs:subClassOf rdf:resource="CUP"/>
+</owl:Class>
+
+<owl:Class rdf:about="CUPNOS">
+  <rdfs:subClassOf rdf:resource="CUP"/>
+</owl:Class>
+
+<owl:Class rdf:about="ACN">
+  <rdfs:subClassOf rdf:resource="CUP"/>
+</owl:Class>
+
+<owl:Class rdf:about="ADNOS">
+  <rdfs:subClassOf rdf:resource="CUP"/>
+</owl:Class>
+
+<owl:Class rdf:about="NETNOS">
+  <rdfs:subClassOf rdf:resource="CUP"/>
+</owl:Class>
+
+<owl:Class rdf:about="UDMN">
+  <rdfs:subClassOf rdf:resource="CUP"/>
+</owl:Class>
+
+<owl:Class rdf:about="NECNOS">
+  <rdfs:subClassOf rdf:resource="CUP"/>
+</owl:Class>
+
+<owl:Class rdf:about="MIXED">
+  <rdfs:subClassOf rdf:resource="OTHER"/>
+</owl:Class>
+
+<owl:Class rdf:about="AIS">
+  <rdfs:subClassOf rdf:resource="OTHER"/>
+</owl:Class>
+
+<owl:Class rdf:about="EGCT">
+  <rdfs:subClassOf rdf:resource="OTHER"/>
+</owl:Class>
+
+<owl:Class rdf:about="UTERUS">
+  <rdfs:subClassOf rdf:resource="Disease"/>
+</owl:Class>
+
+<owl:Class rdf:about="GTD">
+  <rdfs:subClassOf rdf:resource="UTERUS"/>
+</owl:Class>
+
+<owl:Class rdf:about="PSTT">
+  <rdfs:subClassOf rdf:resource="GTD"/>
+</owl:Class>
+
+<owl:Class rdf:about="ETT">
+  <rdfs:subClassOf rdf:resource="GTD"/>
+</owl:Class>
+
+<owl:Class rdf:about="UCCA">
+  <rdfs:subClassOf rdf:resource="GTD"/>
+</owl:Class>
+
+<owl:Class rdf:about="MP">
+  <rdfs:subClassOf rdf:resource="GTD"/>
+</owl:Class>
+
+<owl:Class rdf:about="IHM">
+  <rdfs:subClassOf rdf:resource="MP"/>
+</owl:Class>
+
+<owl:Class rdf:about="CHM">
+  <rdfs:subClassOf rdf:resource="MP"/>
+</owl:Class>
+
+<owl:Class rdf:about="PHM">
+  <rdfs:subClassOf rdf:resource="MP"/>
+</owl:Class>
+
+<owl:Class rdf:about="UCEC">
+  <rdfs:subClassOf rdf:resource="UTERUS"/>
+</owl:Class>
+
+<owl:Class rdf:about="UPDC">
+  <rdfs:subClassOf rdf:resource="UCEC"/>
+</owl:Class>
+
+<owl:Class rdf:about="UASC">
+  <rdfs:subClassOf rdf:resource="UCEC"/>
+</owl:Class>
+
+<owl:Class rdf:about="UMNC">
+  <rdfs:subClassOf rdf:resource="UCEC"/>
+</owl:Class>
+
+<owl:Class rdf:about="UMC">
+  <rdfs:subClassOf rdf:resource="UCEC"/>
+</owl:Class>
+
+<owl:Class rdf:about="UCCC">
+  <rdfs:subClassOf rdf:resource="UCEC"/>
+</owl:Class>
+
+<owl:Class rdf:about="UDDC">
+  <rdfs:subClassOf rdf:resource="UCEC"/>
+</owl:Class>
+
+<owl:Class rdf:about="UCS">
+  <rdfs:subClassOf rdf:resource="UCEC"/>
+</owl:Class>
+
+<owl:Class rdf:about="USC">
+  <rdfs:subClassOf rdf:resource="UCEC"/>
+</owl:Class>
+
+<owl:Class rdf:about="UEC">
+  <rdfs:subClassOf rdf:resource="UCEC"/>
+</owl:Class>
+
+<owl:Class rdf:about="UUC">
+  <rdfs:subClassOf rdf:resource="UCEC"/>
+</owl:Class>
+
+<owl:Class rdf:about="UMEC">
+  <rdfs:subClassOf rdf:resource="UCEC"/>
+</owl:Class>
+
+<owl:Class rdf:about="UNEC">
+  <rdfs:subClassOf rdf:resource="UCEC"/>
+</owl:Class>
+
+<owl:Class rdf:about="OUTT">
+  <rdfs:subClassOf rdf:resource="UTERUS"/>
+</owl:Class>
+
+<owl:Class rdf:about="USARC">
+  <rdfs:subClassOf rdf:resource="UTERUS"/>
+</owl:Class>
+
+<owl:Class rdf:about="UAS">
+  <rdfs:subClassOf rdf:resource="USARC"/>
+</owl:Class>
+
+<owl:Class rdf:about="OUSARC">
+  <rdfs:subClassOf rdf:resource="USARC"/>
+</owl:Class>
+
+<owl:Class rdf:about="ESS">
+  <rdfs:subClassOf rdf:resource="USARC"/>
+</owl:Class>
+
+<owl:Class rdf:about="LGESS">
+  <rdfs:subClassOf rdf:resource="ESS"/>
+</owl:Class>
+
+<owl:Class rdf:about="HGESS">
+  <rdfs:subClassOf rdf:resource="ESS"/>
+</owl:Class>
+
+<owl:Class rdf:about="UPECOMA">
+  <rdfs:subClassOf rdf:resource="USARC"/>
+</owl:Class>
+
+<owl:Class rdf:about="USMT">
+  <rdfs:subClassOf rdf:resource="USARC"/>
+</owl:Class>
+
+<owl:Class rdf:about="USTUMP">
+  <rdfs:subClassOf rdf:resource="USMT"/>
+</owl:Class>
+
+<owl:Class rdf:about="ULM">
+  <rdfs:subClassOf rdf:resource="USMT"/>
+</owl:Class>
+
+<owl:Class rdf:about="UELMS">
+  <rdfs:subClassOf rdf:resource="USMT"/>
+</owl:Class>
+
+<owl:Class rdf:about="UMLMS">
+  <rdfs:subClassOf rdf:resource="USMT"/>
+</owl:Class>
+
+<owl:Class rdf:about="ULMS">
+  <rdfs:subClassOf rdf:resource="USMT"/>
+</owl:Class>
+
+<owl:Class rdf:about="UUS">
+  <rdfs:subClassOf rdf:resource="USARC"/>
+</owl:Class>
+
+<owl:Class rdf:about="PENIS">
+  <rdfs:subClassOf rdf:resource="Disease"/>
+</owl:Class>
+
+<owl:Class rdf:about="PSCC">
+  <rdfs:subClassOf rdf:resource="PENIS"/>
+</owl:Class>
+
+<owl:Class rdf:about="BPSCC">
+  <rdfs:subClassOf rdf:resource="PSCC"/>
+</owl:Class>
+
+<owl:Class rdf:about="WPSCC">
+  <rdfs:subClassOf rdf:resource="PSCC"/>
+</owl:Class>
+
+<owl:Class rdf:about="VPSCC">
+  <rdfs:subClassOf rdf:resource="PSCC"/>
+</owl:Class>
+
+<owl:Class rdf:about="LUNG">
+  <rdfs:subClassOf rdf:resource="Disease"/>
+</owl:Class>
+
+<owl:Class rdf:about="IMTL">
+  <rdfs:subClassOf rdf:resource="LUNG"/>
+</owl:Class>
+
+<owl:Class rdf:about="SARCL">
+  <rdfs:subClassOf rdf:resource="LUNG"/>
+</owl:Class>
+
+<owl:Class rdf:about="CSCLC">
+  <rdfs:subClassOf rdf:resource="LUNG"/>
+</owl:Class>
+
+<owl:Class rdf:about="LAIS">
+  <rdfs:subClassOf rdf:resource="LUNG"/>
+</owl:Class>
+
+<owl:Class rdf:about="LAM">
+  <rdfs:subClassOf rdf:resource="LUNG"/>
+</owl:Class>
+
+<owl:Class rdf:about="NSCLC">
+  <rdfs:subClassOf rdf:resource="LUNG"/>
+</owl:Class>
+
+<owl:Class rdf:about="LUPC">
+  <rdfs:subClassOf rdf:resource="NSCLC"/>
+</owl:Class>
+
+<owl:Class rdf:about="LUAD">
+  <rdfs:subClassOf rdf:resource="NSCLC"/>
+</owl:Class>
+
+<owl:Class rdf:about="LCLC">
+  <rdfs:subClassOf rdf:resource="NSCLC"/>
+</owl:Class>
+
+<owl:Class rdf:about="RLCLC">
+  <rdfs:subClassOf rdf:resource="LCLC"/>
+</owl:Class>
+
+<owl:Class rdf:about="LECLC">
+  <rdfs:subClassOf rdf:resource="LCLC"/>
+</owl:Class>
+
+<owl:Class rdf:about="BLCLC">
+  <rdfs:subClassOf rdf:resource="LCLC"/>
+</owl:Class>
+
+<owl:Class rdf:about="GCLC">
+  <rdfs:subClassOf rdf:resource="LCLC"/>
+</owl:Class>
+
+<owl:Class rdf:about="CCLC">
+  <rdfs:subClassOf rdf:resource="LCLC"/>
+</owl:Class>
+
+<owl:Class rdf:about="SPCC">
+  <rdfs:subClassOf rdf:resource="NSCLC"/>
+</owl:Class>
+
+<owl:Class rdf:about="SGTTL">
+  <rdfs:subClassOf rdf:resource="NSCLC"/>
+</owl:Class>
+
+<owl:Class rdf:about="LUACC">
+  <rdfs:subClassOf rdf:resource="SGTTL"/>
+</owl:Class>
+
+<owl:Class rdf:about="LUMEC">
+  <rdfs:subClassOf rdf:resource="SGTTL"/>
+</owl:Class>
+
+<owl:Class rdf:about="LUSC">
+  <rdfs:subClassOf rdf:resource="NSCLC"/>
+</owl:Class>
+
+<owl:Class rdf:about="LUAS">
+  <rdfs:subClassOf rdf:resource="NSCLC"/>
+</owl:Class>
+
+<owl:Class rdf:about="NSCLCPD">
+  <rdfs:subClassOf rdf:resource="NSCLC"/>
+</owl:Class>
+
+<owl:Class rdf:about="NUTCL">
+  <rdfs:subClassOf rdf:resource="NSCLC"/>
+</owl:Class>
+
+<owl:Class rdf:about="CMPT">
+  <rdfs:subClassOf rdf:resource="NSCLC"/>
+</owl:Class>
+
+<owl:Class rdf:about="PPB">
+  <rdfs:subClassOf rdf:resource="LUNG"/>
+</owl:Class>
+
+<owl:Class rdf:about="LNET">
+  <rdfs:subClassOf rdf:resource="LUNG"/>
+</owl:Class>
+
+<owl:Class rdf:about="ALUCA">
+  <rdfs:subClassOf rdf:resource="LNET"/>
+</owl:Class>
+
+<owl:Class rdf:about="LUCA">
+  <rdfs:subClassOf rdf:resource="LNET"/>
+</owl:Class>
+
+<owl:Class rdf:about="LUNE">
+  <rdfs:subClassOf rdf:resource="LNET"/>
+</owl:Class>
+
+<owl:Class rdf:about="SCLC">
+  <rdfs:subClassOf rdf:resource="LNET"/>
+</owl:Class>
+
+<owl:Class rdf:about="PROSTATE">
+  <rdfs:subClassOf rdf:resource="Disease"/>
+</owl:Class>
+
+<owl:Class rdf:about="PRSC">
+  <rdfs:subClassOf rdf:resource="PROSTATE"/>
+</owl:Class>
+
+<owl:Class rdf:about="PRNE">
+  <rdfs:subClassOf rdf:resource="PROSTATE"/>
+</owl:Class>
+
+<owl:Class rdf:about="PRSCC">
+  <rdfs:subClassOf rdf:resource="PROSTATE"/>
+</owl:Class>
+
+<owl:Class rdf:about="BCCP">
+  <rdfs:subClassOf rdf:resource="PROSTATE"/>
+</owl:Class>
+
+<owl:Class rdf:about="PRAD">
+  <rdfs:subClassOf rdf:resource="PROSTATE"/>
+</owl:Class>
+
+<owl:Class rdf:about="ADRENAL_GLAND">
+  <rdfs:subClassOf rdf:resource="Disease"/>
+</owl:Class>
+
+<owl:Class rdf:about="ACA">
+  <rdfs:subClassOf rdf:resource="ADRENAL_GLAND"/>
+</owl:Class>
+
+<owl:Class rdf:about="PHC">
+  <rdfs:subClassOf rdf:resource="ADRENAL_GLAND"/>
+</owl:Class>
+
+<owl:Class rdf:about="ACC">
+  <rdfs:subClassOf rdf:resource="ADRENAL_GLAND"/>
+</owl:Class>
+
+<owl:Class rdf:about="BRAIN">
+  <rdfs:subClassOf rdf:resource="Disease"/>
+</owl:Class>
+
+<owl:Class rdf:about="MBT">
+  <rdfs:subClassOf rdf:resource="BRAIN"/>
+</owl:Class>
+
+<owl:Class rdf:about="HMBL">
+  <rdfs:subClassOf rdf:resource="MBT"/>
+</owl:Class>
+
+<owl:Class rdf:about="MT">
+  <rdfs:subClassOf rdf:resource="MBT"/>
+</owl:Class>
+
+<owl:Class rdf:about="MLYM">
+  <rdfs:subClassOf rdf:resource="MBT"/>
+</owl:Class>
+
+<owl:Class rdf:about="MCHSCNS">
+  <rdfs:subClassOf rdf:resource="MBT"/>
+</owl:Class>
+
+<owl:Class rdf:about="HGNET">
+  <rdfs:subClassOf rdf:resource="MBT"/>
+</owl:Class>
+
+<owl:Class rdf:about="PRNET">
+  <rdfs:subClassOf rdf:resource="MBT"/>
+</owl:Class>
+
+<owl:Class rdf:about="PBT">
+  <rdfs:subClassOf rdf:resource="MBT"/>
+</owl:Class>
+
+<owl:Class rdf:about="LGNET">
+  <rdfs:subClassOf rdf:resource="MBT"/>
+</owl:Class>
+
+<owl:Class rdf:about="ENCG">
+  <rdfs:subClassOf rdf:resource="BRAIN"/>
+</owl:Class>
+
+<owl:Class rdf:about="GNC">
+  <rdfs:subClassOf rdf:resource="ENCG"/>
+</owl:Class>
+
+<owl:Class rdf:about="LGGNOS">
+  <rdfs:subClassOf rdf:resource="ENCG"/>
+</owl:Class>
+
+<owl:Class rdf:about="DNT">
+  <rdfs:subClassOf rdf:resource="ENCG"/>
+</owl:Class>
+
+<owl:Class rdf:about="PXA">
+  <rdfs:subClassOf rdf:resource="ENCG"/>
+</owl:Class>
+
+<owl:Class rdf:about="PAST">
+  <rdfs:subClassOf rdf:resource="ENCG"/>
+</owl:Class>
+
+<owl:Class rdf:about="APXA">
+  <rdfs:subClassOf rdf:resource="ENCG"/>
+</owl:Class>
+
+<owl:Class rdf:about="PMA">
+  <rdfs:subClassOf rdf:resource="ENCG"/>
+</owl:Class>
+
+<owl:Class rdf:about="GNG">
+  <rdfs:subClassOf rdf:resource="ENCG"/>
+</owl:Class>
+
+<owl:Class rdf:about="AGNG">
+  <rdfs:subClassOf rdf:resource="ENCG"/>
+</owl:Class>
+
+<owl:Class rdf:about="SELT">
+  <rdfs:subClassOf rdf:resource="BRAIN"/>
+</owl:Class>
+
+<owl:Class rdf:about="PTCY">
+  <rdfs:subClassOf rdf:resource="SELT"/>
+</owl:Class>
+
+<owl:Class rdf:about="GCT">
+  <rdfs:subClassOf rdf:resource="SELT"/>
+</owl:Class>
+
+<owl:Class rdf:about="PCGP">
+  <rdfs:subClassOf rdf:resource="SELT"/>
+</owl:Class>
+
+<owl:Class rdf:about="ACPG">
+  <rdfs:subClassOf rdf:resource="SELT"/>
+</owl:Class>
+
+<owl:Class rdf:about="PTCA">
+  <rdfs:subClassOf rdf:resource="SELT"/>
+</owl:Class>
+
+<owl:Class rdf:about="SCOAH">
+  <rdfs:subClassOf rdf:resource="SELT"/>
+</owl:Class>
+
+<owl:Class rdf:about="PTAD">
+  <rdfs:subClassOf rdf:resource="SELT"/>
+</owl:Class>
+
+<owl:Class rdf:about="APTAD">
+  <rdfs:subClassOf rdf:resource="SELT"/>
+</owl:Class>
+
+<owl:Class rdf:about="EMBT">
+  <rdfs:subClassOf rdf:resource="BRAIN"/>
+</owl:Class>
+
+<owl:Class rdf:about="MMBL">
+  <rdfs:subClassOf rdf:resource="EMBT"/>
+</owl:Class>
+
+<owl:Class rdf:about="ONBL">
+  <rdfs:subClassOf rdf:resource="EMBT"/>
+</owl:Class>
+
+<owl:Class rdf:about="ATRT">
+  <rdfs:subClassOf rdf:resource="EMBT"/>
+</owl:Class>
+
+<owl:Class rdf:about="MBEN">
+  <rdfs:subClassOf rdf:resource="EMBT"/>
+</owl:Class>
+
+<owl:Class rdf:about="MBENSHH">
+  <rdfs:subClassOf rdf:resource="MBEN"/>
+</owl:Class>
+
+<owl:Class rdf:about="MBENNOS">
+  <rdfs:subClassOf rdf:resource="MBEN"/>
+</owl:Class>
+
+<owl:Class rdf:about="AMBL">
+  <rdfs:subClassOf rdf:resource="EMBT"/>
+</owl:Class>
+
+<owl:Class rdf:about="AMBLNWS">
+  <rdfs:subClassOf rdf:resource="AMBL"/>
+</owl:Class>
+
+<owl:Class rdf:about="AMBLNWSG4">
+  <rdfs:subClassOf rdf:resource="AMBLNWS"/>
+</owl:Class>
+
+<owl:Class rdf:about="AMBLNWSG3">
+  <rdfs:subClassOf rdf:resource="AMBLNWS"/>
+</owl:Class>
+
+<owl:Class rdf:about="AMBLNOS">
+  <rdfs:subClassOf rdf:resource="AMBL"/>
+</owl:Class>
+
+<owl:Class rdf:about="AMBLSHH">
+  <rdfs:subClassOf rdf:resource="AMBL"/>
+</owl:Class>
+
+<owl:Class rdf:about="PNET">
+  <rdfs:subClassOf rdf:resource="EMBT"/>
+</owl:Class>
+
+<owl:Class rdf:about="ETANTR">
+  <rdfs:subClassOf rdf:resource="EMBT"/>
+</owl:Class>
+
+<owl:Class rdf:about="MBL">
+  <rdfs:subClassOf rdf:resource="EMBT"/>
+</owl:Class>
+
+<owl:Class rdf:about="MBLSHH">
+  <rdfs:subClassOf rdf:resource="MBL"/>
+</owl:Class>
+
+<owl:Class rdf:about="MBLWNT">
+  <rdfs:subClassOf rdf:resource="MBL"/>
+</owl:Class>
+
+<owl:Class rdf:about="MBLNWS">
+  <rdfs:subClassOf rdf:resource="MBL"/>
+</owl:Class>
+
+<owl:Class rdf:about="MBLG3">
+  <rdfs:subClassOf rdf:resource="MBLNWS"/>
+</owl:Class>
+
+<owl:Class rdf:about="MBLG4">
+  <rdfs:subClassOf rdf:resource="MBLNWS"/>
+</owl:Class>
+
+<owl:Class rdf:about="MBLNOS">
+  <rdfs:subClassOf rdf:resource="MBL"/>
+</owl:Class>
+
+<owl:Class rdf:about="MDEP">
+  <rdfs:subClassOf rdf:resource="EMBT"/>
+</owl:Class>
+
+<owl:Class rdf:about="DMBL">
+  <rdfs:subClassOf rdf:resource="EMBT"/>
+</owl:Class>
+
+<owl:Class rdf:about="DMBLSHH">
+  <rdfs:subClassOf rdf:resource="DMBL"/>
+</owl:Class>
+
+<owl:Class rdf:about="DMBLNOS">
+  <rdfs:subClassOf rdf:resource="DMBL"/>
+</owl:Class>
+
+<owl:Class rdf:about="MMB">
+  <rdfs:subClassOf rdf:resource="EMBT"/>
+</owl:Class>
+
+<owl:Class rdf:about="MNGT">
+  <rdfs:subClassOf rdf:resource="BRAIN"/>
+</owl:Class>
+
+<owl:Class rdf:about="HPCCNS">
+  <rdfs:subClassOf rdf:resource="MNGT"/>
+</owl:Class>
+
+<owl:Class rdf:about="PPM">
+  <rdfs:subClassOf rdf:resource="MNGT"/>
+</owl:Class>
+
+<owl:Class rdf:about="CHOM">
+  <rdfs:subClassOf rdf:resource="MNGT"/>
+</owl:Class>
+
+<owl:Class rdf:about="CCM">
+  <rdfs:subClassOf rdf:resource="MNGT"/>
+</owl:Class>
+
+<owl:Class rdf:about="MNG">
+  <rdfs:subClassOf rdf:resource="MNGT"/>
+</owl:Class>
+
+<owl:Class rdf:about="RHM">
+  <rdfs:subClassOf rdf:resource="MNGT"/>
+</owl:Class>
+
+<owl:Class rdf:about="SFTCNS">
+  <rdfs:subClassOf rdf:resource="MNGT"/>
+</owl:Class>
+
+<owl:Class rdf:about="ANM">
+  <rdfs:subClassOf rdf:resource="MNGT"/>
+</owl:Class>
+
+<owl:Class rdf:about="PINT">
+  <rdfs:subClassOf rdf:resource="BRAIN"/>
+</owl:Class>
+
+<owl:Class rdf:about="PBL">
+  <rdfs:subClassOf rdf:resource="PINT"/>
+</owl:Class>
+
+<owl:Class rdf:about="PINC">
+  <rdfs:subClassOf rdf:resource="PINT"/>
+</owl:Class>
+
+<owl:Class rdf:about="PPTID">
+  <rdfs:subClassOf rdf:resource="PINT"/>
+</owl:Class>
+
+<owl:Class rdf:about="PTPR">
+  <rdfs:subClassOf rdf:resource="PINT"/>
+</owl:Class>
+
+<owl:Class rdf:about="BGCT">
+  <rdfs:subClassOf rdf:resource="BRAIN"/>
+</owl:Class>
+
+<owl:Class rdf:about="BMGCT">
+  <rdfs:subClassOf rdf:resource="BGCT"/>
+</owl:Class>
+
+<owl:Class rdf:about="GMN">
+  <rdfs:subClassOf rdf:resource="BGCT"/>
+</owl:Class>
+
+<owl:Class rdf:about="BMT">
+  <rdfs:subClassOf rdf:resource="BGCT"/>
+</owl:Class>
+
+<owl:Class rdf:about="BMGT">
+  <rdfs:subClassOf rdf:resource="BGCT"/>
+</owl:Class>
+
+<owl:Class rdf:about="BYST">
+  <rdfs:subClassOf rdf:resource="BGCT"/>
+</owl:Class>
+
+<owl:Class rdf:about="BIMT">
+  <rdfs:subClassOf rdf:resource="BGCT"/>
+</owl:Class>
+
+<owl:Class rdf:about="BEC">
+  <rdfs:subClassOf rdf:resource="BGCT"/>
+</owl:Class>
+
+<owl:Class rdf:about="BCCA">
+  <rdfs:subClassOf rdf:resource="BGCT"/>
+</owl:Class>
+
+<owl:Class rdf:about="PCNSMT">
+  <rdfs:subClassOf rdf:resource="BRAIN"/>
+</owl:Class>
+
+<owl:Class rdf:about="MELC">
+  <rdfs:subClassOf rdf:resource="PCNSMT"/>
+</owl:Class>
+
+<owl:Class rdf:about="PCNSM">
+  <rdfs:subClassOf rdf:resource="PCNSMT"/>
+</owl:Class>
+
+<owl:Class rdf:about="CPT">
+  <rdfs:subClassOf rdf:resource="BRAIN"/>
+</owl:Class>
+
+<owl:Class rdf:about="CPC">
+  <rdfs:subClassOf rdf:resource="CPT"/>
+</owl:Class>
+
+<owl:Class rdf:about="CPP">
+  <rdfs:subClassOf rdf:resource="CPT"/>
+</owl:Class>
+
+<owl:Class rdf:about="ACPP">
+  <rdfs:subClassOf rdf:resource="CPT"/>
+</owl:Class>
+
+<owl:Class rdf:about="DIFG">
+  <rdfs:subClassOf rdf:resource="BRAIN"/>
+</owl:Class>
+
+<owl:Class rdf:about="AODG">
+  <rdfs:subClassOf rdf:resource="DIFG"/>
+</owl:Class>
+
+<owl:Class rdf:about="ASTR">
+  <rdfs:subClassOf rdf:resource="DIFG"/>
+</owl:Class>
+
+<owl:Class rdf:about="DIPG">
+  <rdfs:subClassOf rdf:resource="DIFG"/>
+</owl:Class>
+
+<owl:Class rdf:about="AOAST">
+  <rdfs:subClassOf rdf:resource="DIFG"/>
+</owl:Class>
+
+<owl:Class rdf:about="HGGNOS">
+  <rdfs:subClassOf rdf:resource="DIFG"/>
+</owl:Class>
+
+<owl:Class rdf:about="GB">
+  <rdfs:subClassOf rdf:resource="DIFG"/>
+</owl:Class>
+
+<owl:Class rdf:about="GBM">
+  <rdfs:subClassOf rdf:resource="GB"/>
+</owl:Class>
+
+<owl:Class rdf:about="SCGBM">
+  <rdfs:subClassOf rdf:resource="GB"/>
+</owl:Class>
+
+<owl:Class rdf:about="GSARC">
+  <rdfs:subClassOf rdf:resource="GB"/>
+</owl:Class>
+
+<owl:Class rdf:about="GNOS">
+  <rdfs:subClassOf rdf:resource="DIFG"/>
+</owl:Class>
+
+<owl:Class rdf:about="DASTR">
+  <rdfs:subClassOf rdf:resource="DIFG"/>
+</owl:Class>
+
+<owl:Class rdf:about="OAST">
+  <rdfs:subClassOf rdf:resource="DIFG"/>
+</owl:Class>
+
+<owl:Class rdf:about="AASTR">
+  <rdfs:subClassOf rdf:resource="DIFG"/>
+</owl:Class>
+
+<owl:Class rdf:about="ODG">
+  <rdfs:subClassOf rdf:resource="DIFG"/>
+</owl:Class>
+
+<owl:Class rdf:about="MNET">
+  <rdfs:subClassOf rdf:resource="BRAIN"/>
+</owl:Class>
+
+<owl:Class rdf:about="ASTB">
+  <rdfs:subClassOf rdf:resource="MNET"/>
+</owl:Class>
+
+<owl:Class rdf:about="LDD">
+  <rdfs:subClassOf rdf:resource="MNET"/>
+</owl:Class>
+
+<owl:Class rdf:about="RGNT">
+  <rdfs:subClassOf rdf:resource="MNET"/>
+</owl:Class>
+
+<owl:Class rdf:about="DIA">
+  <rdfs:subClassOf rdf:resource="MNET"/>
+</owl:Class>
+
+<owl:Class rdf:about="EVN">
+  <rdfs:subClassOf rdf:resource="MNET"/>
+</owl:Class>
+
+<owl:Class rdf:about="ANGL">
+  <rdfs:subClassOf rdf:resource="MNET"/>
+</owl:Class>
+
+<owl:Class rdf:about="CNC">
+  <rdfs:subClassOf rdf:resource="MNET"/>
+</owl:Class>
+
+<owl:Class rdf:about="PGNT">
+  <rdfs:subClassOf rdf:resource="MNET"/>
+</owl:Class>
+
+<owl:Class rdf:about="CHGL">
+  <rdfs:subClassOf rdf:resource="MNET"/>
+</owl:Class>
+
+<owl:Class rdf:about="DIG">
+  <rdfs:subClassOf rdf:resource="MNET"/>
+</owl:Class>
+
+<owl:Class rdf:about="CLNC">
+  <rdfs:subClassOf rdf:resource="MNET"/>
+</owl:Class>
+
+<owl:Class rdf:about="EPMT">
+  <rdfs:subClassOf rdf:resource="BRAIN"/>
+</owl:Class>
+
+<owl:Class rdf:about="APE">
+  <rdfs:subClassOf rdf:resource="EPMT"/>
+</owl:Class>
+
+<owl:Class rdf:about="CCE">
+  <rdfs:subClassOf rdf:resource="EPMT"/>
+</owl:Class>
+
+<owl:Class rdf:about="EPM">
+  <rdfs:subClassOf rdf:resource="EPMT"/>
+</owl:Class>
+
+<owl:Class rdf:about="MPE">
+  <rdfs:subClassOf rdf:resource="EPMT"/>
+</owl:Class>
+
+<owl:Class rdf:about="SUBE">
+  <rdfs:subClassOf rdf:resource="EPMT"/>
+</owl:Class>
+
+<owl:Class rdf:about="BLADDER">
+  <rdfs:subClassOf rdf:resource="Disease"/>
+</owl:Class>
+
+<owl:Class rdf:about="URCA">
+  <rdfs:subClassOf rdf:resource="BLADDER"/>
+</owl:Class>
+
+<owl:Class rdf:about="UA">
+  <rdfs:subClassOf rdf:resource="URCA"/>
+</owl:Class>
+
+<owl:Class rdf:about="URMM">
+  <rdfs:subClassOf rdf:resource="BLADDER"/>
+</owl:Class>
+
+<owl:Class rdf:about="SCBC">
+  <rdfs:subClassOf rdf:resource="BLADDER"/>
+</owl:Class>
+
+<owl:Class rdf:about="BLCA">
+  <rdfs:subClassOf rdf:resource="BLADDER"/>
+</owl:Class>
+
+<owl:Class rdf:about="SCB">
+  <rdfs:subClassOf rdf:resource="BLADDER"/>
+</owl:Class>
+
+<owl:Class rdf:about="UCA">
+  <rdfs:subClassOf rdf:resource="BLADDER"/>
+</owl:Class>
+
+<owl:Class rdf:about="UCU">
+  <rdfs:subClassOf rdf:resource="UCA"/>
+</owl:Class>
+
+<owl:Class rdf:about="UAD">
+  <rdfs:subClassOf rdf:resource="UCA"/>
+</owl:Class>
+
+<owl:Class rdf:about="USCC">
+  <rdfs:subClassOf rdf:resource="UCA"/>
+</owl:Class>
+
+<owl:Class rdf:about="BLAD">
+  <rdfs:subClassOf rdf:resource="BLADDER"/>
+</owl:Class>
+
+<owl:Class rdf:about="SRCBC">
+  <rdfs:subClassOf rdf:resource="BLADDER"/>
+</owl:Class>
+
+<owl:Class rdf:about="IMTB">
+  <rdfs:subClassOf rdf:resource="BLADDER"/>
+</owl:Class>
+
+<owl:Class rdf:about="UTUC">
+  <rdfs:subClassOf rdf:resource="BLADDER"/>
+</owl:Class>
+
+<owl:Class rdf:about="UPA">
+  <rdfs:subClassOf rdf:resource="BLADDER"/>
+</owl:Class>
+
+<owl:Class rdf:about="IUP">
+  <rdfs:subClassOf rdf:resource="BLADDER"/>
+</owl:Class>
+
+<owl:Class rdf:about="BLSC">
+  <rdfs:subClassOf rdf:resource="BLADDER"/>
+</owl:Class>
+
+<owl:Class rdf:about="SKIN">
+  <rdfs:subClassOf rdf:resource="Disease"/>
+</owl:Class>
+
+<owl:Class rdf:about="AECA">
+  <rdfs:subClassOf rdf:resource="SKIN"/>
+</owl:Class>
+
+<owl:Class rdf:about="SKAC">
+  <rdfs:subClassOf rdf:resource="SKIN"/>
+</owl:Class>
+
+<owl:Class rdf:about="EMPD">
+  <rdfs:subClassOf rdf:resource="SKIN"/>
+</owl:Class>
+
+<owl:Class rdf:about="PORO">
+  <rdfs:subClassOf rdf:resource="SKIN"/>
+</owl:Class>
+
+<owl:Class rdf:about="POCA">
+  <rdfs:subClassOf rdf:resource="SKIN"/>
+</owl:Class>
+
+<owl:Class rdf:about="SEBA">
+  <rdfs:subClassOf rdf:resource="SKIN"/>
+</owl:Class>
+
+<owl:Class rdf:about="MEL">
+  <rdfs:subClassOf rdf:resource="SKIN"/>
+</owl:Class>
+
+<owl:Class rdf:about="MUP">
+  <rdfs:subClassOf rdf:resource="MEL"/>
+</owl:Class>
+
+<owl:Class rdf:about="SPZM">
+  <rdfs:subClassOf rdf:resource="MEL"/>
+</owl:Class>
+
+<owl:Class rdf:about="SKCN">
+  <rdfs:subClassOf rdf:resource="MEL"/>
+</owl:Class>
+
+<owl:Class rdf:about="DESM">
+  <rdfs:subClassOf rdf:resource="MEL"/>
+</owl:Class>
+
+<owl:Class rdf:about="SKCM">
+  <rdfs:subClassOf rdf:resource="MEL"/>
+</owl:Class>
+
+<owl:Class rdf:about="ACRM">
+  <rdfs:subClassOf rdf:resource="MEL"/>
+</owl:Class>
+
+<owl:Class rdf:about="SKLMM">
+  <rdfs:subClassOf rdf:resource="MEL"/>
+</owl:Class>
+
+<owl:Class rdf:about="PPCT">
+  <rdfs:subClassOf rdf:resource="SKIN"/>
+</owl:Class>
+
+<owl:Class rdf:about="DTE">
+  <rdfs:subClassOf rdf:resource="SKIN"/>
+</owl:Class>
+
+<owl:Class rdf:about="AFX">
+  <rdfs:subClassOf rdf:resource="SKIN"/>
+</owl:Class>
+
+<owl:Class rdf:about="SGAD">
+  <rdfs:subClassOf rdf:resource="SKIN"/>
+</owl:Class>
+
+<owl:Class rdf:about="CSCC">
+  <rdfs:subClassOf rdf:resource="SKIN"/>
+</owl:Class>
+
+<owl:Class rdf:about="MAC">
+  <rdfs:subClassOf rdf:resource="SKIN"/>
+</owl:Class>
+
+<owl:Class rdf:about="AN">
+  <rdfs:subClassOf rdf:resource="SKIN"/>
+</owl:Class>
+
+<owl:Class rdf:about="MCC">
+  <rdfs:subClassOf rdf:resource="SKIN"/>
+</owl:Class>
+
+<owl:Class rdf:about="ADPA">
+  <rdfs:subClassOf rdf:resource="SKIN"/>
+</owl:Class>
+
+<owl:Class rdf:about="EMPSGC">
+  <rdfs:subClassOf rdf:resource="SKIN"/>
+</owl:Class>
+
+<owl:Class rdf:about="BCC">
+  <rdfs:subClassOf rdf:resource="SKIN"/>
+</owl:Class>
+
+<owl:Class rdf:about="DF">
+  <rdfs:subClassOf rdf:resource="SKIN"/>
+</owl:Class>
+
+<owl:Class rdf:about="DFSP">
+  <rdfs:subClassOf rdf:resource="SKIN"/>
+</owl:Class>
+
+<owl:Class rdf:about="SPIR">
+  <rdfs:subClassOf rdf:resource="SKIN"/>
+</owl:Class>
+
+<owl:Class rdf:about="BONE">
+  <rdfs:subClassOf rdf:resource="Disease"/>
+</owl:Class>
+
+<owl:Class rdf:about="CHS">
+  <rdfs:subClassOf rdf:resource="BONE"/>
+</owl:Class>
+
+<owl:Class rdf:about="EMCHS">
+  <rdfs:subClassOf rdf:resource="CHS"/>
+</owl:Class>
+
+<owl:Class rdf:about="MCHS">
+  <rdfs:subClassOf rdf:resource="CHS"/>
+</owl:Class>
+
+<owl:Class rdf:about="MYCHS">
+  <rdfs:subClassOf rdf:resource="CHS"/>
+</owl:Class>
+
+<owl:Class rdf:about="DDCHS">
+  <rdfs:subClassOf rdf:resource="CHS"/>
+</owl:Class>
+
+<owl:Class rdf:about="ES">
+  <rdfs:subClassOf rdf:resource="BONE"/>
+</owl:Class>
+
+<owl:Class rdf:about="GCTB">
+  <rdfs:subClassOf rdf:resource="BONE"/>
+</owl:Class>
+
+<owl:Class rdf:about="ADMA">
+  <rdfs:subClassOf rdf:resource="BONE"/>
+</owl:Class>
+
+<owl:Class rdf:about="OS">
+  <rdfs:subClassOf rdf:resource="BONE"/>
+</owl:Class>
+
+<owl:Class rdf:about="OSOS">
+  <rdfs:subClassOf rdf:resource="OS"/>
+</owl:Class>
+
+<owl:Class rdf:about="PEOS">
+  <rdfs:subClassOf rdf:resource="OS"/>
+</owl:Class>
+
+<owl:Class rdf:about="LGCOS">
+  <rdfs:subClassOf rdf:resource="OS"/>
+</owl:Class>
+
+<owl:Class rdf:about="FIOS">
+  <rdfs:subClassOf rdf:resource="OS"/>
+</owl:Class>
+
+<owl:Class rdf:about="SECOS">
+  <rdfs:subClassOf rdf:resource="OS"/>
+</owl:Class>
+
+<owl:Class rdf:about="CHOS">
+  <rdfs:subClassOf rdf:resource="OS"/>
+</owl:Class>
+
+<owl:Class rdf:about="TEOS">
+  <rdfs:subClassOf rdf:resource="OS"/>
+</owl:Class>
+
+<owl:Class rdf:about="SCOS">
+  <rdfs:subClassOf rdf:resource="OS"/>
+</owl:Class>
+
+<owl:Class rdf:about="PAOS">
+  <rdfs:subClassOf rdf:resource="OS"/>
+</owl:Class>
+
+<owl:Class rdf:about="HGSOS">
+  <rdfs:subClassOf rdf:resource="OS"/>
+</owl:Class>
+
+<owl:Class rdf:about="CHDM">
+  <rdfs:subClassOf rdf:resource="BONE"/>
+</owl:Class>
+
+<owl:Class rdf:about="CCHDM">
+  <rdfs:subClassOf rdf:resource="CHDM"/>
+</owl:Class>
+
+<owl:Class rdf:about="DDCHDM">
+  <rdfs:subClassOf rdf:resource="CHDM"/>
+</owl:Class>
+
+<owl:Class rdf:about="CHBL">
+  <rdfs:subClassOf rdf:resource="BONE"/>
+</owl:Class>
+
+<owl:Class rdf:about="BOWEL">
+  <rdfs:subClassOf rdf:resource="Disease"/>
+</owl:Class>
+
+<owl:Class rdf:about="COADREAD">
+  <rdfs:subClassOf rdf:resource="BOWEL"/>
+</owl:Class>
+
+<owl:Class rdf:about="CAIS">
+  <rdfs:subClassOf rdf:resource="COADREAD"/>
+</owl:Class>
+
+<owl:Class rdf:about="SRCCR">
+  <rdfs:subClassOf rdf:resource="COADREAD"/>
+</owl:Class>
+
+<owl:Class rdf:about="COAD">
+  <rdfs:subClassOf rdf:resource="COADREAD"/>
+</owl:Class>
+
+<owl:Class rdf:about="MACR">
+  <rdfs:subClassOf rdf:resource="COADREAD"/>
+</owl:Class>
+
+<owl:Class rdf:about="READ">
+  <rdfs:subClassOf rdf:resource="COADREAD"/>
+</owl:Class>
+
+<owl:Class rdf:about="ARMM">
+  <rdfs:subClassOf rdf:resource="BOWEL"/>
+</owl:Class>
+
+<owl:Class rdf:about="SIC">
+  <rdfs:subClassOf rdf:resource="BOWEL"/>
+</owl:Class>
+
+<owl:Class rdf:about="APAD">
+  <rdfs:subClassOf rdf:resource="BOWEL"/>
+</owl:Class>
+
+<owl:Class rdf:about="GCCAP">
+  <rdfs:subClassOf rdf:resource="APAD"/>
+</owl:Class>
+
+<owl:Class rdf:about="SRAP">
+  <rdfs:subClassOf rdf:resource="APAD"/>
+</owl:Class>
+
+<owl:Class rdf:about="CTAAP">
+  <rdfs:subClassOf rdf:resource="APAD"/>
+</owl:Class>
+
+<owl:Class rdf:about="MAAP">
+  <rdfs:subClassOf rdf:resource="APAD"/>
+</owl:Class>
+
+<owl:Class rdf:about="AGA">
+  <rdfs:subClassOf rdf:resource="BOWEL"/>
+</owl:Class>
+
+<owl:Class rdf:about="CMC">
+  <rdfs:subClassOf rdf:resource="BOWEL"/>
+</owl:Class>
+
+<owl:Class rdf:about="TAC">
+  <rdfs:subClassOf rdf:resource="BOWEL"/>
+</owl:Class>
+
+<owl:Class rdf:about="SBC">
+  <rdfs:subClassOf rdf:resource="BOWEL"/>
+</owl:Class>
+
+<owl:Class rdf:about="DA">
+  <rdfs:subClassOf rdf:resource="SBC"/>
+</owl:Class>
+
+<owl:Class rdf:about="LAMN">
+  <rdfs:subClassOf rdf:resource="BOWEL"/>
+</owl:Class>
+
+<owl:Class rdf:about="ANSC">
+  <rdfs:subClassOf rdf:resource="BOWEL"/>
+</owl:Class>
+
+<owl:Class rdf:about="GINET">
+  <rdfs:subClassOf rdf:resource="BOWEL"/>
+</owl:Class>
+
+<owl:Class rdf:about="SBWDNET">
+  <rdfs:subClassOf rdf:resource="GINET"/>
+</owl:Class>
+
+<owl:Class rdf:about="HGNEC">
+  <rdfs:subClassOf rdf:resource="GINET"/>
+</owl:Class>
+
+<owl:Class rdf:about="AWDNET">
+  <rdfs:subClassOf rdf:resource="GINET"/>
+</owl:Class>
+
+<owl:Class rdf:about="RWDNET">
+  <rdfs:subClassOf rdf:resource="GINET"/>
+</owl:Class>
+
+<owl:Class rdf:about="PNS">
+  <rdfs:subClassOf rdf:resource="Disease"/>
+</owl:Class>
+
+<owl:Class rdf:about="GN">
+  <rdfs:subClassOf rdf:resource="PNS"/>
+</owl:Class>
+
+<owl:Class rdf:about="NST">
+  <rdfs:subClassOf rdf:resource="PNS"/>
+</owl:Class>
+
+<owl:Class rdf:about="MPNST">
+  <rdfs:subClassOf rdf:resource="NST"/>
+</owl:Class>
+
+<owl:Class rdf:about="SCHW">
+  <rdfs:subClassOf rdf:resource="NST"/>
+</owl:Class>
+
+<owl:Class rdf:about="MSCHW">
+  <rdfs:subClassOf rdf:resource="SCHW"/>
+</owl:Class>
+
+<owl:Class rdf:about="CSCHW">
+  <rdfs:subClassOf rdf:resource="SCHW"/>
+</owl:Class>
+
+<owl:Class rdf:about="NFIB">
+  <rdfs:subClassOf rdf:resource="NST"/>
+</owl:Class>
+
+<owl:Class rdf:about="NBL">
+  <rdfs:subClassOf rdf:resource="PNS"/>
+</owl:Class>
+
+<owl:Class rdf:about="GNBL">
+  <rdfs:subClassOf rdf:resource="PNS"/>
+</owl:Class>
+
+<owl:Class rdf:about="CERVIX">
+  <rdfs:subClassOf rdf:resource="Disease"/>
+</owl:Class>
+
+<owl:Class rdf:about="MCCE">
+  <rdfs:subClassOf rdf:resource="CERVIX"/>
+</owl:Class>
+
+<owl:Class rdf:about="VGCE">
+  <rdfs:subClassOf rdf:resource="CERVIX"/>
+</owl:Class>
+
+<owl:Class rdf:about="CEAD">
+  <rdfs:subClassOf rdf:resource="CERVIX"/>
+</owl:Class>
+
+<owl:Class rdf:about="CECC">
+  <rdfs:subClassOf rdf:resource="CEAD"/>
+</owl:Class>
+
+<owl:Class rdf:about="CEVG">
+  <rdfs:subClassOf rdf:resource="CEAD"/>
+</owl:Class>
+
+<owl:Class rdf:about="CEMN">
+  <rdfs:subClassOf rdf:resource="CEAD"/>
+</owl:Class>
+
+<owl:Class rdf:about="CESE">
+  <rdfs:subClassOf rdf:resource="CEAD"/>
+</owl:Class>
+
+<owl:Class rdf:about="CEMU">
+  <rdfs:subClassOf rdf:resource="CEAD"/>
+</owl:Class>
+
+<owl:Class rdf:about="ICEMU">
+  <rdfs:subClassOf rdf:resource="CEMU"/>
+</owl:Class>
+
+<owl:Class rdf:about="GCEMU">
+  <rdfs:subClassOf rdf:resource="CEMU"/>
+</owl:Class>
+
+<owl:Class rdf:about="SCEMU">
+  <rdfs:subClassOf rdf:resource="CEMU"/>
+</owl:Class>
+
+<owl:Class rdf:about="CEEN">
+  <rdfs:subClassOf rdf:resource="CEAD"/>
+</owl:Class>
+
+<owl:Class rdf:about="ECAD">
+  <rdfs:subClassOf rdf:resource="CEAD"/>
+</owl:Class>
+
+<owl:Class rdf:about="CEAIS">
+  <rdfs:subClassOf rdf:resource="CERVIX"/>
+</owl:Class>
+
+<owl:Class rdf:about="CEGCC">
+  <rdfs:subClassOf rdf:resource="CERVIX"/>
+</owl:Class>
+
+<owl:Class rdf:about="SCCE">
+  <rdfs:subClassOf rdf:resource="CERVIX"/>
+</owl:Class>
+
+<owl:Class rdf:about="CESC">
+  <rdfs:subClassOf rdf:resource="CERVIX"/>
+</owl:Class>
+
+<owl:Class rdf:about="CEAS">
+  <rdfs:subClassOf rdf:resource="CERVIX"/>
+</owl:Class>
+
+<owl:Class rdf:about="CERMS">
+  <rdfs:subClassOf rdf:resource="CERVIX"/>
+</owl:Class>
+
+<owl:Class rdf:about="CENE">
+  <rdfs:subClassOf rdf:resource="CERVIX"/>
+</owl:Class>
+
+<owl:Class rdf:about="CACC">
+  <rdfs:subClassOf rdf:resource="CERVIX"/>
+</owl:Class>
+
+<owl:Class rdf:about="CELI">
+  <rdfs:subClassOf rdf:resource="CERVIX"/>
+</owl:Class>
+
+<owl:Class rdf:about="CABC">
+  <rdfs:subClassOf rdf:resource="CERVIX"/>
+</owl:Class>
+
+<owl:Class rdf:about="THYMUS">
+  <rdfs:subClassOf rdf:resource="Disease"/>
+</owl:Class>
+
+<owl:Class rdf:about="TNET">
+  <rdfs:subClassOf rdf:resource="THYMUS"/>
+</owl:Class>
+
+<owl:Class rdf:about="TET">
+  <rdfs:subClassOf rdf:resource="THYMUS"/>
+</owl:Class>
+
+<owl:Class rdf:about="THYM">
+  <rdfs:subClassOf rdf:resource="TET"/>
+</owl:Class>
+
+<owl:Class rdf:about="THYC">
+  <rdfs:subClassOf rdf:resource="TET"/>
+</owl:Class>
+
+<owl:Class rdf:about="AMPULLA_OF_VATER">
+  <rdfs:subClassOf rdf:resource="Disease"/>
+</owl:Class>
+
+<owl:Class rdf:about="AMPCA">
+  <rdfs:subClassOf rdf:resource="AMPULLA_OF_VATER"/>
+</owl:Class>
+
+<owl:Class rdf:about="PAMPCA">
+  <rdfs:subClassOf rdf:resource="AMPCA"/>
+</owl:Class>
+
+<owl:Class rdf:about="MAMPCA">
+  <rdfs:subClassOf rdf:resource="AMPCA"/>
+</owl:Class>
+
+<owl:Class rdf:about="IAMPCA">
+  <rdfs:subClassOf rdf:resource="AMPCA"/>
+</owl:Class>
+
+<owl:Class rdf:about="EYE">
+  <rdfs:subClassOf rdf:resource="Disease"/>
+</owl:Class>
+
+<owl:Class rdf:about="OM">
+  <rdfs:subClassOf rdf:resource="EYE"/>
+</owl:Class>
+
+<owl:Class rdf:about="CM">
+  <rdfs:subClassOf rdf:resource="OM"/>
+</owl:Class>
+
+<owl:Class rdf:about="UM">
+  <rdfs:subClassOf rdf:resource="OM"/>
+</owl:Class>
+
+<owl:Class rdf:about="RBL">
+  <rdfs:subClassOf rdf:resource="EYE"/>
+</owl:Class>
+
+<owl:Class rdf:about="LGT">
+  <rdfs:subClassOf rdf:resource="EYE"/>
+</owl:Class>
+
+<owl:Class rdf:about="ACLG">
+  <rdfs:subClassOf rdf:resource="LGT"/>
+</owl:Class>
+
+<owl:Class rdf:about="SCLG">
+  <rdfs:subClassOf rdf:resource="LGT"/>
+</owl:Class>
+
+<owl:Class rdf:about="HEAD_NECK">
+  <rdfs:subClassOf rdf:resource="Disease"/>
+</owl:Class>
+
+<owl:Class rdf:about="SBL">
+  <rdfs:subClassOf rdf:resource="HEAD_NECK"/>
+</owl:Class>
+
+<owl:Class rdf:about="SACA">
+  <rdfs:subClassOf rdf:resource="HEAD_NECK"/>
+</owl:Class>
+
+<owl:Class rdf:about="BCAC">
+  <rdfs:subClassOf rdf:resource="SACA"/>
+</owl:Class>
+
+<owl:Class rdf:about="ACCC">
+  <rdfs:subClassOf rdf:resource="SACA"/>
+</owl:Class>
+
+<owl:Class rdf:about="SGO">
+  <rdfs:subClassOf rdf:resource="SACA"/>
+</owl:Class>
+
+<owl:Class rdf:about="SAAD">
+  <rdfs:subClassOf rdf:resource="SACA"/>
+</owl:Class>
+
+<owl:Class rdf:about="PAC">
+  <rdfs:subClassOf rdf:resource="SACA"/>
+</owl:Class>
+
+<owl:Class rdf:about="ACYC">
+  <rdfs:subClassOf rdf:resource="SACA"/>
+</owl:Class>
+
+<owl:Class rdf:about="MYEC">
+  <rdfs:subClassOf rdf:resource="SACA"/>
+</owl:Class>
+
+<owl:Class rdf:about="MUCC">
+  <rdfs:subClassOf rdf:resource="SACA"/>
+</owl:Class>
+
+<owl:Class rdf:about="CAEXPA">
+  <rdfs:subClassOf rdf:resource="SACA"/>
+</owl:Class>
+
+<owl:Class rdf:about="PADA">
+  <rdfs:subClassOf rdf:resource="SACA"/>
+</owl:Class>
+
+<owl:Class rdf:about="SDCA">
+  <rdfs:subClassOf rdf:resource="SACA"/>
+</owl:Class>
+
+<owl:Class rdf:about="HNMASC">
+  <rdfs:subClassOf rdf:resource="SACA"/>
+</owl:Class>
+
+<owl:Class rdf:about="OSACA">
+  <rdfs:subClassOf rdf:resource="SACA"/>
+</owl:Class>
+
+<owl:Class rdf:about="OHNCA">
+  <rdfs:subClassOf rdf:resource="HEAD_NECK"/>
+</owl:Class>
+
+<owl:Class rdf:about="SNUC">
+  <rdfs:subClassOf rdf:resource="OHNCA"/>
+</owl:Class>
+
+<owl:Class rdf:about="ASCT">
+  <rdfs:subClassOf rdf:resource="OHNCA"/>
+</owl:Class>
+
+<owl:Class rdf:about="HNNE">
+  <rdfs:subClassOf rdf:resource="OHNCA"/>
+</owl:Class>
+
+<owl:Class rdf:about="EMYOCA">
+  <rdfs:subClassOf rdf:resource="OHNCA"/>
+</owl:Class>
+
+<owl:Class rdf:about="SNA">
+  <rdfs:subClassOf rdf:resource="OHNCA"/>
+</owl:Class>
+
+<owl:Class rdf:about="NMCHN">
+  <rdfs:subClassOf rdf:resource="OHNCA"/>
+</owl:Class>
+
+<owl:Class rdf:about="ODGC">
+  <rdfs:subClassOf rdf:resource="OHNCA"/>
+</owl:Class>
+
+<owl:Class rdf:about="CCOC">
+  <rdfs:subClassOf rdf:resource="ODGC"/>
+</owl:Class>
+
+<owl:Class rdf:about="HNSC">
+  <rdfs:subClassOf rdf:resource="HEAD_NECK"/>
+</owl:Class>
+
+<owl:Class rdf:about="HNSCUP">
+  <rdfs:subClassOf rdf:resource="HNSC"/>
+</owl:Class>
+
+<owl:Class rdf:about="LXSC">
+  <rdfs:subClassOf rdf:resource="HNSC"/>
+</owl:Class>
+
+<owl:Class rdf:about="SNSC">
+  <rdfs:subClassOf rdf:resource="HNSC"/>
+</owl:Class>
+
+<owl:Class rdf:about="HPHSC">
+  <rdfs:subClassOf rdf:resource="HNSC"/>
+</owl:Class>
+
+<owl:Class rdf:about="OPHSC">
+  <rdfs:subClassOf rdf:resource="HNSC"/>
+</owl:Class>
+
+<owl:Class rdf:about="OCSC">
+  <rdfs:subClassOf rdf:resource="HNSC"/>
+</owl:Class>
+
+<owl:Class rdf:about="PTH">
+  <rdfs:subClassOf rdf:resource="HEAD_NECK"/>
+</owl:Class>
+
+<owl:Class rdf:about="PTHC">
+  <rdfs:subClassOf rdf:resource="PTH"/>
+</owl:Class>
+
+<owl:Class rdf:about="HNMUCM">
+  <rdfs:subClassOf rdf:resource="HEAD_NECK"/>
+</owl:Class>
+
+<owl:Class rdf:about="NPC">
+  <rdfs:subClassOf rdf:resource="HEAD_NECK"/>
+</owl:Class>
+
+<owl:Class rdf:about="BREAST">
+  <rdfs:subClassOf rdf:resource="Disease"/>
+</owl:Class>
+
+<owl:Class rdf:about="MBC">
+  <rdfs:subClassOf rdf:resource="BREAST"/>
+</owl:Class>
+
+<owl:Class rdf:about="EMBC">
+  <rdfs:subClassOf rdf:resource="MBC"/>
+</owl:Class>
+
+<owl:Class rdf:about="MASC">
+  <rdfs:subClassOf rdf:resource="EMBC"/>
+</owl:Class>
+
+<owl:Class rdf:about="MSCC">
+  <rdfs:subClassOf rdf:resource="EMBC"/>
+</owl:Class>
+
+<owl:Class rdf:about="MASCC">
+  <rdfs:subClassOf rdf:resource="EMBC"/>
+</owl:Class>
+
+<owl:Class rdf:about="MMBC">
+  <rdfs:subClassOf rdf:resource="MBC"/>
+</owl:Class>
+
+<owl:Class rdf:about="CCHM">
+  <rdfs:subClassOf rdf:resource="MMBC"/>
+</owl:Class>
+
+<owl:Class rdf:about="MCS">
+  <rdfs:subClassOf rdf:resource="MMBC"/>
+</owl:Class>
+
+<owl:Class rdf:about="COM">
+  <rdfs:subClassOf rdf:resource="MMBC"/>
+</owl:Class>
+
+<owl:Class rdf:about="IBC">
+  <rdfs:subClassOf rdf:resource="BREAST"/>
+</owl:Class>
+
+<owl:Class rdf:about="BFN">
+  <rdfs:subClassOf rdf:resource="BREAST"/>
+</owl:Class>
+
+<owl:Class rdf:about="FA">
+  <rdfs:subClassOf rdf:resource="BFN"/>
+</owl:Class>
+
+<owl:Class rdf:about="PT">
+  <rdfs:subClassOf rdf:resource="BFN"/>
+</owl:Class>
+
+<owl:Class rdf:about="BPT">
+  <rdfs:subClassOf rdf:resource="PT"/>
+</owl:Class>
+
+<owl:Class rdf:about="BLPT">
+  <rdfs:subClassOf rdf:resource="PT"/>
+</owl:Class>
+
+<owl:Class rdf:about="MPT">
+  <rdfs:subClassOf rdf:resource="PT"/>
+</owl:Class>
+
+<owl:Class rdf:about="JSCB">
+  <rdfs:subClassOf rdf:resource="BREAST"/>
+</owl:Class>
+
+<owl:Class rdf:about="DCIS">
+  <rdfs:subClassOf rdf:resource="BREAST"/>
+</owl:Class>
+
+<owl:Class rdf:about="PD">
+  <rdfs:subClassOf rdf:resource="DCIS"/>
+</owl:Class>
+
+<owl:Class rdf:about="LCIS">
+  <rdfs:subClassOf rdf:resource="BREAST"/>
+</owl:Class>
+
+<owl:Class rdf:about="BRCA">
+  <rdfs:subClassOf rdf:resource="BREAST"/>
+</owl:Class>
+
+<owl:Class rdf:about="ACBC">
+  <rdfs:subClassOf rdf:resource="BRCA"/>
+</owl:Class>
+
+<owl:Class rdf:about="BRCNOS">
+  <rdfs:subClassOf rdf:resource="BRCA"/>
+</owl:Class>
+
+<owl:Class rdf:about="MDLC">
+  <rdfs:subClassOf rdf:resource="BRCA"/>
+</owl:Class>
+
+<owl:Class rdf:about="IDC">
+  <rdfs:subClassOf rdf:resource="BRCA"/>
+</owl:Class>
+
+<owl:Class rdf:about="IMMC">
+  <rdfs:subClassOf rdf:resource="BRCA"/>
+</owl:Class>
+
+<owl:Class rdf:about="SPC">
+  <rdfs:subClassOf rdf:resource="BRCA"/>
+</owl:Class>
+
+<owl:Class rdf:about="CSNOS">
+  <rdfs:subClassOf rdf:resource="BRCA"/>
+</owl:Class>
+
+<owl:Class rdf:about="BRSRCC">
+  <rdfs:subClassOf rdf:resource="BRCA"/>
+</owl:Class>
+
+<owl:Class rdf:about="BRCANOS">
+  <rdfs:subClassOf rdf:resource="BRCA"/>
+</owl:Class>
+
+<owl:Class rdf:about="ILC">
+  <rdfs:subClassOf rdf:resource="BRCA"/>
+</owl:Class>
+
+<owl:Class rdf:about="BRAME">
+  <rdfs:subClassOf rdf:resource="BREAST"/>
+</owl:Class>
+
+<owl:Class rdf:about="PBS">
+  <rdfs:subClassOf rdf:resource="BREAST"/>
+</owl:Class>
+
+<owl:Class rdf:about="BA">
+  <rdfs:subClassOf rdf:resource="PBS"/>
+</owl:Class>
+
+<owl:Class rdf:about="BNNOS">
+  <rdfs:subClassOf rdf:resource="BREAST"/>
+</owl:Class>
+
+<owl:Class rdf:about="BILIARY_TRACT">
+  <rdfs:subClassOf rdf:resource="Disease"/>
+</owl:Class>
+
+<owl:Class rdf:about="ICPN">
+  <rdfs:subClassOf rdf:resource="BILIARY_TRACT"/>
+</owl:Class>
+
+<owl:Class rdf:about="GBC">
+  <rdfs:subClassOf rdf:resource="ICPN"/>
+</owl:Class>
+
+<owl:Class rdf:about="GBAD">
+  <rdfs:subClassOf rdf:resource="GBC"/>
+</owl:Class>
+
+<owl:Class rdf:about="SCGBC">
+  <rdfs:subClassOf rdf:resource="GBC"/>
+</owl:Class>
+
+<owl:Class rdf:about="GBASC">
+  <rdfs:subClassOf rdf:resource="GBC"/>
+</owl:Class>
+
+<owl:Class rdf:about="IPN">
+  <rdfs:subClassOf rdf:resource="BILIARY_TRACT"/>
+</owl:Class>
+
+<owl:Class rdf:about="CHOL">
+  <rdfs:subClassOf rdf:resource="IPN"/>
+</owl:Class>
+
+<owl:Class rdf:about="IHCH">
+  <rdfs:subClassOf rdf:resource="CHOL"/>
+</owl:Class>
+
+<owl:Class rdf:about="PHCH">
+  <rdfs:subClassOf rdf:resource="CHOL"/>
+</owl:Class>
+
+<owl:Class rdf:about="EHCH">
+  <rdfs:subClassOf rdf:resource="CHOL"/>
+</owl:Class>
+
+<owl:Class rdf:about="PANCREAS">
+  <rdfs:subClassOf rdf:resource="Disease"/>
+</owl:Class>
+
+<owl:Class rdf:about="PANEC">
+  <rdfs:subClassOf rdf:resource="PANCREAS"/>
+</owl:Class>
+
+<owl:Class rdf:about="PANET">
+  <rdfs:subClassOf rdf:resource="PANCREAS"/>
+</owl:Class>
+
+<owl:Class rdf:about="PACT">
+  <rdfs:subClassOf rdf:resource="PANCREAS"/>
+</owl:Class>
+
+<owl:Class rdf:about="IOPN">
+  <rdfs:subClassOf rdf:resource="PACT"/>
+</owl:Class>
+
+<owl:Class rdf:about="ITPN">
+  <rdfs:subClassOf rdf:resource="PACT"/>
+</owl:Class>
+
+<owl:Class rdf:about="IPMN">
+  <rdfs:subClassOf rdf:resource="PACT"/>
+</owl:Class>
+
+<owl:Class rdf:about="MCN">
+  <rdfs:subClassOf rdf:resource="PACT"/>
+</owl:Class>
+
+<owl:Class rdf:about="PSC">
+  <rdfs:subClassOf rdf:resource="PACT"/>
+</owl:Class>
+
+<owl:Class rdf:about="PAAC">
+  <rdfs:subClassOf rdf:resource="PANCREAS"/>
+</owl:Class>
+
+<owl:Class rdf:about="PAASC">
+  <rdfs:subClassOf rdf:resource="PANCREAS"/>
+</owl:Class>
+
+<owl:Class rdf:about="UCP">
+  <rdfs:subClassOf rdf:resource="PANCREAS"/>
+</owl:Class>
+
+<owl:Class rdf:about="OSGCT">
+  <rdfs:subClassOf rdf:resource="UCP"/>
+</owl:Class>
+
+<owl:Class rdf:about="PB">
+  <rdfs:subClassOf rdf:resource="PANCREAS"/>
+</owl:Class>
+
+<owl:Class rdf:about="PAAD">
+  <rdfs:subClassOf rdf:resource="PANCREAS"/>
+</owl:Class>
+
+<owl:Class rdf:about="SPN">
+  <rdfs:subClassOf rdf:resource="PANCREAS"/>
+</owl:Class>
+
+<owl:Class rdf:about="PLEURA">
+  <rdfs:subClassOf rdf:resource="Disease"/>
+</owl:Class>
+
+<owl:Class rdf:about="PLMESO">
+  <rdfs:subClassOf rdf:resource="PLEURA"/>
+</owl:Class>
+
+<owl:Class rdf:about="PLSMESO">
+  <rdfs:subClassOf rdf:resource="PLMESO"/>
+</owl:Class>
+
+<owl:Class rdf:about="PLEMESO">
+  <rdfs:subClassOf rdf:resource="PLMESO"/>
+</owl:Class>
+
+<owl:Class rdf:about="PLBMESO">
+  <rdfs:subClassOf rdf:resource="PLMESO"/>
+</owl:Class>
+
+<owl:Class rdf:about="THYROID">
+  <rdfs:subClassOf rdf:resource="Disease"/>
+</owl:Class>
+
+<owl:Class rdf:about="THPD">
+  <rdfs:subClassOf rdf:resource="THYROID"/>
+</owl:Class>
+
+<owl:Class rdf:about="HTAT">
+  <rdfs:subClassOf rdf:resource="THYROID"/>
+</owl:Class>
+
+<owl:Class rdf:about="THME">
+  <rdfs:subClassOf rdf:resource="THYROID"/>
+</owl:Class>
+
+<owl:Class rdf:about="THHC">
+  <rdfs:subClassOf rdf:resource="THYROID"/>
+</owl:Class>
+
+<owl:Class rdf:about="WDTC">
+  <rdfs:subClassOf rdf:resource="THYROID"/>
+</owl:Class>
+
+<owl:Class rdf:about="THFO">
+  <rdfs:subClassOf rdf:resource="WDTC"/>
+</owl:Class>
+
+<owl:Class rdf:about="THPA">
+  <rdfs:subClassOf rdf:resource="WDTC"/>
+</owl:Class>
+
+<owl:Class rdf:about="THAP">
+  <rdfs:subClassOf rdf:resource="THYROID"/>
+</owl:Class>
+
+<owl:Class rdf:about="OAT">
+  <rdfs:subClassOf rdf:resource="THYROID"/>
+</owl:Class>
+
+<owl:Class rdf:about="SOFT_TISSUE">
+  <rdfs:subClassOf rdf:resource="Disease"/>
+</owl:Class>
+
+<owl:Class rdf:about="RMS">
+  <rdfs:subClassOf rdf:resource="SOFT_TISSUE"/>
+</owl:Class>
+
+<owl:Class rdf:about="PLRMS">
+  <rdfs:subClassOf rdf:resource="RMS"/>
+</owl:Class>
+
+<owl:Class rdf:about="SCSRMS">
+  <rdfs:subClassOf rdf:resource="RMS"/>
+</owl:Class>
+
+<owl:Class rdf:about="ERMS">
+  <rdfs:subClassOf rdf:resource="RMS"/>
+</owl:Class>
+
+<owl:Class rdf:about="SCRMS">
+  <rdfs:subClassOf rdf:resource="RMS"/>
+</owl:Class>
+
+<owl:Class rdf:about="ARMS">
+  <rdfs:subClassOf rdf:resource="RMS"/>
+</owl:Class>
+
+<owl:Class rdf:about="DCS">
+  <rdfs:subClassOf rdf:resource="SOFT_TISSUE"/>
+</owl:Class>
+
+<owl:Class rdf:about="HDCS">
+  <rdfs:subClassOf rdf:resource="DCS"/>
+</owl:Class>
+
+<owl:Class rdf:about="EPIS">
+  <rdfs:subClassOf rdf:resource="SOFT_TISSUE"/>
+</owl:Class>
+
+<owl:Class rdf:about="PTES">
+  <rdfs:subClassOf rdf:resource="EPIS"/>
+</owl:Class>
+
+<owl:Class rdf:about="RCSNOS">
+  <rdfs:subClassOf rdf:resource="SOFT_TISSUE"/>
+</owl:Class>
+
+<owl:Class rdf:about="FIBS">
+  <rdfs:subClassOf rdf:resource="SOFT_TISSUE"/>
+</owl:Class>
+
+<owl:Class rdf:about="SEF">
+  <rdfs:subClassOf rdf:resource="FIBS"/>
+</owl:Class>
+
+<owl:Class rdf:about="DES">
+  <rdfs:subClassOf rdf:resource="SOFT_TISSUE"/>
+</owl:Class>
+
+<owl:Class rdf:about="LMS">
+  <rdfs:subClassOf rdf:resource="SOFT_TISSUE"/>
+</owl:Class>
+
+<owl:Class rdf:about="CCS">
+  <rdfs:subClassOf rdf:resource="SOFT_TISSUE"/>
+</owl:Class>
+
+<owl:Class rdf:about="DSRCT">
+  <rdfs:subClassOf rdf:resource="SOFT_TISSUE"/>
+</owl:Class>
+
+<owl:Class rdf:about="IMT">
+  <rdfs:subClassOf rdf:resource="SOFT_TISSUE"/>
+</owl:Class>
+
+<owl:Class rdf:about="HEMA">
+  <rdfs:subClassOf rdf:resource="SOFT_TISSUE"/>
+</owl:Class>
+
+<owl:Class rdf:about="ESST">
+  <rdfs:subClassOf rdf:resource="SOFT_TISSUE"/>
+</owl:Class>
+
+<owl:Class rdf:about="IMS">
+  <rdfs:subClassOf rdf:resource="SOFT_TISSUE"/>
+</owl:Class>
+
+<owl:Class rdf:about="GS">
+  <rdfs:subClassOf rdf:resource="SOFT_TISSUE"/>
+</owl:Class>
+
+<owl:Class rdf:about="ASPS">
+  <rdfs:subClassOf rdf:resource="SOFT_TISSUE"/>
+</owl:Class>
+
+<owl:Class rdf:about="EHAE">
+  <rdfs:subClassOf rdf:resource="SOFT_TISSUE"/>
+</owl:Class>
+
+<owl:Class rdf:about="GIST">
+  <rdfs:subClassOf rdf:resource="SOFT_TISSUE"/>
+</owl:Class>
+
+<owl:Class rdf:about="SARCNOS">
+  <rdfs:subClassOf rdf:resource="SOFT_TISSUE"/>
+</owl:Class>
+
+<owl:Class rdf:about="SFT">
+  <rdfs:subClassOf rdf:resource="SOFT_TISSUE"/>
+</owl:Class>
+
+<owl:Class rdf:about="AA">
+  <rdfs:subClassOf rdf:resource="SOFT_TISSUE"/>
+</owl:Class>
+
+<owl:Class rdf:about="PMHE">
+  <rdfs:subClassOf rdf:resource="SOFT_TISSUE"/>
+</owl:Class>
+
+<owl:Class rdf:about="MGST">
+  <rdfs:subClassOf rdf:resource="SOFT_TISSUE"/>
+</owl:Class>
+
+<owl:Class rdf:about="LIPO">
+  <rdfs:subClassOf rdf:resource="SOFT_TISSUE"/>
+</owl:Class>
+
+<owl:Class rdf:about="PLLS">
+  <rdfs:subClassOf rdf:resource="LIPO"/>
+</owl:Class>
+
+<owl:Class rdf:about="WDLS">
+  <rdfs:subClassOf rdf:resource="LIPO"/>
+</owl:Class>
+
+<owl:Class rdf:about="MRLS">
+  <rdfs:subClassOf rdf:resource="LIPO"/>
+</owl:Class>
+
+<owl:Class rdf:about="DDLS">
+  <rdfs:subClassOf rdf:resource="LIPO"/>
+</owl:Class>
+
+<owl:Class rdf:about="MFS">
+  <rdfs:subClassOf rdf:resource="SOFT_TISSUE"/>
+</owl:Class>
+
+<owl:Class rdf:about="PECOMA">
+  <rdfs:subClassOf rdf:resource="SOFT_TISSUE"/>
+</owl:Class>
+
+<owl:Class rdf:about="MF">
+  <rdfs:subClassOf rdf:resource="SOFT_TISSUE"/>
+</owl:Class>
+
+<owl:Class rdf:about="IFS">
+  <rdfs:subClassOf rdf:resource="SOFT_TISSUE"/>
+</owl:Class>
+
+<owl:Class rdf:about="PGNG">
+  <rdfs:subClassOf rdf:resource="SOFT_TISSUE"/>
+</owl:Class>
+
+<owl:Class rdf:about="MFH">
+  <rdfs:subClassOf rdf:resource="SOFT_TISSUE"/>
+</owl:Class>
+
+<owl:Class rdf:about="STMYEC">
+  <rdfs:subClassOf rdf:resource="SOFT_TISSUE"/>
+</owl:Class>
+
+<owl:Class rdf:about="SYNS">
+  <rdfs:subClassOf rdf:resource="SOFT_TISSUE"/>
+</owl:Class>
+
+<owl:Class rdf:about="ALT">
+  <rdfs:subClassOf rdf:resource="SOFT_TISSUE"/>
+</owl:Class>
+
+<owl:Class rdf:about="ANGS">
+  <rdfs:subClassOf rdf:resource="SOFT_TISSUE"/>
+</owl:Class>
+
+<owl:Class rdf:about="MYXO">
+  <rdfs:subClassOf rdf:resource="SOFT_TISSUE"/>
+</owl:Class>
+
+<owl:Class rdf:about="OFMT">
+  <rdfs:subClassOf rdf:resource="MYXO"/>
+</owl:Class>
+
+<owl:Class rdf:about="INTS">
+  <rdfs:subClassOf rdf:resource="SOFT_TISSUE"/>
+</owl:Class>
+
+<owl:Class rdf:about="RAS">
+  <rdfs:subClassOf rdf:resource="SOFT_TISSUE"/>
+</owl:Class>
+
+<owl:Class rdf:about="AFH">
+  <rdfs:subClassOf rdf:resource="SOFT_TISSUE"/>
+</owl:Class>
+
+<owl:Class rdf:about="TGCT">
+  <rdfs:subClassOf rdf:resource="SOFT_TISSUE"/>
+</owl:Class>
+
+<owl:Class rdf:about="LGFMS">
+  <rdfs:subClassOf rdf:resource="SOFT_TISSUE"/>
+</owl:Class>
+
+<owl:Class rdf:about="MPC">
+  <rdfs:subClassOf rdf:resource="SOFT_TISSUE"/>
+</owl:Class>
+
+<owl:Class rdf:about="LM">
+  <rdfs:subClassOf rdf:resource="SOFT_TISSUE"/>
+</owl:Class>
+
+<owl:Class rdf:about="LYMPH">
+  <rdfs:subClassOf rdf:resource="Disease"/>
+</owl:Class>
+
+<owl:Class rdf:about="LBGN">
+  <rdfs:subClassOf rdf:resource="LYMPH"/>
+</owl:Class>
+
+<owl:Class rdf:about="LATL">
+  <rdfs:subClassOf rdf:resource="LYMPH"/>
+</owl:Class>
+
+<owl:Class rdf:about="LNM">
+  <rdfs:subClassOf rdf:resource="LYMPH"/>
+</owl:Class>
+
+<owl:Class rdf:about="TLL">
+  <rdfs:subClassOf rdf:resource="LNM"/>
+</owl:Class>
+
+<owl:Class rdf:about="ETPLL">
+  <rdfs:subClassOf rdf:resource="TLL"/>
+</owl:Class>
+
+<owl:Class rdf:about="NKCLL">
+  <rdfs:subClassOf rdf:resource="TLL"/>
+</owl:Class>
+
+<owl:Class rdf:about="HL">
+  <rdfs:subClassOf rdf:resource="LNM"/>
+</owl:Class>
+
+<owl:Class rdf:about="CHL">
+  <rdfs:subClassOf rdf:resource="HL"/>
+</owl:Class>
+
+<owl:Class rdf:about="MCCHL">
+  <rdfs:subClassOf rdf:resource="CHL"/>
+</owl:Class>
+
+<owl:Class rdf:about="LRCHL">
+  <rdfs:subClassOf rdf:resource="CHL"/>
+</owl:Class>
+
+<owl:Class rdf:about="NSCHL">
+  <rdfs:subClassOf rdf:resource="CHL"/>
+</owl:Class>
+
+<owl:Class rdf:about="LDCHL">
+  <rdfs:subClassOf rdf:resource="CHL"/>
+</owl:Class>
+
+<owl:Class rdf:about="NLPHL">
+  <rdfs:subClassOf rdf:resource="HL"/>
+</owl:Class>
+
+<owl:Class rdf:about="NHL">
+  <rdfs:subClassOf rdf:resource="LNM"/>
+</owl:Class>
+
+<owl:Class rdf:about="MTNN">
+  <rdfs:subClassOf rdf:resource="NHL"/>
+</owl:Class>
+
+<owl:Class rdf:about="AITL">
+  <rdfs:subClassOf rdf:resource="MTNN"/>
+</owl:Class>
+
+<owl:Class rdf:about="TLGL">
+  <rdfs:subClassOf rdf:resource="MTNN"/>
+</owl:Class>
+
+<owl:Class rdf:about="SPTCL">
+  <rdfs:subClassOf rdf:resource="MTNN"/>
+</owl:Class>
+
+<owl:Class rdf:about="MEITL">
+  <rdfs:subClassOf rdf:resource="MTNN"/>
+</owl:Class>
+
+<owl:Class rdf:about="EATL">
+  <rdfs:subClassOf rdf:resource="MTNN"/>
+</owl:Class>
+
+<owl:Class rdf:about="CLPDNK">
+  <rdfs:subClassOf rdf:resource="MTNN"/>
+</owl:Class>
+
+<owl:Class rdf:about="NPTLTFH">
+  <rdfs:subClassOf rdf:resource="MTNN"/>
+</owl:Class>
+
+<owl:Class rdf:about="ATLL">
+  <rdfs:subClassOf rdf:resource="MTNN"/>
+</owl:Class>
+
+<owl:Class rdf:about="HVLL">
+  <rdfs:subClassOf rdf:resource="MTNN"/>
+</owl:Class>
+
+<owl:Class rdf:about="MYCF">
+  <rdfs:subClassOf rdf:resource="MTNN"/>
+</owl:Class>
+
+<owl:Class rdf:about="PCLPD">
+  <rdfs:subClassOf rdf:resource="MTNN"/>
+</owl:Class>
+
+<owl:Class rdf:about="LYP">
+  <rdfs:subClassOf rdf:resource="PCLPD"/>
+</owl:Class>
+
+<owl:Class rdf:about="PCALCL">
+  <rdfs:subClassOf rdf:resource="PCLPD"/>
+</owl:Class>
+
+<owl:Class rdf:about="ENKL">
+  <rdfs:subClassOf rdf:resource="MTNN"/>
+</owl:Class>
+
+<owl:Class rdf:about="PCSMTPLD">
+  <rdfs:subClassOf rdf:resource="MTNN"/>
+</owl:Class>
+
+<owl:Class rdf:about="PCGDTCL">
+  <rdfs:subClassOf rdf:resource="MTNN"/>
+</owl:Class>
+
+<owl:Class rdf:about="SS">
+  <rdfs:subClassOf rdf:resource="MTNN"/>
+</owl:Class>
+
+<owl:Class rdf:about="PCATCL">
+  <rdfs:subClassOf rdf:resource="MTNN"/>
+</owl:Class>
+
+<owl:Class rdf:about="TPLL">
+  <rdfs:subClassOf rdf:resource="MTNN"/>
+</owl:Class>
+
+<owl:Class rdf:about="FTCL">
+  <rdfs:subClassOf rdf:resource="MTNN"/>
+</owl:Class>
+
+<owl:Class rdf:about="ANKL">
+  <rdfs:subClassOf rdf:resource="MTNN"/>
+</owl:Class>
+
+<owl:Class rdf:about="HSTCL">
+  <rdfs:subClassOf rdf:resource="MTNN"/>
+</owl:Class>
+
+<owl:Class rdf:about="SEBVTLC">
+  <rdfs:subClassOf rdf:resource="MTNN"/>
+</owl:Class>
+
+<owl:Class rdf:about="ALCL">
+  <rdfs:subClassOf rdf:resource="MTNN"/>
+</owl:Class>
+
+<owl:Class rdf:about="ALCLALKN">
+  <rdfs:subClassOf rdf:resource="ALCL"/>
+</owl:Class>
+
+<owl:Class rdf:about="ALCLALKP">
+  <rdfs:subClassOf rdf:resource="ALCL"/>
+</owl:Class>
+
+<owl:Class rdf:about="BIALCL">
+  <rdfs:subClassOf rdf:resource="ALCL"/>
+</owl:Class>
+
+<owl:Class rdf:about="PTCL">
+  <rdfs:subClassOf rdf:resource="MTNN"/>
+</owl:Class>
+
+<owl:Class rdf:about="PCAECTCL">
+  <rdfs:subClassOf rdf:resource="MTNN"/>
+</owl:Class>
+
+<owl:Class rdf:about="ITLPDGI">
+  <rdfs:subClassOf rdf:resource="MTNN"/>
+</owl:Class>
+
+<owl:Class rdf:about="MBN">
+  <rdfs:subClassOf rdf:resource="NHL"/>
+</owl:Class>
+
+<owl:Class rdf:about="SBLU">
+  <rdfs:subClassOf rdf:resource="MBN"/>
+</owl:Class>
+
+<owl:Class rdf:about="SDRPL">
+  <rdfs:subClassOf rdf:resource="SBLU"/>
+</owl:Class>
+
+<owl:Class rdf:about="HCL-V">
+  <rdfs:subClassOf rdf:resource="SBLU"/>
+</owl:Class>
+
+<owl:Class rdf:about="MZL">
+  <rdfs:subClassOf rdf:resource="MBN"/>
+</owl:Class>
+
+<owl:Class rdf:about="SMZL">
+  <rdfs:subClassOf rdf:resource="MZL"/>
+</owl:Class>
+
+<owl:Class rdf:about="NMZL">
+  <rdfs:subClassOf rdf:resource="MZL"/>
+</owl:Class>
+
+<owl:Class rdf:about="EMALT">
+  <rdfs:subClassOf rdf:resource="MZL"/>
+</owl:Class>
+
+<owl:Class rdf:about="PCM">
+  <rdfs:subClassOf rdf:resource="MBN"/>
+</owl:Class>
+
+<owl:Class rdf:about="MIDD">
+  <rdfs:subClassOf rdf:resource="MBN"/>
+</owl:Class>
+
+<owl:Class rdf:about="MIDDA">
+  <rdfs:subClassOf rdf:resource="MIDD"/>
+</owl:Class>
+
+<owl:Class rdf:about="MIDDO">
+  <rdfs:subClassOf rdf:resource="MIDD"/>
+</owl:Class>
+
+<owl:Class rdf:about="MCL">
+  <rdfs:subClassOf rdf:resource="MBN"/>
+</owl:Class>
+
+<owl:Class rdf:about="ISMCL">
+  <rdfs:subClassOf rdf:resource="MCL"/>
+</owl:Class>
+
+<owl:Class rdf:about="ALKLBCL">
+  <rdfs:subClassOf rdf:resource="MBN"/>
+</owl:Class>
+
+<owl:Class rdf:about="PEL">
+  <rdfs:subClassOf rdf:resource="MBN"/>
+</owl:Class>
+
+<owl:Class rdf:about="IVBCL">
+  <rdfs:subClassOf rdf:resource="MBN"/>
+</owl:Class>
+
+<owl:Class rdf:about="DLBCLNOS">
+  <rdfs:subClassOf rdf:resource="MBN"/>
+</owl:Class>
+
+<owl:Class rdf:about="GCB">
+  <rdfs:subClassOf rdf:resource="DLBCLNOS"/>
+</owl:Class>
+
+<owl:Class rdf:about="ABC">
+  <rdfs:subClassOf rdf:resource="DLBCLNOS"/>
+</owl:Class>
+
+<owl:Class rdf:about="THRLBCL">
+  <rdfs:subClassOf rdf:resource="MBN"/>
+</owl:Class>
+
+<owl:Class rdf:about="HGBCLMYCBCL2">
+  <rdfs:subClassOf rdf:resource="MBN"/>
+</owl:Class>
+
+<owl:Class rdf:about="HCL">
+  <rdfs:subClassOf rdf:resource="MBN"/>
+</owl:Class>
+
+<owl:Class rdf:about="PTFL">
+  <rdfs:subClassOf rdf:resource="MBN"/>
+</owl:Class>
+
+<owl:Class rdf:about="EP">
+  <rdfs:subClassOf rdf:resource="MBN"/>
+</owl:Class>
+
+<owl:Class rdf:about="LBLIRF4">
+  <rdfs:subClassOf rdf:resource="MBN"/>
+</owl:Class>
+
+<owl:Class rdf:about="EBVDLBCLNOS">
+  <rdfs:subClassOf rdf:resource="MBN"/>
+</owl:Class>
+
+<owl:Class rdf:about="GHCD">
+  <rdfs:subClassOf rdf:resource="MBN"/>
+</owl:Class>
+
+<owl:Class rdf:about="PLBL">
+  <rdfs:subClassOf rdf:resource="MBN"/>
+</owl:Class>
+
+<owl:Class rdf:about="PMBL">
+  <rdfs:subClassOf rdf:resource="MBN"/>
+</owl:Class>
+
+<owl:Class rdf:about="HHV8DLBCL">
+  <rdfs:subClassOf rdf:resource="MBN"/>
+</owl:Class>
+
+<owl:Class rdf:about="BLL11Q">
+  <rdfs:subClassOf rdf:resource="MBN"/>
+</owl:Class>
+
+<owl:Class rdf:about="MGUS">
+  <rdfs:subClassOf rdf:resource="MBN"/>
+</owl:Class>
+
+<owl:Class rdf:about="MGUSIGM">
+  <rdfs:subClassOf rdf:resource="MGUS"/>
+</owl:Class>
+
+<owl:Class rdf:about="MGUSIGA">
+  <rdfs:subClassOf rdf:resource="MGUS"/>
+</owl:Class>
+
+<owl:Class rdf:about="MGUSIGG">
+  <rdfs:subClassOf rdf:resource="MGUS"/>
+</owl:Class>
+
+<owl:Class rdf:about="HGBCL">
+  <rdfs:subClassOf rdf:resource="MBN"/>
+</owl:Class>
+
+<owl:Class rdf:about="LYG">
+  <rdfs:subClassOf rdf:resource="MBN"/>
+</owl:Class>
+
+<owl:Class rdf:about="PCFCL">
+  <rdfs:subClassOf rdf:resource="MBN"/>
+</owl:Class>
+
+<owl:Class rdf:about="MHCD">
+  <rdfs:subClassOf rdf:resource="MBN"/>
+</owl:Class>
+
+<owl:Class rdf:about="CLLSLL">
+  <rdfs:subClassOf rdf:resource="MBN"/>
+</owl:Class>
+
+<owl:Class rdf:about="AHCD">
+  <rdfs:subClassOf rdf:resource="MBN"/>
+</owl:Class>
+
+<owl:Class rdf:about="BCLU">
+  <rdfs:subClassOf rdf:resource="MBN"/>
+</owl:Class>
+
+<owl:Class rdf:about="PCNSL">
+  <rdfs:subClassOf rdf:resource="MBN"/>
+</owl:Class>
+
+<owl:Class rdf:about="BPLL">
+  <rdfs:subClassOf rdf:resource="MBN"/>
+</owl:Class>
+
+<owl:Class rdf:about="DLBCLCI">
+  <rdfs:subClassOf rdf:resource="MBN"/>
+</owl:Class>
+
+<owl:Class rdf:about="EBVMCU">
+  <rdfs:subClassOf rdf:resource="MBN"/>
+</owl:Class>
+
+<owl:Class rdf:about="PCLBCLLT">
+  <rdfs:subClassOf rdf:resource="MBN"/>
+</owl:Class>
+
+<owl:Class rdf:about="BL">
+  <rdfs:subClassOf rdf:resource="MBN"/>
+</owl:Class>
+
+<owl:Class rdf:about="LPL">
+  <rdfs:subClassOf rdf:resource="MBN"/>
+</owl:Class>
+
+<owl:Class rdf:about="WM">
+  <rdfs:subClassOf rdf:resource="LPL"/>
+</owl:Class>
+
+<owl:Class rdf:about="MCBCL">
+  <rdfs:subClassOf rdf:resource="MBN"/>
+</owl:Class>
+
+<owl:Class rdf:about="FL">
+  <rdfs:subClassOf rdf:resource="MBN"/>
+</owl:Class>
+
+<owl:Class rdf:about="DFL">
+  <rdfs:subClassOf rdf:resource="FL"/>
+</owl:Class>
+
+<owl:Class rdf:about="ISFN">
+  <rdfs:subClassOf rdf:resource="FL"/>
+</owl:Class>
+
+<owl:Class rdf:about="SPB">
+  <rdfs:subClassOf rdf:resource="MBN"/>
+</owl:Class>
+
+<owl:Class rdf:about="BLL">
+  <rdfs:subClassOf rdf:resource="LNM"/>
+</owl:Class>
+
+<owl:Class rdf:about="BLLNOS">
+  <rdfs:subClassOf rdf:resource="BLL"/>
+</owl:Class>
+
+<owl:Class rdf:about="BLLRGA">
+  <rdfs:subClassOf rdf:resource="BLL"/>
+</owl:Class>
+
+<owl:Class rdf:about="BLLETV6RUNX1">
+  <rdfs:subClassOf rdf:resource="BLLRGA"/>
+</owl:Class>
+
+<owl:Class rdf:about="BLLBCRABL1">
+  <rdfs:subClassOf rdf:resource="BLLRGA"/>
+</owl:Class>
+
+<owl:Class rdf:about="BLLHYPO">
+  <rdfs:subClassOf rdf:resource="BLLRGA"/>
+</owl:Class>
+
+<owl:Class rdf:about="BLLHYPER">
+  <rdfs:subClassOf rdf:resource="BLLRGA"/>
+</owl:Class>
+
+<owl:Class rdf:about="BLLIAMP21">
+  <rdfs:subClassOf rdf:resource="BLLRGA"/>
+</owl:Class>
+
+<owl:Class rdf:about="BLLIL3IGH">
+  <rdfs:subClassOf rdf:resource="BLLRGA"/>
+</owl:Class>
+
+<owl:Class rdf:about="BLLTCF3PBX1">
+  <rdfs:subClassOf rdf:resource="BLLRGA"/>
+</owl:Class>
+
+<owl:Class rdf:about="BLLKMT2A">
+  <rdfs:subClassOf rdf:resource="BLLRGA"/>
+</owl:Class>
+
+<owl:Class rdf:about="BLLBCRABL1L">
+  <rdfs:subClassOf rdf:resource="BLLRGA"/>
+</owl:Class>
+
+<owl:Class rdf:about="PTLD">
+  <rdfs:subClassOf rdf:resource="LNM"/>
+</owl:Class>
+
+<owl:Class rdf:about="IMPTLD">
+  <rdfs:subClassOf rdf:resource="PTLD"/>
+</owl:Class>
+
+<owl:Class rdf:about="PHPTLD">
+  <rdfs:subClassOf rdf:resource="PTLD"/>
+</owl:Class>
+
+<owl:Class rdf:about="MPTLD">
+  <rdfs:subClassOf rdf:resource="PTLD"/>
+</owl:Class>
+
+<owl:Class rdf:about="FHPTLD">
+  <rdfs:subClassOf rdf:resource="PTLD"/>
+</owl:Class>
+
+<owl:Class rdf:about="PPTLD">
+  <rdfs:subClassOf rdf:resource="PTLD"/>
+</owl:Class>
+
+<owl:Class rdf:about="CHLPTLD">
+  <rdfs:subClassOf rdf:resource="PTLD"/>
+</owl:Class>
+
+<owl:Class rdf:about="OVARY">
+  <rdfs:subClassOf rdf:resource="Disease"/>
+</owl:Class>
+
+<owl:Class rdf:about="SCST">
+  <rdfs:subClassOf rdf:resource="OVARY"/>
+</owl:Class>
+
+<owl:Class rdf:about="FT">
+  <rdfs:subClassOf rdf:resource="SCST"/>
+</owl:Class>
+
+<owl:Class rdf:about="OGBL">
+  <rdfs:subClassOf rdf:resource="SCST"/>
+</owl:Class>
+
+<owl:Class rdf:about="GRCT">
+  <rdfs:subClassOf rdf:resource="SCST"/>
+</owl:Class>
+
+<owl:Class rdf:about="SCT">
+  <rdfs:subClassOf rdf:resource="SCST"/>
+</owl:Class>
+
+<owl:Class rdf:about="SLCT">
+  <rdfs:subClassOf rdf:resource="SCST"/>
+</owl:Class>
+
+<owl:Class rdf:about="OGCT">
+  <rdfs:subClassOf rdf:resource="OVARY"/>
+</owl:Class>
+
+<owl:Class rdf:about="OYST">
+  <rdfs:subClassOf rdf:resource="OGCT"/>
+</owl:Class>
+
+<owl:Class rdf:about="OEC">
+  <rdfs:subClassOf rdf:resource="OGCT"/>
+</owl:Class>
+
+<owl:Class rdf:about="ODYS">
+  <rdfs:subClassOf rdf:resource="OGCT"/>
+</owl:Class>
+
+<owl:Class rdf:about="OMT">
+  <rdfs:subClassOf rdf:resource="OGCT"/>
+</owl:Class>
+
+<owl:Class rdf:about="OMGCT">
+  <rdfs:subClassOf rdf:resource="OGCT"/>
+</owl:Class>
+
+<owl:Class rdf:about="OPE">
+  <rdfs:subClassOf rdf:resource="OGCT"/>
+</owl:Class>
+
+<owl:Class rdf:about="OIMT">
+  <rdfs:subClassOf rdf:resource="OGCT"/>
+</owl:Class>
+
+<owl:Class rdf:about="OVT">
+  <rdfs:subClassOf rdf:resource="OVARY"/>
+</owl:Class>
+
+<owl:Class rdf:about="OCS">
+  <rdfs:subClassOf rdf:resource="OVT"/>
+</owl:Class>
+
+<owl:Class rdf:about="OSMBT">
+  <rdfs:subClassOf rdf:resource="OVT"/>
+</owl:Class>
+
+<owl:Class rdf:about="SCCO">
+  <rdfs:subClassOf rdf:resource="OVT"/>
+</owl:Class>
+
+<owl:Class rdf:about="CCOV">
+  <rdfs:subClassOf rdf:resource="OVT"/>
+</owl:Class>
+
+<owl:Class rdf:about="MBOV">
+  <rdfs:subClassOf rdf:resource="OVT"/>
+</owl:Class>
+
+<owl:Class rdf:about="MXOV">
+  <rdfs:subClassOf rdf:resource="OVT"/>
+</owl:Class>
+
+<owl:Class rdf:about="SBMOV">
+  <rdfs:subClassOf rdf:resource="OVT"/>
+</owl:Class>
+
+<owl:Class rdf:about="MOV">
+  <rdfs:subClassOf rdf:resource="OVT"/>
+</owl:Class>
+
+<owl:Class rdf:about="SBOV">
+  <rdfs:subClassOf rdf:resource="OVT"/>
+</owl:Class>
+
+<owl:Class rdf:about="EOV">
+  <rdfs:subClassOf rdf:resource="OVT"/>
+</owl:Class>
+
+<owl:Class rdf:about="OSMAD">
+  <rdfs:subClassOf rdf:resource="OVT"/>
+</owl:Class>
+
+<owl:Class rdf:about="OSMCA">
+  <rdfs:subClassOf rdf:resource="OVT"/>
+</owl:Class>
+
+<owl:Class rdf:about="CCBOV">
+  <rdfs:subClassOf rdf:resource="OVT"/>
+</owl:Class>
+
+<owl:Class rdf:about="BTOV">
+  <rdfs:subClassOf rdf:resource="OVT"/>
+</owl:Class>
+
+<owl:Class rdf:about="BTMOV">
+  <rdfs:subClassOf rdf:resource="BTOV"/>
+</owl:Class>
+
+<owl:Class rdf:about="BTBOV">
+  <rdfs:subClassOf rdf:resource="BTOV"/>
+</owl:Class>
+
+<owl:Class rdf:about="BTBEOV">
+  <rdfs:subClassOf rdf:resource="BTOV"/>
+</owl:Class>
+
+<owl:Class rdf:about="SOC">
+  <rdfs:subClassOf rdf:resource="OVT"/>
+</owl:Class>
+
+<owl:Class rdf:about="LGSOC">
+  <rdfs:subClassOf rdf:resource="SOC"/>
+</owl:Class>
+
+<owl:Class rdf:about="HGSOC">
+  <rdfs:subClassOf rdf:resource="SOC"/>
+</owl:Class>
+
+<owl:Class rdf:about="EBOV">
+  <rdfs:subClassOf rdf:resource="OVT"/>
+</owl:Class>
+
+<owl:Class rdf:about="OOVC">
+  <rdfs:subClassOf rdf:resource="OVARY"/>
+</owl:Class>
+
+<owl:Class rdf:about="HGSFT">
+  <rdfs:subClassOf rdf:resource="OOVC"/>
+</owl:Class>
+
+<owl:Class rdf:about="HGONEC">
+  <rdfs:subClassOf rdf:resource="OOVC"/>
+</owl:Class>
+
+<owl:Class rdf:about="OCNOS">
+  <rdfs:subClassOf rdf:resource="OOVC"/>
 </owl:Class>
 
 <owl:Class rdf:about="p.V600E">
