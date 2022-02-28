@@ -41,12 +41,19 @@ oncokb_cangenes <- readr::read_tsv(
   "OncoKB_cancerGeneList.tsv",
   show_col_types = FALSE
 )
+tcga_dna_repair_genes <- readxl::read_xlsx(
+  "TCGA_DNA_Repair_Genes_PMID_29617664.xlsx", skip = 3)
+
 cangenes <- c(
   cosmic_cangenes$`Gene Symbol`,
-  oncokb_cangenes$`Hugo Symbol`
+  oncokb_cangenes$`Hugo Symbol`,
+  tcga_dna_repair_genes$`Gene Symbol`
 ) %>%
   unique() %>%
+  stringr::str_trim() %>%
   sort()
+
+# readr::write_tsv(tibble(Gene_Symbol = cangenes), file = "CancerGeneList.tsv")
 ```
 
 
@@ -167,16 +174,15 @@ table(barcodes_per_sample$n)
 table(tcga_maf$Variant_Type)
 table(tcga_maf$Variant_Classification)
 
-#    DEL    INS    ONP    SNP    TNP 
-#  10872   3617      4 137439      0 
-# 
-#        Frame_Shift_Del        Frame_Shift_Ins           In_Frame_Del 
-#                   9387                   3375                   1152 
-#           In_Frame_Ins      Missense_Mutation      Nonsense_Mutation 
-#                    134                 121515                  12657 
-#       Nonstop_Mutation            Splice_Site Translation_Start_Site 
-#                     87                   3511                    114 
-# 
+ #   DEL    INS    ONP    SNP 
+ # 11823   3894      5 149864 
+ # 
+ #       Frame_Shift_Del        Frame_Shift_Ins           In_Frame_Del 
+ #                 10207                   3641                   1256 
+ #          In_Frame_Ins      Missense_Mutation      Nonsense_Mutation 
+ #                   141                 132581                  13696 
+ #      Nonstop_Mutation            Splice_Site Translation_Start_Site 
+ #                    95                   3844                    125 
 ```
 
 
@@ -263,8 +269,15 @@ tcga_fusion <- readxl::read_xlsx("TCGA_DriverFusions_mmc2.xlsx",
   ) %>%
   mutate(
     participant_id = barcode_to_participant(Tumor_Sample_Barcode),
-    sample_id = barcode_to_sample(Tumor_Sample_Barcode)
+    sample_id = barcode_to_sample(Tumor_Sample_Barcode),
+    gene1 = purrr::map_chr(Fusion, function(s) {
+      stringr::str_split(s, pattern = "--")[[1]][[1]]
+    }),
+    gene2 = purrr::map_chr(Fusion, function(s) {
+      stringr::str_split(s, pattern = "--")[[1]][[2]]
+    })
   ) %>%
+  filter((gene1 %in% cangenes) | (gene2 %in% cangenes)) %>%
   filter(sample_id %in% tcga_mut_samples) %>%
   filter(Spanning >= MIN_SPANNING_READ_COUNT) %>%
   filter(Junction >= MIN_JUNCTION_READ_COUNT) %>%

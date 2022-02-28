@@ -74,3 +74,22 @@ rule make_owl:
 	shell:
 		"python -m src.ontology {input.level_1} {output.ontology}"
 
+
+rule download_tcga_copyalt:
+	output:
+		copyalt = "source_data/tcga_gene_copyalt.gz"
+	shell:
+		"wget -O {output.copyalt}  https://tcga-xena-hub.s3.us-east-1.amazonaws.com/download/TCGA.PANCAN.sampleMap%2FGistic2_CopyNumber_Gistic2_all_thresholded.by_genes.gz"
+
+
+rule write_tcga_combined_variants_table:
+	input:
+		copyalt = rules.download_tcga_copyalt.output.copyalt
+	output:
+		tcga_var_tbl = "source_data/TCGA_AllVarTypes_by_Sample.tsv.gz"
+	script:
+		"src/Prep_TCGA_PanCan.R"
+
+
+	
+		
