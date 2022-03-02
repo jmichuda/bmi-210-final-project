@@ -7,13 +7,13 @@ Corresponding Author:   Joseph Wakim
 Affiliation:            Stanford
 Date:                   February 27, 2022
 """
+from typing import Optional, Sequence
 
 import pandas as pd
 import numpy as np
-from typing import Optional, Sequence
+from bravado.client import SwaggerClient
 
 import api_tools as apit
-from bravado.client import SwaggerClient
 
 
 endpoint_set = {
@@ -266,7 +266,7 @@ def get_mutations(
         df_temp = apit.swagger_endpoint_data_to_df(all_mutations)
         if gene_list is not None:
             df_temp = df_temp.query(
-                "proteinChange in @gene_list | gene in @gene_list"
+                "proteinChange in @gene_list | gene in @gene_list | entrezGeneId in @gene_list"
             )
 
         if empty:

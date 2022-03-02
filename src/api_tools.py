@@ -4,11 +4,10 @@ Corresponding Author:   Joseph Wakim
 Affiliation:            Stanford University
 Date:                   February 26, 2022
 """
-
 from typing import Optional, List, Mapping, Sequence
+import requests
 
 import pandas as pd
-import requests
 from bravado.client import SwaggerClient
 
 
