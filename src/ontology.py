@@ -1,5 +1,5 @@
 from owlready2 import *
-from src.generate_data import therapies, all_curated_genes,add_oncotree, add_variants
+from src.generate_data import therapies, all_curated_genes,add_oncotree, parse_maf
 import re
 import types 
 import defopt
@@ -8,21 +8,21 @@ import os
 
 
 
+
+
 def main(variants_path: str, output_path: str):
 	onto = get_ontology("ontology/base.owl").load()
-	with onto:
-		
 
+	with onto:
 		onto = therapies(onto)
 		onto = all_curated_genes(onto)
 		onto = add_oncotree(onto)
-		onto = add_variants(onto, variants_path)
 
+		onto = add_oncotree(onto)
+		onto = parse_maf(onto, variants_path)
 
-
-
-	# save ontology to disk
-	onto.save(file = output_path)
+		# save ontology to disk
+		onto.save(file = output_path)
 
 if __name__ == "__main__":
 	defopt.run(main)

@@ -1,5 +1,4 @@
-from src.constants import MAF_FILES, ONCOKB_API_KEY
-
+from src.constants import MAF_FILES, ONCOKB_API_KEY,MAF_COLUMNS
 
 # to do: 
 # add raw, unzip and annotated to suffix instead of prefix
@@ -53,26 +52,18 @@ rule cat_maf_files:
 		pd.concat(mafs).to_parquet(output.maf)
 
 
-rule subset_level_1:
+rule subset_maf_files:
 	input:
 		maf = rules.cat_maf_files.output.maf
 	output:
-		variants = "ontology/level_1.csv"
+		variants = "ontology/all_variants.csv"
 	run:
 		import pandas as pd
 		df = pd.read_parquet(input.maf)
-		df = df.loc[df['LEVEL_1'].notna()]
-		df = df[["Hugo_Symbol","HGVSp_Short","LEVEL_1"]].drop_duplicates()
+		df = df[MAF_COLUMNS]
+		df = df=df.loc[df.iloc[:,-22:].any(axis=1)]
 		df.to_csv(output.variants,index=False)
 		
-
-rule make_owl:
-	input:
-		level_1 = rules.subset_level_1.output.variants
-	output:
-		ontology = "ontology/oncokb.owl"
-	shell:
-		"python -m src.ontology {input.level_1} {output.ontology}"
 
 
 rule download_tcga_copyalt:
@@ -89,6 +80,15 @@ rule write_tcga_combined_variants_table:
 		tcga_var_tbl = "source_data/TCGA_AllVarTypes_by_Sample.tsv"
 	script:
 		"src/Prep_TCGA_PanCan.R"
+
+
+rule make_owl:
+	input:
+		level_1 = rules.subset_maf_files.output.variants
+	output:
+		ontology = "ontology/oncokb.owl"
+	shell:
+		"python -m src.ontology {input.level_1} {output.ontology}"
 
 
 	

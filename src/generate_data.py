@@ -7,8 +7,10 @@ def ontology_classes(onto):
 	classes = []
 	for i in list(onto.classes()):
 		classes.append((str(i)[5:]))
-	
+	for i in list(onto.individuals()):
+		classes.append((str(i)[5:]))
 	return classes
+
 def therapy_normalize(diagnosis):
 	return diagnosis.replace(" ","_").replace(",","").replace("+","_").replace("__","_").replace("__","_")
 
@@ -24,7 +26,7 @@ def all_curated_genes(onto):
 
 	# generate gene subclasses
 	for i in response.json():
-		gene_subclass = types.new_class(i['hugoSymbol'], (onto['Gene'],))
+		gene_subclass = onto['Gene'](i['hugoSymbol'])
 		gene_subclass.comment = i['background'].replace('','')
 		gene_subclass.grch38RefSeq = i['grch38RefSeq']
 		gene_subclass.highestResistanceLevel = i['highestResistanceLevel']
@@ -33,6 +35,7 @@ def all_curated_genes(onto):
 		gene_subclass.grch38Isoform = i['grch38Isoform']
 		gene_subclass.highestSensitiveLevel = i['highestSensitiveLevel']
 		gene_subclass.oncogene = i['oncogene']
+		gene_subclass.hasVariant = []
 	return onto
 
 
@@ -42,7 +45,7 @@ def therapies(onto):
 	therapies = list(tabular['Drugs (for therapeutic implications only)'].dropna().unique())
 	for i in therapies:
 		therapy_regimen = therapy_normalize(i)
-		therapy_subclass = types.new_class(therapy_regimen, (onto['TherapyRegimen'],))
+		therapy_subclass = onto['TherapyRegimen'](therapy_regimen)
 	return onto
 
 ## Add oncotree cancer types
@@ -66,28 +69,59 @@ def add_oncotree(onto):
 		if parent == "TISSUE":
 			parent = "Disease"
 		if node['code'] != "TISSUE":
-			NewClass = types.new_class(node['code'], (onto[parent],))
+			if node['code'] not in ontology_classes(onto):
+				NewClass = types.new_class(node['code'], (onto[parent],))
 	return onto
+
+def clean_mutation_effect(mutation_effect):
+	mapping = {
+		"Unknown": None,
+		"Likely Loss-of-function":"LossOfFunction",
+		"Gain-of-function":"GainOfFunction",
+		"Loss-of-function":"LossOfFunction",
+		"Likely Gain-of-function":"GainOfFunction",
+		"Likely Neutral":None,
+		"Inconclusive":None,
+		"Likely Switch-of-function":None,
+		"Switch-of-function":None,
+		None: None
+	}
+	return mapping[mutation_effect]
+
 
 
 ## vaiants and biomarker relationships
-def add_variants(onto, variants_path):
+def parse_maf(onto, variants_path):
 	# generate  variant subclasses and is_biomarker_for object properties
-	level_1 = pd.read_csv(variants_path).dropna()
-	level_1 = level_1.loc[level_1.Hugo_Symbol!='Hugo_Symbol']
+	variants = pd.read_csv(variants_path)
 
 
-	for index, row in level_1.iterrows():
-		variant = types.new_class(row['HGVSp_Short'], (onto['Variant'],))
-		gene = types.new_class(row['Hugo_Symbol'], (onto['Gene'],))
-		variant.hasGene = [gene]
-		gene.hasVariant = [variant]
-		regimens = row['LEVEL_1']
-		for i in row['LEVEL_1'].split(","):
-			therapy_regimen = therapy_normalize(i)
-			therapy = types.new_class(therapy_regimen, (onto['TherapyRegimen'],))
-			therapy.hasEvidenceLevel1 =  [variant]
+	variants = variants.loc[
+		(variants.Hugo_Symbol!='Hugo_Symbol') 
+		& variants.Hugo_Symbol.notna()
+		* (variants.Hugo_Symbol!='nan') 
+	]
 
 
+	for index, row in variants.iterrows():
+		mutation_effect = clean_mutation_effect(row['MUTATION_EFFECT'])
+		variant = onto['Mutation'](row['HGVSp_Short'])
+		if mutation_effect is not None and onto[row['Hugo_Symbol']] is not None:
+			variant.is_a.append(onto[mutation_effect])
+			variant.hasGene = onto[row['Hugo_Symbol']]
+			onto[row['Hugo_Symbol']].hasVariant.append(onto[row['HGVSp_Short']])
+
+
+
+
+		# gene = types.new_class(row['Hugo_Symbol'], (onto['Gene'],))
+		# gene.hasVariant = [variant]
+		# regimens = row['LEVEL_1']
+		# for i in row['LEVEL_1'].split(","):
+		# 	therapy_regimen = therapy_normalize(i)
+		# 	therapy = types.new_class(therapy_regimen, (onto['TherapyRegimen'],))
+		# 	therapy.hasEvidenceLevel1 =  [variant]
+
+	print(onto['ATM'].hasVariant)
 	return onto
 
