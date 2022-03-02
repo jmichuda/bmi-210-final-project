@@ -86,7 +86,7 @@ rule write_tcga_combined_variants_table:
 	input:
 		copyalt = rules.download_tcga_copyalt.output.copyalt
 	output:
-		tcga_var_tbl = "source_data/TCGA_AllVarTypes_by_Sample.tsv.gz"
+		tcga_var_tbl = "source_data/TCGA_AllVarTypes_by_Sample.tsv"
 	script:
 		"src/Prep_TCGA_PanCan.R"
 

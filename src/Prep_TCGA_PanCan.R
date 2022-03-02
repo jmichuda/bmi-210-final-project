@@ -224,7 +224,7 @@ stopifnot(
 )
 
 # OUTPUT -----------------------------------------------------------------------
-readr::write_tsv(genvar_tbl, file = gzfile(output_file))
+readr::write_tsv(genvar_tbl, file = output_file)
 message(paste0("Combined variant data table written to: ", output_file))
 # ------------------------------------------------------------------------------
 

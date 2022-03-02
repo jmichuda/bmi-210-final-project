@@ -155,6 +155,92 @@
     <!-- 
     ///////////////////////////////////////////////////////////////////////////////////////
     //
+    // Data properties
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://test.org/base.owl/entrezGeneId -->
+
+    <owl:DatatypeProperty rdf:about="http://test.org/base.owl/entrezGeneId">
+        <rdfs:subPropertyOf rdf:resource="http://test.org/base.owl/geneProperties"/>
+        <rdfs:domain rdf:resource="http://test.org/base.owl/Gene"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://test.org/base.owl/geneProperties -->
+
+    <owl:DatatypeProperty rdf:about="http://test.org/base.owl/geneProperties"/>
+    
+
+
+    <!-- http://test.org/base.owl/grch38Isoform -->
+
+    <owl:DatatypeProperty rdf:about="http://test.org/base.owl/grch38Isoform">
+        <rdfs:subPropertyOf rdf:resource="http://test.org/base.owl/geneProperties"/>
+        <rdfs:domain rdf:resource="http://test.org/base.owl/Gene"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://test.org/base.owl/grch38RefSeq -->
+
+    <owl:DatatypeProperty rdf:about="http://test.org/base.owl/grch38RefSeq">
+        <rdfs:subPropertyOf rdf:resource="http://test.org/base.owl/geneProperties"/>
+        <rdfs:domain rdf:resource="http://test.org/base.owl/Gene"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://test.org/base.owl/highestResistanceLevel -->
+
+    <owl:DatatypeProperty rdf:about="http://test.org/base.owl/highestResistanceLevel">
+        <rdfs:subPropertyOf rdf:resource="http://test.org/base.owl/geneProperties"/>
+        <rdfs:domain rdf:resource="http://test.org/base.owl/Gene"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://test.org/base.owl/highestSensitiveLevel -->
+
+    <owl:DatatypeProperty rdf:about="http://test.org/base.owl/highestSensitiveLevel">
+        <rdfs:subPropertyOf rdf:resource="http://test.org/base.owl/geneProperties"/>
+        <rdfs:domain rdf:resource="http://test.org/base.owl/Gene"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://test.org/base.owl/hugoSymbol -->
+
+    <owl:DatatypeProperty rdf:about="http://test.org/base.owl/hugoSymbol">
+        <rdfs:subPropertyOf rdf:resource="http://test.org/base.owl/geneProperties"/>
+        <rdfs:domain rdf:resource="http://test.org/base.owl/Gene"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://test.org/base.owl/oncogene -->
+
+    <owl:DatatypeProperty rdf:about="http://test.org/base.owl/oncogene">
+        <rdfs:subPropertyOf rdf:resource="http://test.org/base.owl/geneProperties"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#boolean"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
     // Classes
     //
     ///////////////////////////////////////////////////////////////////////////////////////
