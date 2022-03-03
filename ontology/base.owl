@@ -119,8 +119,6 @@
     <!-- http://test.org/base.owl/hasGene -->
 
     <owl:ObjectProperty rdf:about="http://test.org/base.owl/hasGene">
-        <owl:inverseOf rdf:resource="http://test.org/base.owl/hasVariant"/>
-        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
         <rdfs:range rdf:resource="http://test.org/base.owl/Gene"/>
     </owl:ObjectProperty>
     
@@ -129,7 +127,6 @@
     <!-- http://test.org/base.owl/hasVariant -->
 
     <owl:ObjectProperty rdf:about="http://test.org/base.owl/hasVariant">
-        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#InverseFunctionalProperty"/>
         <rdfs:range rdf:resource="http://test.org/base.owl/Gene"/>
     </owl:ObjectProperty>
     

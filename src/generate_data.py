@@ -151,26 +151,28 @@ def parse_maf(onto, variants_path):
 				if level != '':
 					for i in level.split(","):
 						therapy_regimen = therapy_normalize(i)
-
-						therapy = types.new_class(therapy_regimen,(onto['TherapyRegimen'],))
+						if therapy_regimen in ontology_classes(onto):
+							therapy = onto[therapy_regimen]
+						else:
+							therapy = types.new_class(therapy_regimen,(onto['TherapyRegimen'],))
 						if key == "Level_1":
-							therapy.hasEvidenceLevel1 = [biomarker]
-							biomarker.hasEvidenceLevel1 = [therapy]
+							therapy.hasEvidenceLevel1.append(biomarker)
+							biomarker.hasEvidenceLevel1.append(therapy)
 						if key == "Level_2":
-							therapy.hasEvidenceLevel2 = [biomarker]
-							biomarker.hasEvidenceLevel2 = [therapy]
+							therapy.hasEvidenceLevel2.append(biomarker)
+							biomarker.hasEvidenceLevel2.append(therapy)
 						if key == "Level_3":
-							therapy.hasEvidenceLevel3 = [biomarker]
-							biomarker.hasEvidenceLevel3 = [therapy]
+							therapy.hasEvidenceLevel3.append(biomarker)
+							biomarker.hasEvidenceLevel3.append(therapy)
 						if key == "Level_4":
-							therapy.hasEvidenceLevel4 = [biomarker]
-							biomarker.hasEvidenceLevel4 = [therapy]
+							therapy.hasEvidenceLevel4.append(biomarker)
+							biomarker.hasEvidenceLevel4.append(therapy)
 						if key == "Level_R1":
-							therapy.hasEvidenceLevelR1 = [biomarker]
-							biomarker.hasEvidenceLevelR1 = [therapy]
+							therapy.hasEvidenceLevelR1.append(biomarker)
+							biomarker.hasEvidenceLevelR1.append(therapy)
 						if key == "Level_R2":
-							therapy.hasEvidenceLevelR2 = [biomarker]
-							biomarker.hasEvidenceLevelR2 = [therapy]
+							therapy.hasEvidenceLevelR2.append(biomarker)
+							biomarker.hasEvidenceLevelR2.append(therapy)
 					
 
 	return onto
