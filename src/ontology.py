@@ -10,16 +10,15 @@ import os
 
 
 
-def main(variants_path: str, output_path: str):
+def main(maf_path: str, fusion_path: str, cna_path: str, output_path: str):
 	onto = get_ontology("ontology/base.owl").load()
 
 	with onto:
 		onto = therapies(onto)
 		onto = all_curated_genes(onto)
 		onto = add_oncotree(onto)
-
 		onto = add_oncotree(onto)
-		onto = parse_maf(onto, variants_path)
+		onto = parse_maf(onto, maf_path)
 
 		# save ontology to disk
 		onto.save(file = output_path)

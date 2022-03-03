@@ -1,8 +1,7 @@
 import os
 ONCOKB_API_KEY = "28c66f60-7f3d-48d9-b791-4babf383f3ad" #os.get('ONCOKB_API_KEY')
 
-
-
+DEVELOPMENT_MODE = True
 
 MAF_FILES = [
 	
@@ -42,12 +41,13 @@ MAF_FILES = [
 ]
 
 MAF_COLUMNS = [
+	"Cohort",
 	"Hugo_Symbol",
 	"HGVSp_Short",
-	"LEVEL_1",
 	"MUTATION_EFFECT",
 	"MUTATION_EFFECT_CITATIONS",
 	"ONCOGENIC",
+	"Variant_Classification",
 	"LEVEL_1",
 	"LEVEL_2",
 	"LEVEL_3A",
@@ -69,3 +69,4 @@ MAF_COLUMNS = [
 	"HIGHEST_PX_LEVEL",
 	"PX_CITATIONS"
 	]
+THERAPEUTIC_COLUMNS = MAF_COLUMNS[-20:]
