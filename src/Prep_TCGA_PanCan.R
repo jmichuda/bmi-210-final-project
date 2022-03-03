@@ -12,7 +12,7 @@ tcga_gene_fusion_tbl <- "src/TCGA_DriverFusions_mmc2.xlsx"
 output_file = snakemake@output[["tcga_var_tbl"]]
 output_file_clinical = snakemake@output[["tcga_clinical"]]
 output_file_cna = snakemake@output[["tcga_cna"]]
-output_file_fusions = snakemake@output[["tcga_fusions"]]
+output_file_fusions = snakemake@output[["tcga_fusion"]]
 output_file_maf = snakemake@output[["tcga_maf"]]
 
 # FILTERING CRITERIA -----------------------------------------------------------
@@ -114,7 +114,7 @@ tcga_maf_out <- tcga_maf %>%
     # Set to sample-level id shared by copy and fusion data samples
     Tumor_Sample_Barcode = barcode_to_sample(Tumor_Sample_Barcode)
   )
-readr::write_tsv(tcga_maf_out, file = gzfile(output_file_maf))
+readr::write_tsv(tcga_maf_out, file = output_file_maf)
 
 tcga_clinical <- tcga_maf_out %>%
   select(Tumor_Sample_Barcode, Study_Abbreviation) %>%
@@ -156,7 +156,7 @@ tcga_cna_out <- tcga_cop %>%
   ) %>%
   select(`Gene Symbol`, `Locus ID`, Cytoband, everything()) %>%
   arrange(`Gene Symbol`)
-readr::write_tsv(tcga_cna_out, file = gzfile(output_file_cna))
+readr::write_tsv(tcga_cna_out, file = output_file_cna)
 # -------------------------------------------------------------------
 
 tcga_cop <- tcga_cop %>%
@@ -275,7 +275,7 @@ stopifnot(
 )
 
 # OUTPUT -----------------------------------------------------------------------
-readr::write_tsv(genvar_tbl, file = gzfile(output_file))
+readr::write_tsv(genvar_tbl, file = output_file)
 message(paste0("Combined variant data table written to: ", output_file))
 message(paste0("Clinical data table written to: ", output_file_clinical))
 message(paste0("CNA data table written to: ", output_file_cna))
