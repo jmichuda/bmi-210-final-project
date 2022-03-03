@@ -122,18 +122,20 @@ def parse_maf(onto, variants_path):
 		mutation_effect = clean_mutation_effect(row['MUTATION_EFFECT'])
 		variant_classification = clean_variant_classification(row['Variant_Classification'])
 		variant_name = clean_variant(row['HGVSp_Short'])
-		cancer_type = row['Cohort']
+		cancer_type = onto[row['Cohort']]
 
 
 		biomarker_name = f"{row['Hugo_Symbol']}_{variant_name}_{row['Cohort']}"
 		biomarker = types.new_class(biomarker_name, (onto['Biomarker'],))
-		
+		gene  = onto[row['Hugo_Symbol']]
+		biomarker.hasGene.append(gene)
+		gene.hasBiomarker.append(biomarker)
+		biomarker.hasDisease.append(cancer_type)
+
 		if variant_classification is not None:
 			variant = types.new_class(variant_name,(onto[variant_classification],))
 			biomarker.hasVariant = [variant]
 			variant.hasBiomarker.append(biomarker)
-
-			gene  = onto[row['Hugo_Symbol']]
 			variant.hasGene = [gene]
 			gene.hasVariant.append(variant)
 
