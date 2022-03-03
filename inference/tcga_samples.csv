@@ -1,0 +1,6 @@
+,0,1,2,3,4
+0,TCGA-AA-3811,ATM,C1838Vfs8,COAD,['oncokb.Olaparib']
+1,TCGA-BG-A2AE,ATM,X1833_splice,UCEC,['oncokb.Olaparib']
+2,TCGA-67-6215,ATM,R3008H,LUAD,['oncokb.Olaparib']
+3,TCGA-LL-A5YN,ATM,L663Ffs42,BRCA,['oncokb.Olaparib']
+4,TCGA-DA-A1IB,ATM,G2477,SKCM,['oncokb.Olaparib']
