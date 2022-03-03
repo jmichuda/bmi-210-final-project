@@ -1,11 +1,7 @@
 import os
 ONCOKB_API_KEY = "28c66f60-7f3d-48d9-b791-4babf383f3ad" #os.get('ONCOKB_API_KEY')
 
-HEADER = {
-	'Authorization' : f'Bearer {ONCOKB_API_KEY}',
-	'accept': 'application/json'
-	}
-
+DEVELOPMENT_MODE = True
 
 MAF_FILES = [
 	
@@ -43,3 +39,34 @@ MAF_FILES = [
 	# "fea333b5-78e0-43c8-bf76-4c78dd3fac92/TCGA.PAAD.mutect.fea333b5-78e0-43c8-bf76-4c78dd3fac92.DR-10.0.somatic",
 	# "02747363-f04a-4ba6-a079-fe4f87853788/TCGA.UCS.mutect.02747363-f04a-4ba6-a079-fe4f87853788.DR-10.0.somatic",
 ]
+
+MAF_COLUMNS = [
+	"Cohort",
+	"Hugo_Symbol",
+	"HGVSp_Short",
+	"MUTATION_EFFECT",
+	"MUTATION_EFFECT_CITATIONS",
+	"ONCOGENIC",
+	"Variant_Classification",
+	"LEVEL_1",
+	"LEVEL_2",
+	"LEVEL_3A",
+	"LEVEL_3B",
+	"LEVEL_4",
+	"LEVEL_R1",
+	"LEVEL_R2",
+	"LEVEL_R3",
+	"HIGHEST_LEVEL",
+	"TX_CITATIONS",
+	"LEVEL_Dx1",
+	"LEVEL_Dx2",
+	"LEVEL_Dx3",
+	"HIGHEST_DX_LEVEL",
+	"DX_CITATIONS",
+	"LEVEL_Px1",
+	"LEVEL_Px2",
+	"LEVEL_Px3",
+	"HIGHEST_PX_LEVEL",
+	"PX_CITATIONS"
+	]
+THERAPEUTIC_COLUMNS = MAF_COLUMNS[-20:]
