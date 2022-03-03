@@ -242,32 +242,32 @@
     
 
 
+    <!-- http://test.org/base.owl/Amplification -->
+
+    <owl:Class rdf:about="http://test.org/base.owl/Amplification">
+        <rdfs:subClassOf rdf:resource="http://test.org/base.owl/CopyNumberAlteration"/>
+    </owl:Class>
+    
+
+
     <!-- http://test.org/base.owl/Biomarker -->
 
     <owl:Class rdf:about="http://test.org/base.owl/Biomarker"/>
     
 
 
-    <!-- http://test.org/base.owl/DNACopyGain -->
+    <!-- http://test.org/base.owl/CopyNumberAlteration -->
 
-    <owl:Class rdf:about="http://test.org/base.owl/DNACopyGain">
-        <rdfs:subClassOf rdf:resource="http://test.org/base.owl/DNACopyVariant"/>
-    </owl:Class>
-    
-
-
-    <!-- http://test.org/base.owl/DNACopyLoss -->
-
-    <owl:Class rdf:about="http://test.org/base.owl/DNACopyLoss">
-        <rdfs:subClassOf rdf:resource="http://test.org/base.owl/DNACopyVariant"/>
-    </owl:Class>
-    
-
-
-    <!-- http://test.org/base.owl/DNACopyVariant -->
-
-    <owl:Class rdf:about="http://test.org/base.owl/DNACopyVariant">
+    <owl:Class rdf:about="http://test.org/base.owl/CopyNumberAlteration">
         <rdfs:subClassOf rdf:resource="http://test.org/base.owl/Mutation"/>
+    </owl:Class>
+    
+
+
+    <!-- http://test.org/base.owl/Deletion -->
+
+    <owl:Class rdf:about="http://test.org/base.owl/Deletion">
+        <rdfs:subClassOf rdf:resource="http://test.org/base.owl/CopyNumberAlteration"/>
     </owl:Class>
     
 
