@@ -9,6 +9,7 @@ USAGE: python query_therapy_regimen.py <ONTOLOGY_PATH> <MUTATION_TABLE_PATH> <GE
 import csv
 import sys
 import os
+import re
 from typing import List, Optional
 
 import numpy as np
@@ -77,9 +78,9 @@ def get_mutation_data(
     return df
 
 
-def get_therapy_regimens(
-        ontology: or2.namespace.Ontology, gene: str
-) -> List[or2.entity.ThingClass]:
+def get_therapy_given_gene(
+    ontology: or2.namespace.Ontology, gene: str, evidence_level: str
+) -> List[str]:
     """Query ontology for therapy regimen associated with mutation in gene.
 
     Parameters
@@ -88,10 +89,12 @@ def get_therapy_regimens(
         OWL ontology from which to query therapy regimens matching mutated gene
     gene : str
         Gene for which to query therapy regimen
+    evidence_level : str
+        Evidence level of therapy regemen to query for in ontology
 
     Returns
     -------
-    List[or2.entity.ThingClass]
+    List[str]
         List of therapy regimens associated with gene of interest
     """
     with ontology:
@@ -101,20 +104,130 @@ def get_therapy_regimens(
                 SELECT distinct ?regimen
                 {{
                     ?biomarker rdfs:subClassOf oncokb:Biomarker.
-                    ?biomarker rdfs:subClassOf ?restriction1.
-                    ?restriction1 owl:onProperty oncokb:hasGene.
-                    ?restriction1 owl:someValuesFrom oncokb:{gene}.
+                    ?biomarker rdfs:subClassOf ?r1.
+                    ?r1 owl:onProperty oncokb:hasGene.
+                    ?r1 owl:someValuesFrom oncokb:{re.escape(gene)}.
                     
                     ?regimen rdfs:subClassOf oncokb:TherapyRegimen.
-                    ?regimen rdfs:subClassOf ?restriction2.
-                    ?restriction2 owl:onProperty oncokb:hasEvidenceLevel4.
-                    ?restriction2 owl:someValuesFrom ?biomarker.
+                    ?regimen rdfs:subClassOf ?r2.
+                    ?r2 owl:onProperty oncokb:hasEvidenceLevel{evidence_level}.
+                    ?r2 owl:someValuesFrom ?biomarker.
                 }}
                 """
             )
         )
     therapy_list = [str(gene[0]) for gene in therapy_list]
     return therapy_list
+
+
+def get_therapy_given_gene_variant(
+    ontology: or2.namespace.Ontology, gene: str, variant: str,
+    evidence_level: str
+) -> List[str]:
+    """Query ontology for therapy matching gene and variant.
+
+    Given a patient's gene and variant, query the ontology for all therapy
+    regimens.
+
+    Parameters
+    ----------
+    ontology : or2.namespace.Ontology
+        OWL ontology from which to query therapy regimens matching mutated gene
+    gene : str
+        Gene for which to query therapy regimen
+    variant : str
+        Specific variant of gene for which to query therapy regiment
+    evidence_level : str
+        Evidence level of therapy regemen to query for in ontology
+
+    Returns
+    -------
+    List[str]
+        List of therapy regimens associated with the gene and variant
+    """
+    with ontology:
+        treatments = list(
+            or2.default_world.sparql(
+                f"""
+                SELECT distinct ?regimen
+                {{
+                    ?biomarker rdfs:subClassOf oncokb:Biomarker.
+                    ?biomarker rdfs:subClassOf ?R1.
+                    ?R1 owl:onProperty oncokb:hasGene.
+                    ?R1 owl:someValuesFrom oncokb:{re.escape(gene)}.
+                    
+                    ?biomarker rdfs:subClassOf ?R2.
+                    ?R2 owl:onProperty oncokb:hasVariant.
+                    ?R2 owl:someValuesFrom oncokb:{re.escape(variant)}.
+                    
+                    ?regimen rdfs:subClassOf oncokb:TherapyRegimen.
+                    ?regimen rdfs:subClassOf ?R3.
+                    ?R3 owl:onProperty oncokb:hasEvidenceLevel{evidence_level}.
+                    ?R3 owl:someValuesFrom ?biomarker.
+                }}
+                """
+            )
+        )
+    return [str(tx[0]) for tx in treatments]
+
+
+def get_therapy_given_gene_variant_disease(
+    ontology: or2.namespace.Ontology, gene: str, variant: str, disease: str,
+    evidence_level: str
+) -> List[str]:
+    """Query ontology for therapy matching gene, variant, disease, and evidence.
+
+    Given a patient's gene, variant, and disease, query the ontology for
+    therapy regimens with a specified evidence level.
+
+    Parameters
+    ----------
+    ontology : or2.namespace.Ontology
+        OWL ontology from which to query therapy regimens matching mutated gene
+    gene : str
+        Gene for which to query therapy regimen
+    variant : str
+        Specific variant of gene for which to query therapy regiment
+    disease : str
+        Specific disease associated with gene and variant for which to query the
+        ontology
+    evidence_level : str
+        Evidence level of therapy regemen to query for in ontology
+
+    Returns
+    -------
+    List[str]
+        List of therapy regimens associated with the gene, variant, and disease
+        matching records in the ontology
+    """
+    with ontology:
+        treatments = list(
+            or2.default_world.sparql(
+                f"""
+                SELECT distinct ?regimen
+                {{
+                    ?biomarker rdfs:subClassOf oncokb:Biomarker.
+                    ?biomarker rdfs:subClassOf ?R1.
+                    ?R1 owl:onProperty oncokb:hasGene.
+                    ?R1 owl:someValuesFrom oncokb:{re.escape(gene)}.
+                    
+                    ?biomarker rdfs:subClassOf ?R2.
+                    ?R2 owl:onProperty oncokb:hasVariant.
+                    ?R2 owl:someValuesFrom oncokb:{re.escape(variant)}.
+                    
+                    ?biomarker rdfs:subClassOf ?R3.
+                    ?R3 owl:onProperty oncokb:hasDisease.
+                    ?R3 owl:someValuesFrom oncokb:{re.escape(disease)}.
+ 
+                    ?regimen rdfs:subClassOf oncokb:TherapyRegimen.
+                    ?regimen rdfs:subClassOf ?R4.
+                    ?R4 owl:onProperty oncokb:hasEvidenceLevel{evidence_level}.
+                    ?R4 owl:someValuesFrom ?biomarker.
+                }}
+                """
+            )
+        )
+    return [str(tx[0]) for tx in treatments]
 
 
 def main(
@@ -148,6 +261,8 @@ def main(
         mutation_path, gene_list_path, df_mutations=df_mutation
     )
     genes = mutation_data["Gene_Symbol"].to_numpy()
+    variants = mutation_data["proteinChange"].to_numpy()
+    evidence_levels = ["1", "2", "3", "4", "R1", "R2"]
 
     # Clear file
     if os.path.isfile(regimen_save_path):
@@ -158,9 +273,18 @@ def main(
     # Write therapy regimen to file
     with open(regimen_save_path, "a") as f:
         writer = csv.writer(f)
-        for gene in genes:
-            therapy_list = get_therapy_regimens(ontology, gene)
-            writer.writerow([gene] + therapy_list)
+        for i, gene in enumerate(genes):
+            variant = re.escape(variants[i])
+            for evidence in evidence_levels:
+                try:
+                    therapy_list = get_therapy_given_gene_variant(
+                        ontology, gene, variant, evidence
+                    )
+                    writer.writerow(
+                        [gene, variant, f"level{evidence}"] + therapy_list
+                    )
+                except Exception:
+                    continue
 
 
 if __name__ == "__main__":
@@ -168,12 +292,11 @@ if __name__ == "__main__":
     
     Creates a file with therapy regimen for specified user.
     """
-    ontology_path = sys.argv[1]
-    mutation_table_path = sys.argv[2]
-    gene_list_path = sys.argv[3]
-    patient_id = sys.argv[4]
-    regimen_save_path = sys.argv[5]
+    onto_path = sys.argv[1]
+    mut_tbl_path = sys.argv[2]
+    gene_lst_path = sys.argv[3]
+    pat_id = sys.argv[4]
+    therapy_save_path = sys.argv[5]
     main(
-        ontology_path, mutation_table_path, gene_list_path, patient_id,
-        regimen_save_path
+        onto_path, mut_tbl_path, gene_lst_path, pat_id, therapy_save_path
     )
