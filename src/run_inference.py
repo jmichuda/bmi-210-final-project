@@ -28,14 +28,13 @@ def get_therapy_regimens(onto, gene, variant, disease, evidence_level):
 				"""
 			,error_on_undefined_entities=False)
 		)
-	return [str(tx[0]) for tx in treatments]
+	return [str(tx[0]).replace("oncokb.","") for tx in treatments]
 
 def main(ontology: str, tcga_variants: str, output: str):
 	onto = get_ontology(ontology).load()
 	tcga_variants = pd.read_csv(tcga_variants,sep="\t",low_memory=False)
 	tcga_variants = tcga_variants.loc[tcga_variants['Variant_Type']!='Copy_Number_Alteration']
-	tcga_variants = tcga_variants.loc[tcga_variants.Gene == 'ATM'].sample(300)
-
+	tcga_variants = tcga_variants.loc[tcga_variants.Gene == 'BRAF'].sample(300)
 	patient_regimens = []
 	for index, row in tcga_variants.iterrows():
 		gene = row['Gene']
@@ -43,13 +42,19 @@ def main(ontology: str, tcga_variants: str, output: str):
 		disease = row['TCGA_Cohort']
 		patient = row['Participant_ID']
 		
-		regimens = get_therapy_regimens(onto, gene,variant,disease,"3")
-		print(gene,variant,disease,regimens)
-		if len(regimens) > 0:
-			patient_regimens.append(pd.Series([patient,gene,variant,disease,regimens]))
+		for level in ["1","2","3","4","R1","R2"]:
+			print(gene,variant,disease,level)			
+			regimens = get_therapy_regimens(onto, gene,variant,disease,level)
+			print(regimens)
+			for regimen in regimens:
+				patient_regimens.append(pd.Series([patient, gene, variant, disease,level,regimen]))
+		
 	all_patient_regimens = pd.concat(patient_regimens,axis=1).T
-	all_patient_regimens.to_csv(output)
+	all_patient_regimens.columns = ['patient','gene','variant','disease','level','therapy']
+	all_patient_regimens.to_csv(output,index=False)
 	return
 
 if __name__=="__main__":
 	defopt.run(main)
+
+
