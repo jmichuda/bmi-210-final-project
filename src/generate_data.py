@@ -100,20 +100,57 @@ def clean_variant_classification(variant_classification):
 	"In_Frame_Del":"INDEL",
 	"In_Frame_Ins":"INDEL",
 	"Translation_Start_Site":"TranslationStartSite",
+	"Nonstop_Mutation":"Nonsense"
 	}
 	return mapping[variant_classification]
 
 def clean_variant(variant):
 	return variant.replace("p.","").replace("*","")
 
-
+def add_levels(onto, row, biomarker):
+	level_mapping = {
+				"Level_1":["LEVEL_1"],
+				"Level_2":["LEVEL_2"],
+				"Level_3":["LEVEL_3A","LEVEL_3B"],
+				"Level_4":["LEVEL_4"],
+				"Level_R1":["LEVEL_R1"],
+				"Level_R2":["LEVEL_R2"],
+			}
+	for key, value in level_mapping.items():
+		level = ','.join(row[value].dropna())
+		if level != '':
+			for i in level.split(","):
+				therapy_regimen = therapy_normalize(i)
+				if therapy_regimen in ontology_classes(onto):
+					therapy = onto[therapy_regimen]
+				else:
+					therapy = types.new_class(therapy_regimen,(onto['TherapyRegimen'],))
+				if key == "Level_1":
+					therapy.hasEvidenceLevel1.append(biomarker)
+					biomarker.hasEvidenceLevel1.append(therapy)
+				if key == "Level_2":
+					therapy.hasEvidenceLevel2.append(biomarker)
+					biomarker.hasEvidenceLevel2.append(therapy)
+				if key == "Level_3":
+					therapy.hasEvidenceLevel3.append(biomarker)
+					biomarker.hasEvidenceLevel3.append(therapy)
+				if key == "Level_4":
+					therapy.hasEvidenceLevel4.append(biomarker)
+					biomarker.hasEvidenceLevel4.append(therapy)
+				if key == "Level_R1":
+					therapy.hasEvidenceLevelR1.append(biomarker)
+					biomarker.hasEvidenceLevelR1.append(therapy)
+				if key == "Level_R2":
+					therapy.hasEvidenceLevelR2.append(biomarker)
+					biomarker.hasEvidenceLevelR2.append(therapy)
+	return onto,therapy,biomarker
 
 ## variants and biomarker relationships
 def parse_maf(onto, variants_path):
 	# generate  variant subclasses and is_biomarker_for object properties
 	variants = pd.read_csv(variants_path, sep ="\t",low_memory=False)
 	variants = variants[MAF_COLUMNS]
-	variants = variants.loc[variants[THERAPEUTIC_COLUMNS].notna().any(axis=1)]
+	variants = variants.loc[variants['HIGHEST_LEVEL'].notna()]
 
 	if DEVELOPMENT_MODE:
 		variants = variants.sample(100)
@@ -138,44 +175,56 @@ def parse_maf(onto, variants_path):
 			variant.hasBiomarker.append(biomarker)
 			variant.hasGene = [gene]
 			gene.hasVariant.append(variant)
-
-
-			level_mapping = {
-				"Level_1":["LEVEL_1"],
-				"Level_2":["LEVEL_2"],
-				"Level_3":["LEVEL_3A","LEVEL_3B"],
-				"Level_4":["LEVEL_4"],
-				"Level_R1":["LEVEL_R1"],
-				"Level_R2":["LEVEL_R2"],
-			}
-			for key, value in level_mapping.items():
-				level = ','.join(row[value].dropna())
-				if level != '':
-					for i in level.split(","):
-						therapy_regimen = therapy_normalize(i)
-						if therapy_regimen in ontology_classes(onto):
-							therapy = onto[therapy_regimen]
-						else:
-							therapy = types.new_class(therapy_regimen,(onto['TherapyRegimen'],))
-						if key == "Level_1":
-							therapy.hasEvidenceLevel1.append(biomarker)
-							biomarker.hasEvidenceLevel1.append(therapy)
-						if key == "Level_2":
-							therapy.hasEvidenceLevel2.append(biomarker)
-							biomarker.hasEvidenceLevel2.append(therapy)
-						if key == "Level_3":
-							therapy.hasEvidenceLevel3.append(biomarker)
-							biomarker.hasEvidenceLevel3.append(therapy)
-						if key == "Level_4":
-							therapy.hasEvidenceLevel4.append(biomarker)
-							biomarker.hasEvidenceLevel4.append(therapy)
-						if key == "Level_R1":
-							therapy.hasEvidenceLevelR1.append(biomarker)
-							biomarker.hasEvidenceLevelR1.append(therapy)
-						if key == "Level_R2":
-							therapy.hasEvidenceLevelR2.append(biomarker)
-							biomarker.hasEvidenceLevelR2.append(therapy)
-					
-
+			onto, therapy, biomarker = add_levels(onto, row,biomarker)
 	return onto
+
+
+def add_fusions(onto,fusion_path):
+	fusions = pd.read_csv(fusion_path,sep="\t",low_memory=False)
+	fusions = fusions.loc[fusions['HIGHEST_LEVEL'].notna()]
+	for index, row in fusions.iterrows():
+		gene_1 = row['Fusion'].split("-")[0]
+		gene_2 = row['Fusion'].split("-")[1]
+		biomarker_name = f"fusion_{gene_1}_{gene_2}"
+		fusion_name = f"{gene_1}_{gene_2}"
+		if fusion_name not in ontology_classes(onto):
+			fusion = types.new_class(fusion_name, (onto['GeneFusion'],))
+			biomarker = types.new_class(biomarker_name, (onto['Biomarker'],))
+		else:
+			fusion = onto[fusion_name]
+			biomarker = onto[biomarker_name]
+
+		if gene_1 in ontology_classes(onto):
+			fusion.hasGene = [onto[gene_1]]
+		if gene_2 in ontology_classes(onto):
+			fusion.hasGene.append(onto[gene_2])
+		biomarker.hasVariant = [fusion]
+		fusion.hasBiomarker.append(biomarker)
+		onto, therapy, biomarker = add_levels(onto, row, biomarker)
+	return onto
+
+def add_cnas(onto, cna_path):
+	cnas = pd.read_csv(cna_path, sep = "\t",low_memory = False).drop_duplicates(subset=['CANCER_TYPE','HUGO_SYMBOL','ALTERATION'])
+	cnas = cnas.loc[cnas['HIGHEST_LEVEL'].notna()]
+	for index, row in cnas.iterrows():
+		gene_name = row['HUGO_SYMBOL']
+		cancer_type = row['CANCER_TYPE']
+		alteration = row['ALTERATION']
+		cna_name = f"{gene_name}_{alteration}"
+		biomarker_name = f"{gene_name}_{alteration}_{cancer_type}"
+		if gene_name not in ontology_classes(onto):
+			gene = types.new_class(gene_name, (onto['Gene']))
+		else:
+			gene = onto[gene_name]
+
+		cna = types.new_class(cna_name, (onto[alteration],))
+		cna.hasGene = [gene]
+		biomarker = types.new_class(biomarker_name,(onto['Biomarker'],))
+		biomarker.hasVariant = [cna]
+		biomarker.hasDisease = [onto[cancer_type]]
+		onto, therapy, biomarker = add_levels(onto, row, biomarker)
+	return onto
+
+
+
 

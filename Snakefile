@@ -137,6 +137,18 @@ rule make_owl:
 	shell:
 		"python -m src.ontology {input.annotate_maf} {input.fusion} {input.cna} {output.ontology}"
 
+rule run_inference:
+	input:
+		tcga = rules.write_tcga_combined_variants_table.output.tcga_var_tbl,
+		onto = rules.make_owl.output.ontology
+	output:
+		therapies = "inference/tcga_samples.csv"
+	threads: 8
+	shell:
+		"python -m src.run_inference {input.onto}  {input.tcga} {output.therapies} {threads}"
+
+
+
 
 	
 		
