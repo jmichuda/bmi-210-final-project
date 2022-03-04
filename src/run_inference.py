@@ -54,9 +54,7 @@ def infer_row(row):
 
 def main(ontology: str, tcga_variants: str, output: str, threads:int):
 	tcga_variants = pd.read_csv(tcga_variants,sep="\t",low_memory=False)
-	tcga_variants = tcga_variants.loc[tcga_variants['Variant_Type']!='Copy_Number_Alteration']
-	tcga_variants = tcga_variants.loc[tcga_variants['Gene'] =='BRAF'].sample(24)
-	patient_regimens = []
+	tcga_variants = tcga_variants.loc[tcga_variants['Variant_Type']!='Copy_Number_Alteration'].sample(10000)
 	rows = [row for index,row in tcga_variants.iterrows()]
 	pool = multiprocessing.Pool(threads)
 	patient_regimens = pool.map(infer_row,  rows)
