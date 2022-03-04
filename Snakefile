@@ -143,8 +143,9 @@ rule run_inference:
 		onto = rules.make_owl.output.ontology
 	output:
 		therapies = "inference/tcga_samples.csv"
+	threads: 8
 	shell:
-		"python -m src.run_inference {input.onto}  {input.tcga} {output.therapies}"
+		"python -m src.run_inference {input.onto}  {input.tcga} {output.therapies} {threads}"
 
 
 

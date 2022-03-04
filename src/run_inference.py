@@ -2,6 +2,12 @@ import pandas as pd
 from owlready2 import *
 import defopt
 from src.generate_data import clean_variant
+import multiprocessing
+import functools
+import itertools
+
+
+onto = get_ontology("ontology/oncokb.owl").load()
 
 def get_therapy_regimens(onto, gene, variant, disease, evidence_level):
 	with onto:
@@ -30,26 +36,33 @@ def get_therapy_regimens(onto, gene, variant, disease, evidence_level):
 		)
 	return [str(tx[0]).replace("oncokb.","") for tx in treatments]
 
-def main(ontology: str, tcga_variants: str, output: str):
-	onto = get_ontology(ontology).load()
-	tcga_variants = pd.read_csv(tcga_variants,sep="\t",low_memory=False)
-	tcga_variants = tcga_variants.loc[tcga_variants['Variant_Type']!='Copy_Number_Alteration']
-	tcga_variants = tcga_variants.loc[tcga_variants.Gene == 'BRAF'].sample(300)
-	patient_regimens = []
-	for index, row in tcga_variants.iterrows():
-		gene = row['Gene']
-		variant = clean_variant(row['Description'])
-		disease = row['TCGA_Cohort']
-		patient = row['Participant_ID']
-		
-		for level in ["1","2","3","4","R1","R2"]:
-			print(gene,variant,disease,level)			
+def infer_row(row):
+	gene = row['Gene']
+	variant = clean_variant(row['Description'])
+	disease = row['TCGA_Cohort']
+	patient = row['Participant_ID']
+	patient_regimens=[]
+	for level in ["1","2","3","4","R1","R2"]:
+		try:
 			regimens = get_therapy_regimens(onto, gene,variant,disease,level)
-			print(regimens)
 			for regimen in regimens:
 				patient_regimens.append(pd.Series([patient, gene, variant, disease,level,regimen]))
-		
-	all_patient_regimens = pd.concat(patient_regimens,axis=1).T
+		except:
+			continue
+	return patient_regimens
+
+
+def main(ontology: str, tcga_variants: str, output: str, threads:int):
+	tcga_variants = pd.read_csv(tcga_variants,sep="\t",low_memory=False)
+	tcga_variants = tcga_variants.loc[tcga_variants['Variant_Type']!='Copy_Number_Alteration']
+	tcga_variants = tcga_variants.loc[tcga_variants['Gene'] =='BRAF'].sample(24)
+	patient_regimens = []
+	rows = [row for index,row in tcga_variants.iterrows()]
+	pool = multiprocessing.Pool(threads)
+	patient_regimens = pool.map(infer_row,  rows)
+	flattened = itertools.chain.from_iterable(patient_regimens)
+
+	all_patient_regimens = pd.concat(flattened,axis=1).T
 	all_patient_regimens.columns = ['patient','gene','variant','disease','level','therapy']
 	all_patient_regimens.to_csv(output,index=False)
 	return
