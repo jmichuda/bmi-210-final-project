@@ -126,16 +126,27 @@ rule annotate_clinical:
 	shell:
 		'poetry run python -m src.oncokb_annotator.ClinicalDataAnnotator -i {input.tcga_clinical} -o {output.tcga_clinical} -a "{input.tcga_maf},{input.tcga_cna},{input.tcga_fusion}"'
 
+
+
+rule generate_civic:
+	output:
+		civic = "source_data/civic_evidence.csv"
+	shell:
+		"poetry run python -m src.generate_civic {output.civic}"
+
 rule make_owl:
 	input:
 		annotate_maf = rules.annotate_tcga_maf.output.tcga_maf,
 		fusion  = rules.annotate_fusion.output.tcga_fusion,
 		cna  = rules.annotate_cnv.output.tcga_cna,
-		clinical = rules.annotate_clinical.output.tcga_clinical
+		clinical = rules.annotate_clinical.output.tcga_clinical,
+		civic = rules.generate_civic.output.civic
 	output:
 		ontology = "ontology/oncokb.owl"
 	shell:
-		"poetry run python -m src.ontology {input.annotate_maf} {input.fusion} {input.cna} {output.ontology}"
+		"poetry run python -m src.ontology {input.annotate_maf} {input.fusion} {input.cna} {input.civic} {output.ontology}"
+
+
 
 rule run_inference:
 	input:

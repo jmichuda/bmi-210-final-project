@@ -1,8 +1,46 @@
 import pandas as pd
 import defopt
-import api_tools as apit
+import src.api_tools as apit
+from src.generate_data import oncotree
+import json
+from thefuzz import process
+from thefuzz import fuzz
 
-def generate_evidence(output:str):
+
+def generate_oncotree_mapping():
+    tree = oncotree()
+    node = tree['TISSUE']
+    stack = [node]
+    mapping = []
+    while len(stack) > 0:
+        node = stack.pop()
+        for key, child in node['children'].items():
+            stack.append(child)
+        parent = node['parent']
+        if parent == "TISSUE":
+            parent = "Disease"
+        if node['code'] != "TISSUE":
+            if "NCI" in node['externalReferences'].keys():
+                for umls in node['externalReferences']['NCI']:
+                    mapping.append([umls, node['code'], node['name']])
+    return pd.DataFrame(mapping, columns = ['NCI','oncotree','name'])
+
+
+def add_oncotree_code(df_variant_evidence_filtered):
+    oncotree = generate_oncotree_mapping()
+    oncotree_mapping = [ ]
+    for disease in df_variant_evidence_filtered["Disease"].drop_duplicates():
+        oncotree_name, score, score2 = process.extractOne(disease, oncotree.name, scorer=fuzz.token_sort_ratio)
+        oncotree_code = oncotree.set_index('name').loc[oncotree_name,'oncotree']
+        oncotree_mapping.append([disease,oncotree_name,score,score2,oncotree_code])
+        
+    full_mapping = pd.DataFrame(oncotree_mapping, columns = ['disease','oncotree_name','score','score2','oncotree'])
+
+    df_variant_evidence_filtered['oncotree'] = df_variant_evidence_filtered.Disease.map(full_mapping.set_index('disease')['oncotree'])
+    return df_variant_evidence_filtered
+
+
+def main(output:str):
     civic_gene = apit.Endpoint(url="https://civicdb.org/api/genes?count=238")
     df_civic_gene = civic_gene.data_as_pandas("records")
 
@@ -28,7 +66,8 @@ def generate_evidence(output:str):
         df_variant_evidence_filtered.loc[i, "therapy_regimen"] = therapy_regimen
         df_variant_evidence_filtered.loc[i, "disease"] = df_variant_evidence_filtered.loc[i, "disease"]["name"]
 
-    gene_list = pd.read_csv("CancerGeneList.tsv", sep="\t", header=0, usecols=[0, 1])
+
+    gene_list = pd.read_csv("source_data/CancerGeneList.tsv", sep="\t", header=0, usecols=[0, 1])
     df_variant_evidence_filtered = df_variant_evidence_filtered.merge(gene_list, left_on="entrez_id", right_on="Entrez_Id", how="left")
     df_variant_evidence_filtered = df_variant_evidence_filtered.drop(columns=["Entrez_Id", "drugs"])
 
@@ -42,6 +81,7 @@ def generate_evidence(output:str):
     }
     df_variant_evidence_filtered.rename(columns=column_mappings, inplace=True)
 
+    df_variant_evidence_filtered = add_oncotree_code(df_variant_evidence_filtered)
     df_variant_evidence_filtered.to_csv(output)
 
 if __name__=="__main__":

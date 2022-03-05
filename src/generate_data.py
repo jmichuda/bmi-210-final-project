@@ -168,7 +168,7 @@ def parse_maf(onto, variants_path):
 		biomarker.hasGene.append(gene)
 		gene.hasBiomarker.append(biomarker)
 		biomarker.hasDisease.append(cancer_type)
-
+		biomarker.evidenceSource.append("oncoKB")
 		if variant_classification is not None:
 			variant = types.new_class(variant_name,(onto[variant_classification],))
 			biomarker.hasVariant = [variant]
@@ -176,6 +176,7 @@ def parse_maf(onto, variants_path):
 			variant.hasGene = [gene]
 			gene.hasVariant.append(variant)
 			onto, therapy, biomarker = add_levels(onto, row,biomarker)
+
 	return onto
 
 
@@ -201,6 +202,7 @@ def add_fusions(onto,fusion_path):
 		biomarker.hasVariant = [fusion]
 		fusion.hasBiomarker.append(biomarker)
 		onto, therapy, biomarker = add_levels(onto, row, biomarker)
+		biomarker.evidenceSource.append("oncoKB")
 	return onto
 
 def add_cnas(onto, cna_path):
@@ -222,9 +224,83 @@ def add_cnas(onto, cna_path):
 		biomarker = types.new_class(biomarker_name,(onto['Biomarker'],))
 		biomarker.hasVariant = [cna]
 		biomarker.hasDisease = [onto[cancer_type]]
+		biomarker.evidenceSource.append("oncoKB")
+
 		onto, therapy, biomarker = add_levels(onto, row, biomarker)
 	return onto
 
 
+def map_civic_evidence(clin_sig, evidence_level):
+	mapping = {
+		"A":{"Sensitivity/Response":"Level_2", "Resistance":"Level_R1", "Adverse Response":"Level_R1", "Reduced Sensitivity":"Level_R1",},
+		"B":{"Sensitivity/Response":"Level_3", "Resistance":"Level_R1", "Adverse Response":"Level_R1", "Reduced Sensitivity":"Level_R1",},
+		"C":{"Sensitivity/Response":"Level_3", "Resistance":"Level_R2", "Adverse Response":"Level_R2", "Reduced Sensitivity":"Level_R2",},
+		"D":{"Sensitivity/Response":"Level_3", "Resistance":"Level_R2", "Adverse Response":"Level_R2", "Reduced Sensitivity":"Level_R2",},
+		"E":{"Sensitivity/Response":"Level_4", "Resistance":"Level_R2", "Adverse Response":"Level_R2", "Reduced Sensitivity":"Level_R2",},
+	}
+	return mapping[evidence_level][clin_sig]
 
+def add_civic(onto, civic_path):
+	civic_evidence = pd.read_csv(civic_path)
+	# subset to cleanly formatted civic variants
+	civic_evidence= civic_evidence.loc[civic_evidence.variant.str.contains("^[A-Z][0-9]*[A-Z]$",na=False)]
+	civic_evidence = civic_evidence[['Gene','variant','TherapyRegimen','oncotree','ClinicalSignificance','EvidenceLevel']].dropna().drop_duplicates()
+	for index, row in civic_evidence.iterrows():
+		print(row)
+		therapy_name = therapy_normalize(row['TherapyRegimen'])
+		gene_name = row['Gene']
+		mutation_name = clean_variant(row['variant'])
+		disease_name = row['oncotree']
+		evidence_level = map_civic_evidence(row['ClinicalSignificance'], row['EvidenceLevel'])
+		biomarker_name = f"{gene_name}_{mutation_name}_{disease_name}"
+
+
+		if disease_name in ontology_classes(onto):
+			disease = onto[disease_name]
+		else:
+			disease = types.new_class(disease_name, (onto['Disease'],))
+
+		if gene_name not in ontology_classes(onto):
+			gene = types.new_class(gene_name, (onto['Gene'],))
+		else:
+			gene = onto[gene_name]
+		if therapy_name not in ontology_classes(onto):
+			therapy = types.new_class(therapy_name, (onto['TherapyRegimen'],))
+		else:
+			therapy = onto[therapy_name]
+		if mutation_name not in ontology_classes(onto):
+			mutation = types.new_class(mutation_name, (onto['Missense'],))
+		else:
+			mutation = onto[mutation_name]
+		if biomarker_name not in ontology_classes(onto):
+			biomarker = types.new_class(biomarker_name, (onto['Biomarker'],))
+		else:
+			biomarker = onto[biomarker_name]
+
+		biomarker.evidenceSource.append("CIViC")
+		biomarker.hasGene.append(gene)
+		gene.hasBiomarker.append(biomarker)
+		biomarker.hasDisease.append(disease)
+
+		if evidence_level == "Level_1":
+			therapy.hasEvidenceLevel1.append(biomarker)
+			biomarker.hasEvidenceLevel1.append(therapy)
+		if evidence_level == "Level_2":
+			therapy.hasEvidenceLevel2.append(biomarker)
+			biomarker.hasEvidenceLevel2.append(therapy)
+		if evidence_level == "Level_3":
+			therapy.hasEvidenceLevel3.append(biomarker)
+			biomarker.hasEvidenceLevel3.append(therapy)
+		if evidence_level == "Level_4":
+			therapy.hasEvidenceLevel4.append(biomarker)
+			biomarker.hasEvidenceLevel4.append(therapy)
+		if evidence_level == "Level_R1":
+			therapy.hasEvidenceLevelR1.append(biomarker)
+			biomarker.hasEvidenceLevelR1.append(therapy)
+		if evidence_level == "Level_R2":
+			therapy.hasEvidenceLevelR2.append(biomarker)
+			biomarker.hasEvidenceLevelR2.append(therapy)
+
+
+	return onto
 

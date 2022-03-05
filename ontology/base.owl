@@ -151,11 +151,25 @@
     
 
 
+    <!-- http://test.org/base.owl/biomarkerProperties -->
+
+    <owl:DatatypeProperty rdf:about="http://test.org/base.owl/biomarkerProperties"/>
+    
+
+
     <!-- http://test.org/base.owl/entrezGeneId -->
 
     <owl:DatatypeProperty rdf:about="http://test.org/base.owl/entrezGeneId">
         <rdfs:subPropertyOf rdf:resource="http://test.org/base.owl/geneProperties"/>
         <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://test.org/base.owl/evidenceSource -->
+
+    <owl:DatatypeProperty rdf:about="http://test.org/base.owl/evidenceSource">
+        <rdfs:subPropertyOf rdf:resource="http://test.org/base.owl/biomarkerProperties"/>
     </owl:DatatypeProperty>
     
 
