@@ -168,7 +168,7 @@ def parse_maf(onto, variants_path):
 		biomarker.hasGene.append(gene)
 		gene.hasBiomarker.append(biomarker)
 		biomarker.hasDisease.append(cancer_type)
-		biomarker.evidenceSource.append("oncoKB")
+		biomarker.evidenceSource.append("oncokb")
 		if variant_classification is not None:
 			variant = types.new_class(variant_name,(onto[variant_classification],))
 			biomarker.hasVariant = [variant]
@@ -202,7 +202,7 @@ def add_fusions(onto,fusion_path):
 		biomarker.hasVariant = [fusion]
 		fusion.hasBiomarker.append(biomarker)
 		onto, therapy, biomarker = add_levels(onto, row, biomarker)
-		biomarker.evidenceSource.append("oncoKB")
+		biomarker.evidenceSource.append("oncokb")
 	return onto
 
 def add_cnas(onto, cna_path):
@@ -224,7 +224,7 @@ def add_cnas(onto, cna_path):
 		biomarker = types.new_class(biomarker_name,(onto['Biomarker'],))
 		biomarker.hasVariant = [cna]
 		biomarker.hasDisease = [onto[cancer_type]]
-		biomarker.evidenceSource.append("oncoKB")
+		biomarker.evidenceSource.append("oncokb")
 
 		onto, therapy, biomarker = add_levels(onto, row, biomarker)
 	return onto
@@ -276,7 +276,7 @@ def add_civic(onto, civic_path):
 		else:
 			biomarker = onto[biomarker_name]
 
-		biomarker.evidenceSource.append("CIViC")
+		biomarker.evidenceSource.append("civic")
 		biomarker.hasGene.append(gene)
 		gene.hasBiomarker.append(biomarker)
 		biomarker.hasDisease.append(disease)
