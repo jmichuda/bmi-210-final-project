@@ -134,24 +134,33 @@ rule generate_civic:
 	shell:
 		"poetry run python -m src.generate_civic {output.civic}"
 
-rule make_owl:
+rule make_oncokb_owl:
 	input:
 		annotate_maf = rules.annotate_tcga_maf.output.tcga_maf,
 		fusion  = rules.annotate_fusion.output.tcga_fusion,
 		cna  = rules.annotate_cnv.output.tcga_cna,
 		clinical = rules.annotate_clinical.output.tcga_clinical,
-		civic = rules.generate_civic.output.civic
 	output:
-		ontology = "ontology/oncokb.owl"
+		owl = "ontology/oncokb.owl"
 	shell:
-		"poetry run python -m src.ontology {input.annotate_maf} {input.fusion} {input.cna} {input.civic} {output.ontology}"
+		"poetry run python -m src.ontology {input.annotate_maf} {input.fusion} {input.cna} {output.owl}"
+
+rule make_oncokb_civic_owl:
+	input:
+		civic = rules.generate_civic.output.civic,
+		owl = rules.make_oncokb_owl.output.owl
+	output:
+		owl = "ontology/oncokb_civic.owl"
+	shell:
+		"poetry run python -m src.add_civic_onto {input.owl} {input.civic} {output.owl}"
+
 
 
 
 rule run_inference:
 	input:
 		tcga = rules.write_tcga_combined_variants_table.output.tcga_var_tbl,
-		onto = rules.make_owl.output.ontology
+		onto = rules.make_oncokb_civic_owl.output.owl
 	output:
 		therapies = "inference/tcga_samples.csv"
 	threads: 96
