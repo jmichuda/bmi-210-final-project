@@ -130,9 +130,9 @@ rule annotate_clinical:
 
 rule generate_civic:
 	output:
-		civic = "source_data/civic_evidence.csv"
+		civic = "ontology/civic_evidence.csv"
 	shell:
-		"poetry run python -m src.generate_civic {output.civic}"
+		"poetry run python -m src.generate_civic {output.civic} source_data/doid_to_oncotree.csv"
 
 rule make_oncokb_owl:
 	input:

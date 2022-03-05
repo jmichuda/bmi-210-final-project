@@ -69,13 +69,14 @@ def main(ontology: str, tcga_variants: str, output: str, threads:int):
 	tcga_variants = pd.read_csv(tcga_variants,sep="\t",low_memory=False)
 	tcga_variants = tcga_variants.loc[tcga_variants['Variant_Type']!='Copy_Number_Alteration']
 	tcga_variants = tcga_variants.loc[tcga_variants['TCGA_Cohort'] =='LUAD']
+	tcga_variants = tcga_variants.loc[tcga_variants['Gene'] =='KRAS'].sample(10)
 	rows = [row for index,row in tcga_variants.iterrows()]
 	with multiprocessing.Pool(threads) as p:
 		patient_regimens = list(tqdm.tqdm(p.imap(infer_row,  rows), total = len(rows)))
 	flattened = itertools.chain.from_iterable(patient_regimens)
 
 	all_patient_regimens = pd.concat(flattened,axis=1).T
-	all_patient_regimens.columns = ['patient','gene','variant','disease','level','therapy']
+	all_patient_regimens.columns = ['patient','gene','variant','disease','level','source','therapy']
 	all_patient_regimens.to_csv(output,index=False)
 	return
 
