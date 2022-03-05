@@ -10,7 +10,7 @@ import os
 
 
 
-def main(maf_path: str, fusion_path: str, cna_path: str, civic_path: str, output_path: str):
+def main(maf_path: str, fusion_path: str, cna_path: str, output_path: str):
 	onto = get_ontology("ontology/base.owl").load()
 	with onto:
 		onto = therapies(onto)
@@ -19,7 +19,6 @@ def main(maf_path: str, fusion_path: str, cna_path: str, civic_path: str, output
 		onto = parse_maf(onto, maf_path)
 		onto = add_fusions(onto,fusion_path)
 		onto = add_cnas(onto, cna_path)
-		onto = add_civic(onto, civic_path)
 		onto.save(file = output_path)
 
 if __name__ == "__main__":

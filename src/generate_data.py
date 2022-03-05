@@ -246,7 +246,6 @@ def add_civic(onto, civic_path):
 	civic_evidence= civic_evidence.loc[civic_evidence.variant.str.contains("^[A-Z][0-9]*[A-Z]$",na=False)]
 	civic_evidence = civic_evidence[['Gene','variant','TherapyRegimen','oncotree','ClinicalSignificance','EvidenceLevel']].dropna().drop_duplicates()
 	for index, row in civic_evidence.iterrows():
-		print(row)
 		therapy_name = therapy_normalize(row['TherapyRegimen'])
 		gene_name = row['Gene']
 		mutation_name = clean_variant(row['variant'])
