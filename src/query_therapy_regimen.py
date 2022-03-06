@@ -4,7 +4,9 @@ Corresponding Authors:  Joseph Wakim, Vinodh Rajapakse
 Affiliation:            Stanford
 Date:                   March 3, 2022
 
-USAGE: python query_therapy_regimen.py <ONTOLOGY_PATH> <MUTATION_TABLE_PATH> <GENE_LIST_PATH> <PATIENT_NAME> <REGIMEN_SAVE_PATH>
+USAGE: python query_therapy_regimen.py <ONTOLOGY_PATH> <MUTATION_TABLE_PATH>
+            <GENE_LIST_PATH> <CLINICAL_DATA_PATH> <CANCER_TYPE_PATH>
+            <PATIENT_NAME> <REGIMEN_SAVE_PATH>
 """
 import csv
 import sys
@@ -36,9 +38,14 @@ def load_ongology(path: str) -> or2.namespace.Ontology:
 
 
 def get_mutation_data(
-        csv_path: str, gene_path: str,
+        csv_path: str,
+        gene_path: str,
+        clinical_data_path: str,
+        cancer_types_path: str,
         df_mutations: Optional[pd.DataFrame] = None,
-        df_genes: Optional[pd.DataFrame] = None
+        df_genes: Optional[pd.DataFrame] = None,
+        df_clinical_data: Optional[pd.DataFrame] = None,
+        df_cancer_types: Optional[pd.DataFrame] = None
 ) -> pd.DataFrame:
     """Get cBioPortal mutation data and add gene labels, if available.
 
@@ -50,6 +57,12 @@ def get_mutation_data(
     gene_path : str
         Path to table of genes associated with cancer and their entrez IDs (if
         `df_genes` is not None, this path has no effect)
+    clinical_data_path : str
+        Path to table of patient records with associated diseases (if
+        `df_clinical_data` is not None, this path has no effect)
+    cancer_types_path : str
+        Path to table of cancer types and abbreviations (if `df_cancer_types` is
+        not None, this path has no effect)
     df_mutations: Optional[pd.DataFrame]
         If a mutation table is loaded as a Pandas DataFrame, you can enter the
         DataFrame object under this argument to avoid reloading the mutation
@@ -70,11 +83,24 @@ def get_mutation_data(
     df_mutations = df_mutations.loc[:, columns_of_interest]
     if df_genes is None:
         df_genes = pd.read_csv(gene_path, sep="\t", usecols=[0, 1])
+
     df_genes["Entrez_Id"] = \
         df_genes["Entrez_Id"].dropna().astype("int").astype("str")
     df = df_mutations.merge(
         df_genes, left_on="entrezGeneId", right_on="Entrez_Id", how="left"
     ).drop("Entrez_Id", axis=1)
+
+    if df_clinical_data is None:
+        df_clinical_data = pd.read_csv(
+            clinical_data_path, index_col=0
+        ).drop_duplicates()
+    df = df.merge(df_clinical_data, on="patientId", how="left")
+    df = df.loc[:, ["patientId", "proteinChange", "Gene_Symbol", "entrezGeneId", "name"]]
+
+    if df_cancer_types is None:
+        df_cancer_types = pd.read_csv(cancer_types_path, index_col=0)
+    df = df.merge(df_cancer_types, on="name", how="left")
+    df = df.loc[:, ['patientId', 'proteinChange', 'Gene_Symbol', 'entrezGeneId', 'shortName']].dropna()
     return df
 
 
@@ -113,7 +139,7 @@ def get_therapy_given_gene(
                     ?r2 owl:onProperty oncokb:hasEvidenceLevel{evidence_level}.
                     ?r2 owl:someValuesFrom ?biomarker.
                 }}
-                """
+                """, error_on_undefined_entities=False
             )
         )
     therapy_list = [str(gene[0]) for gene in therapy_list]
@@ -165,7 +191,7 @@ def get_therapy_given_gene_variant(
                     ?R3 owl:onProperty oncokb:hasEvidenceLevel{evidence_level}.
                     ?R3 owl:someValuesFrom ?biomarker.
                 }}
-                """
+                """, error_on_undefined_entities=False
             )
         )
     return [str(tx[0]) for tx in treatments]
@@ -224,7 +250,7 @@ def get_therapy_given_gene_variant_disease(
                     ?R4 owl:onProperty oncokb:hasEvidenceLevel{evidence_level}.
                     ?R4 owl:someValuesFrom ?biomarker.
                 }}
-                """
+                """, error_on_undefined_entities=False
             )
         )
     return [str(tx[0]) for tx in treatments]
@@ -234,6 +260,8 @@ def main(
     ontology_path: str,
     mutation_path: str,
     gene_list_path: str,
+    clinical_data_path: str,
+    cancer_type_path: str,
     patient_id: str,
     regimen_save_path: str
 ):
@@ -247,6 +275,10 @@ def main(
         Path to patient mutation data extracted from cBioPortal
     gene_list_path : str
         Path to table of genes associated with cancer and their entrez IDs
+    clinical_data_path : str
+        Path to table of patient records with associated diseases
+    cancer_types_path : str
+        Path to table of cancer types and abbreviations
     patient_id : str
         Patient identifier matching record in cBioPortal mutation table
     regimen_save_path : str
@@ -258,10 +290,12 @@ def main(
         mutation_path, patient_id
     )
     mutation_data = get_mutation_data(
-        mutation_path, gene_list_path, df_mutations=df_mutation
+        mutation_path, gene_list_path, clinical_data_path, cancer_type_path,
+        df_mutations=df_mutation
     )
     genes = mutation_data["Gene_Symbol"].to_numpy()
     variants = mutation_data["proteinChange"].to_numpy()
+    diseases = mutation_data["shortName"].to_numpy()
     evidence_levels = ["1", "2", "3", "4", "R1", "R2"]
 
     # Clear file
@@ -275,16 +309,17 @@ def main(
         writer = csv.writer(f)
         for i, gene in enumerate(genes):
             variant = re.escape(variants[i])
+            disease = re.escape(diseases[i])
             for evidence in evidence_levels:
                 try:
-                    therapy_list = get_therapy_given_gene_variant(
-                        ontology, gene, variant, evidence
+                    therapy_list = get_therapy_given_gene_variant_disease(
+                        ontology, gene, variant, disease, evidence
                     )
                     writer.writerow(
-                        [gene, variant, f"level{evidence}"] + therapy_list
+                        [gene, variant, disease, f"level{evidence}"] + therapy_list
                     )
                 except Exception:
-                    continue
+                    pass
 
 
 if __name__ == "__main__":
@@ -295,8 +330,11 @@ if __name__ == "__main__":
     onto_path = sys.argv[1]
     mut_tbl_path = sys.argv[2]
     gene_lst_path = sys.argv[3]
-    pat_id = sys.argv[4]
-    therapy_save_path = sys.argv[5]
+    clinical_data_path = sys.argv[4]
+    cancer_type_path = sys.argv[5]
+    pat_id = sys.argv[6]
+    therapy_save_path = sys.argv[7]
     main(
-        onto_path, mut_tbl_path, gene_lst_path, pat_id, therapy_save_path
+        onto_path, mut_tbl_path, gene_lst_path, clinical_data_path,
+        cancer_type_path, pat_id, therapy_save_path
     )
