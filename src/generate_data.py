@@ -337,11 +337,10 @@ def add_civic_cnas(onto, civic_path):
 			biomarker = onto[biomarker_name]
 		else:
 			biomarker = types.new_class(biomarker_name, (onto['Biomarker'],))
-			
 
 
 		biomarker.hasVariant.append(cna)
-		biomarker.evidenceSource.append("oncokb")
+		biomarker.evidenceSource.append("civic")
 		gene.hasBiomarker.append(biomarker)
 		biomarker.hasDisease.append(disease)
 		biomarker.hasVariant.append(cna)
