@@ -53,7 +53,7 @@
 127,Esophageal Cancer,Urethral Cancer,69,238,UCA,STOMACH,
 166,Congenital Fibrosarcoma,Fibrosarcoma,69,440,FIBS,FIBS,
 203,Core Binding Factor Acute Myeloid Leukemia,Acute Myeloid Leukemia,69,53,AML,AML,
-22,Prostate Cancer,Prostate,70,135,PROSTATE,PROSTATE,
+22,Prostate Cancer,Prostate,70,135,PROSTATE,PRAD,
 146,Solid Tumor,Sellar Tumor,70,159,SELT,OTHER,
 170,Chronic Neutrophilic Leukemia,Chronic Myelomonocytic Leukemia,70,45,CMML,CNL,
 204,Myelofibrosis,Myofibroma,70,461,MF,PMF,

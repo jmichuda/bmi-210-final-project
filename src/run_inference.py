@@ -67,7 +67,7 @@ def infer_row(row):
 def main(ontology: str, tcga_variants: str, output: str, threads:int):
 	tcga_variants = pd.read_csv(tcga_variants,sep="\t",low_memory=False)
 	tcga_variants = tcga_variants.loc[tcga_variants['Variant_Type']!='Copy_Number_Alteration']
-	tcga_variants = tcga_variants.loc[tcga_variants['TCGA_Cohort'] =='PAAD']
+	tcga_variants = tcga_variants.loc[tcga_variants['TCGA_Cohort'] =='PRAD']
 	rows = [row for index,row in tcga_variants.iterrows()]
 	with multiprocessing.Pool(threads) as p:
 		patient_regimens = list(tqdm.tqdm(p.imap(infer_row,  rows), total = len(rows)))

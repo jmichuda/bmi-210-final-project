@@ -1,5 +1,5 @@
 from owlready2 import *
-from src.generate_data import therapies, all_curated_genes,add_oncotree, parse_maf, add_fusions, add_cnas, add_civic
+from src.generate_data import therapies, all_curated_genes,add_oncotree, parse_maf, add_fusions, add_cnas
 import re
 import types 
 import defopt
