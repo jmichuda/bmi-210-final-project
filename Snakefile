@@ -178,7 +178,6 @@ rule save_biomarkers:
 		onto = get_ontology(input.owl).load()
 		biomarker = [(i, i.evidenceSource, i.hasDisease, i.hasVariant) for i in onto['Biomarker'].subclasses()]
 		biomarker = pd.DataFrame(biomarker, columns=['biomarker','source','disease','variant']).astype('str')
-		biomarker.loc[:,biomarker.dtypes == object]=biomarker.loc[:,biomarker.dtypes == object].apply(lambda x: x.str.replace('oncokb_civic.',''))
 		biomarker['civic']=biomarker['source'].apply(lambda x: 'civic' in x)
 		biomarker['oncokb']=biomarker['source'].apply(lambda x: 'oncokb' in x)
 		biomarker.to_csv(output.biomarkers)

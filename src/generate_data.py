@@ -222,9 +222,15 @@ def add_cnas(onto, cna_path):
 		cna = types.new_class(cna_name, (onto[alteration],))
 		cna.hasGene = [gene]
 		biomarker = types.new_class(biomarker_name,(onto['Biomarker'],))
+
+
 		biomarker.hasVariant = [cna]
 		biomarker.hasDisease = [onto[cancer_type]]
 		biomarker.evidenceSource.append("oncokb")
+		gene.hasBiomarker.append(biomarker)
+		biomarker.hasDisease.append(disease)
+		biomarker.hasVariant.append(cna)
+		cna.hasBiomarker.append(biomarker)
 
 		onto, therapy, biomarker = add_levels(onto, row, biomarker)
 	return onto
@@ -240,7 +246,7 @@ def map_civic_evidence(clin_sig, evidence_level):
 	}
 	return mapping[evidence_level][clin_sig]
 
-def add_civic(onto, civic_path):
+def add_civic_variants(onto, civic_path):
 	civic_evidence = pd.read_csv(civic_path)
 	# subset to cleanly formatted civic variants
 	civic_evidence= civic_evidence.loc[civic_evidence.variant.str.contains("^[A-Z][0-9]*[A-Z]$",na=False)]
@@ -252,29 +258,32 @@ def add_civic(onto, civic_path):
 		disease_name = row['oncotree']
 		evidence_level = map_civic_evidence(row['ClinicalSignificance'], row['EvidenceLevel'])
 		biomarker_name = f"{gene_name}_{mutation_name}_{disease_name}"
-
-
 		if disease_name in ontology_classes(onto):
 			disease = onto[disease_name]
 		else:
 			disease = types.new_class(disease_name, (onto['Disease'],))
 
-		if gene_name not in ontology_classes(onto):
-			gene = types.new_class(gene_name, (onto['Gene'],))
-		else:
+		if gene_name in ontology_classes(onto):
 			gene = onto[gene_name]
-		if therapy_name not in ontology_classes(onto):
-			therapy = types.new_class(therapy_name, (onto['TherapyRegimen'],))
+			
 		else:
+			gene = types.new_class(gene_name, (onto['Gene'],))
+
+		if therapy_name in ontology_classes(onto):
 			therapy = onto[therapy_name]
-		if mutation_name not in ontology_classes(onto):
-			mutation = types.new_class(mutation_name, (onto['Missense'],))
 		else:
+			therapy = types.new_class(therapy_name, (onto['TherapyRegimen'],))
+
+		if mutation_name in ontology_classes(onto):
 			mutation = onto[mutation_name]
-		if biomarker_name not in ontology_classes(onto):
-			biomarker = types.new_class(biomarker_name, (onto['Biomarker'],))
 		else:
+			mutation = types.new_class(mutation_name, (onto['Missense'],))
+
+		if biomarker_name in ontology_classes(onto):
 			biomarker = onto[biomarker_name]
+		else:
+			biomarker = types.new_class(biomarker_name, (onto['Biomarker'],))
+			
 
 		biomarker.evidenceSource.append("civic")
 		biomarker.hasGene.append(gene)
@@ -305,4 +314,77 @@ def add_civic(onto, civic_path):
 
 
 	return onto
+
+def add_civic_cnas(onto, civic_path):
+	civic_evidence = pd.read_csv(civic_path)
+	# subset to cleanly formatted civic variants
+	civic_cnas= civic_evidence.loc[civic_evidence.variant.str.contains("amplification|deletion",na=False, case=False)]
+
+	for index, row in civic_evidence.iterrows():
+		therapy_name = therapy_normalize(row['TherapyRegimen'])
+		gene_name = row['Gene']
+		alteration = "Amplification" if "amplification" in row['variant'] else "Deletion"
+		cna_name = f"{gene_name}_{alteration}"
+		disease_name = row['oncotree']
+		evidence_level = map_civic_evidence(row['ClinicalSignificance'], row['EvidenceLevel'])
+		biomarker_name = f"{gene_name}_{mutation_name}_{disease_name}"
+		
+		if disease_name in ontology_classes(onto):
+			disease = onto[disease_name]
+		else:
+			disease = types.new_class(disease_name, (onto['Disease'],))
+
+		if gene_name in ontology_classes(onto):
+			gene = onto[gene_name]
+			
+		else:
+			gene = types.new_class(gene_name, (onto['Gene'],))
+
+		if therapy_name in ontology_classes(onto):
+			therapy = onto[therapy_name]
+		else:
+			therapy = types.new_class(therapy_name, (onto['TherapyRegimen'],))
+
+		if cna_name in ontology_classes(onto):
+			cna = onto[mutation_name]
+		else:
+			cna = types.new_class(cna_name, (onto[alteration],))
+
+		if biomarker_name in ontology_classes(onto):
+			biomarker = onto[biomarker_name]
+		else:
+			biomarker = types.new_class(biomarker_name, (onto['Biomarker'],))
+			
+
+
+		biomarker.hasVariant = [cna]
+		biomarker.hasDisease = [onto[cancer_type]]
+		biomarker.evidenceSource.append("oncokb")
+		gene.hasBiomarker.append(biomarker)
+		biomarker.hasDisease.append(disease)
+		biomarker.hasVariant.append(cna)
+		cna.hasBiomarker.append(biomarker)
+
+
+		if evidence_level == "Level_1":
+			therapy.hasEvidenceLevel1.append(biomarker)
+			biomarker.hasEvidenceLevel1.append(therapy)
+		if evidence_level == "Level_2":
+			therapy.hasEvidenceLevel2.append(biomarker)
+			biomarker.hasEvidenceLevel2.append(therapy)
+		if evidence_level == "Level_3":
+			therapy.hasEvidenceLevel3.append(biomarker)
+			biomarker.hasEvidenceLevel3.append(therapy)
+		if evidence_level == "Level_4":
+			therapy.hasEvidenceLevel4.append(biomarker)
+			biomarker.hasEvidenceLevel4.append(therapy)
+		if evidence_level == "Level_R1":
+			therapy.hasEvidenceLevelR1.append(biomarker)
+			biomarker.hasEvidenceLevelR1.append(therapy)
+		if evidence_level == "Level_R2":
+			therapy.hasEvidenceLevelR2.append(biomarker)
+			biomarker.hasEvidenceLevelR2.append(therapy)
+
+
+
 
