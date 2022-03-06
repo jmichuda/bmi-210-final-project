@@ -319,15 +319,15 @@ def add_civic_cnas(onto, civic_path):
 	civic_evidence = pd.read_csv(civic_path)
 	# subset to cleanly formatted civic variants
 	civic_cnas= civic_evidence.loc[civic_evidence.variant.str.contains("amplification|deletion",na=False, case=False)]
-
-	for index, row in civic_evidence.iterrows():
+	civic_cnas = civic_cnas[['Gene','variant','TherapyRegimen','oncotree','ClinicalSignificance','EvidenceLevel']].dropna().drop_duplicates()
+	for index, row in civic_cnas.iterrows():
 		therapy_name = therapy_normalize(row['TherapyRegimen'])
 		gene_name = row['Gene']
 		alteration = "Amplification" if "amplification" in row['variant'] else "Deletion"
 		cna_name = f"{gene_name}_{alteration}"
 		disease_name = row['oncotree']
 		evidence_level = map_civic_evidence(row['ClinicalSignificance'], row['EvidenceLevel'])
-		biomarker_name = f"{gene_name}_{mutation_name}_{disease_name}"
+		biomarker_name = f"{gene_name}_{alteration}_{disease_name}"
 		
 		if disease_name in ontology_classes(onto):
 			disease = onto[disease_name]
@@ -357,8 +357,7 @@ def add_civic_cnas(onto, civic_path):
 			
 
 
-		biomarker.hasVariant = [cna]
-		biomarker.hasDisease = [onto[cancer_type]]
+		biomarker.hasVariant.append(cna)
 		biomarker.evidenceSource.append("oncokb")
 		gene.hasBiomarker.append(biomarker)
 		biomarker.hasDisease.append(disease)
@@ -385,6 +384,6 @@ def add_civic_cnas(onto, civic_path):
 			therapy.hasEvidenceLevelR2.append(biomarker)
 			biomarker.hasEvidenceLevelR2.append(therapy)
 
-
+	return onto
 
 
