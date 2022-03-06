@@ -26,21 +26,25 @@ def generate_oncotree_mapping():
     return pd.DataFrame(mapping, columns = ['NCI','oncotree','name'])
 
 
-def add_oncotree_code(df_variant_evidence_filtered):
-    oncotree = generate_oncotree_mapping()
-    oncotree_mapping = [ ]
-    for disease in df_variant_evidence_filtered["Disease"].drop_duplicates():
-        oncotree_name, score, score2 = process.extractOne(disease, oncotree.name, scorer=fuzz.token_sort_ratio)
-        oncotree_code = oncotree.set_index('name').loc[oncotree_name,'oncotree']
-        oncotree_mapping.append([disease,oncotree_name,score,score2,oncotree_code])
-        
-    full_mapping = pd.DataFrame(oncotree_mapping, columns = ['disease','oncotree_name','score','score2','oncotree'])
-
-    df_variant_evidence_filtered['oncotree'] = df_variant_evidence_filtered.Disease.map(full_mapping.set_index('disease')['oncotree'])
+def add_oncotree_code(df_variant_evidence_filtered, mapping_path):
+    if mapping_path is None:
+        oncotree = generate_oncotree_mapping()
+        oncotree_mapping = [ ]
+        for disease in df_variant_evidence_filtered["Disease"].drop_duplicates():
+            oncotree_name, score, score2 = process.extractOne(disease, oncotree.name, scorer=fuzz.token_sort_ratio)
+            oncotree_code = oncotree.set_index('name').loc[oncotree_name,'oncotree']
+            oncotree_mapping.append([disease,oncotree_name,score,score2,oncotree_code])
+            
+        full_mapping = pd.DataFrame(oncotree_mapping, columns = ['disease','oncotree_name','score','score2','oncotree'])
+        mapper = full_mapping.set_index('disease')['oncotree']
+    else:
+        full_mapping = pd.read_csv(mapping_path)
+        mapper = full_mapping.set_index('DO disease')['New']
+    df_variant_evidence_filtered['oncotree'] = df_variant_evidence_filtered.Disease.map(mapper)
     return df_variant_evidence_filtered
 
 
-def main(output:str):
+def main(output:str, mapping_path: str):
     civic_gene = apit.Endpoint(url="https://civicdb.org/api/genes?count=238")
     df_civic_gene = civic_gene.data_as_pandas("records")
 
@@ -81,7 +85,7 @@ def main(output:str):
     }
     df_variant_evidence_filtered.rename(columns=column_mappings, inplace=True)
 
-    df_variant_evidence_filtered = add_oncotree_code(df_variant_evidence_filtered)
+    df_variant_evidence_filtered = add_oncotree_code(df_variant_evidence_filtered, mapping_path)
     df_variant_evidence_filtered.to_csv(output)
 
 if __name__=="__main__":

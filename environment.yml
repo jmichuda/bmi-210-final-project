@@ -1,0 +1,22 @@
+name: bmi-210-final
+channels:
+  - conda-forge
+  - bioconda
+  - default
+dependencies:
+  - python=3.9
+  - r-base
+  - r-tidyverse
+  - r-arrow
+  - r-ggplot2
+  - r-ggsci
+  - jupyterlab
+  - r-corrplot
+  - bioconductor-maftools
+  - pip:
+    - pandas==1.4.1
+    - snakemake==6.15.5
+    - owlready2==0.36
+    - matplotlib==3.5.1
+    - pyarrow==7.0.0
+    - defopt==6.3.0
