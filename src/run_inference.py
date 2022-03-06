@@ -10,9 +10,8 @@ import tempfile
 
 
 onto = get_ontology("ontology/oncokb_civic.owl").load()
-fd, path = tempfile.mkstemp()
-print(path)
-default_world.set_backend(filename = path)
+level4 = onto['hasEvidenceLevel4']
+destroy_entity(level4)
 
 def get_therapy_regimens(onto, gene, variant, disease, evidence_level):
     with onto:
@@ -55,21 +54,20 @@ def infer_row(row):
 	patient = row['Participant_ID']
 	patient_regimens=[]
 	for level in ["1","2","3","4","R1","R2"]:
-		# try:
-		regimens = get_therapy_regimens(onto, gene,variant,disease,level)
-		for reg in regimens:
-			regimen, source = reg
-			patient_regimens.append(pd.Series([patient, gene, variant, disease,level,source,regimen]))
-		# except:
-		# 	continue
+		try:
+			regimens = get_therapy_regimens(onto, gene,variant,disease,level)
+			for reg in regimens:
+				regimen, source = reg
+				patient_regimens.append(pd.Series([patient, gene, variant, disease,level,source,regimen]))
+		except:
+			continue
 	return patient_regimens
 
 
 def main(ontology: str, tcga_variants: str, output: str, threads:int):
 	tcga_variants = pd.read_csv(tcga_variants,sep="\t",low_memory=False)
 	tcga_variants = tcga_variants.loc[tcga_variants['Variant_Type']!='Copy_Number_Alteration']
-	tcga_variants = tcga_variants.loc[tcga_variants['TCGA_Cohort'] =='LUAD']
-	tcga_variants = tcga_variants.loc[tcga_variants['Gene'] =='KRAS'].sample(10)
+	tcga_variants = tcga_variants.loc[tcga_variants['TCGA_Cohort'] =='BRCA']
 	rows = [row for index,row in tcga_variants.iterrows()]
 	with multiprocessing.Pool(threads) as p:
 		patient_regimens = list(tqdm.tqdm(p.imap(infer_row,  rows), total = len(rows)))

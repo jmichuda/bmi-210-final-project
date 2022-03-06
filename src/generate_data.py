@@ -280,6 +280,9 @@ def add_civic(onto, civic_path):
 		biomarker.hasGene.append(gene)
 		gene.hasBiomarker.append(biomarker)
 		biomarker.hasDisease.append(disease)
+		biomarker.hasVariant.append(mutation)
+		mutation.hasBiomarker.append(biomarker)
+
 
 		if evidence_level == "Level_1":
 			therapy.hasEvidenceLevel1.append(biomarker)

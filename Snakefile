@@ -162,7 +162,7 @@ rule run_inference:
 		tcga = rules.write_tcga_combined_variants_table.output.tcga_var_tbl,
 		onto = rules.make_oncokb_civic_owl.output.owl
 	output:
-		therapies = "inference/tcga_samples.csv"
+		therapies = "inference/tcga_samples_brca.csv"
 	threads: 96
 	shell:
 		"poetry run python -m src.run_inference {input.onto}  {input.tcga} {output.therapies} {threads}"
