@@ -1,4 +1,5 @@
 from src.constants import MAF_FILES, ONCOKB_API_KEY,MAF_COLUMNS
+from owlready2 import *
 
 # to do: 
 # add raw, unzip and annotated to suffix instead of prefix
@@ -162,11 +163,25 @@ rule run_inference:
 		tcga = rules.write_tcga_combined_variants_table.output.tcga_var_tbl,
 		onto = rules.make_oncokb_civic_owl.output.owl
 	output:
-		therapies = "inference/tcga_samples_brca.csv"
+		therapies = "inference/tcga_samples_paad_2.csv"
 	threads: 96
 	shell:
 		"poetry run python -m src.run_inference {input.onto}  {input.tcga} {output.therapies} {threads}"
 
+rule save_biomarkers:
+	input:
+		owl = rules.make_oncokb_civic_owl.output.owl
+	output:
+		biomarkers = "ontology/biomarkers.csv"
+	run:
+		import pandas as pd
+		onto = get_ontology(input.owl).load()
+		biomarker = [(i, i.evidenceSource, i.hasDisease, i.hasVariant) for i in onto['Biomarker'].subclasses()]
+		biomarker = pd.DataFrame(biomarker, columns=['biomarker','source','disease','variant']).astype('str')
+		biomarker.loc[:,biomarker.dtypes == object]=biomarker.loc[:,biomarker.dtypes == object].apply(lambda x: x.str.replace('oncokb_civic.',''))
+		biomarker['civic']=biomarker['source'].apply(lambda x: 'civic' in x)
+		biomarker['oncokb']=biomarker['source'].apply(lambda x: 'oncokb' in x)
+		biomarker.to_csv(output.biomarkers)
 
 
 
