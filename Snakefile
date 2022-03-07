@@ -1,4 +1,5 @@
 from src.constants import MAF_FILES, ONCOKB_API_KEY,MAF_COLUMNS
+from owlready2 import *
 
 # to do: 
 # add raw, unzip and annotated to suffix instead of prefix
@@ -36,7 +37,7 @@ rule annotate_maf_files:
 	output:
 		maf = "maf_files/{maf_file}_annotated.maf"
 	shell:
-		"python -m src.oncokb_annotator.MafAnnotator -i {input.maf} -o {output.maf} -b {ONCOKB_API_KEY}"
+		"poetry run python -m src.oncokb_annotator.MafAnnotator -i {input.maf} -o {output.maf} -b {ONCOKB_API_KEY}"
 
 
 rule cat_maf_files:
@@ -92,7 +93,7 @@ rule annotate_tcga_maf:
 	output:
 		tcga_maf = "source_data/tcga_annotated_maf.tsv"
 	shell:
-		"python -m src.oncokb_annotator.MafAnnotator -i {input.tcga_maf} -o {output.tcga_maf}  -c {input.tcga_clinical} -b {ONCOKB_API_KEY}"
+		"poetry run python -m src.oncokb_annotator.MafAnnotator -i {input.tcga_maf} -o {output.tcga_maf}  -c {input.tcga_clinical} -b {ONCOKB_API_KEY}"
 
 rule annotate_fusion:
 	input: 
@@ -101,7 +102,7 @@ rule annotate_fusion:
 	output:
 		tcga_fusion ="source_data/tcga_annotated_fusion.tsv"
 	shell:
-		"python -m src.oncokb_annotator.FusionAnnotator -i {input.tcga_fusion} -o {output.tcga_fusion} -c {input.tcga_clinical} -b {ONCOKB_API_KEY}"
+		"poetry run python -m src.oncokb_annotator.FusionAnnotator -i {input.tcga_fusion} -o {output.tcga_fusion} -c {input.tcga_clinical} -b {ONCOKB_API_KEY}"
 
 
 rule annotate_cnv:
@@ -111,7 +112,7 @@ rule annotate_cnv:
 	output:
 		tcga_cna ="source_data/tcga_annotated_cna.tsv"
 	shell:
-		"python -m src.oncokb_annotator.CnaAnnotator -i {input.tcga_cna} -o {output.tcga_cna} -c {input.tcga_clinical} -b {ONCOKB_API_KEY}"
+		"poetry run python -m src.oncokb_annotator.CnaAnnotator -i {input.tcga_cna} -o {output.tcga_cna} -c {input.tcga_clinical} -b {ONCOKB_API_KEY}"
 
 
 rule annotate_clinical:
@@ -124,29 +125,62 @@ rule annotate_clinical:
 	output:
 		tcga_clinical ="source_data/tcga_annotated_clinical.tsv"
 	shell:
-		'python -m src.oncokb_annotator.ClinicalDataAnnotator -i {input.tcga_clinical} -o {output.tcga_clinical} -a "{input.tcga_maf},{input.tcga_cna},{input.tcga_fusion}"'
+		'poetry run python -m src.oncokb_annotator.ClinicalDataAnnotator -i {input.tcga_clinical} -o {output.tcga_clinical} -a "{input.tcga_maf},{input.tcga_cna},{input.tcga_fusion}"'
 
-rule make_owl:
+
+
+rule generate_civic:
+	output:
+		civic = "ontology/civic_evidence.csv"
+	shell:
+		"poetry run python -m src.generate_civic {output.civic} source_data/doid_to_oncotree.csv"
+
+rule make_oncokb_owl:
 	input:
 		annotate_maf = rules.annotate_tcga_maf.output.tcga_maf,
 		fusion  = rules.annotate_fusion.output.tcga_fusion,
 		cna  = rules.annotate_cnv.output.tcga_cna,
-		clinical = rules.annotate_clinical.output.tcga_clinical
+		clinical = rules.annotate_clinical.output.tcga_clinical,
 	output:
-		ontology = "ontology/oncokb.owl"
+		owl = "ontology/oncokb.owl"
 	shell:
-		"python -m src.ontology {input.annotate_maf} {input.fusion} {input.cna} {output.ontology}"
+		"poetry run python -m src.ontology {input.annotate_maf} {input.fusion} {input.cna} {output.owl}"
+
+rule make_oncokb_civic_owl:
+	input:
+		civic = rules.generate_civic.output.civic,
+		owl = rules.make_oncokb_owl.output.owl
+	output:
+		owl = "ontology/oncokb_civic.owl"
+	shell:
+		"poetry run python -m src.add_civic_onto {input.owl} {input.civic} {output.owl}"
+
+
+
 
 rule run_inference:
 	input:
 		tcga = rules.write_tcga_combined_variants_table.output.tcga_var_tbl,
-		onto = rules.make_owl.output.ontology
+		onto = rules.make_oncokb_civic_owl.output.owl
 	output:
-		therapies = "inference/tcga_samples.csv"
-	threads: 8
+		therapies = "inference/tcga_samples_prad.csv"
+	threads: 96
 	shell:
-		"python -m src.run_inference {input.onto}  {input.tcga} {output.therapies} {threads}"
+		"poetry run python -m src.run_inference {input.onto}  {input.tcga} {output.therapies} {threads}"
 
+rule save_biomarkers:
+	input:
+		owl = rules.make_oncokb_civic_owl.output.owl
+	output:
+		biomarkers = "ontology/biomarkers.csv"
+	run:
+		import pandas as pd
+		onto = get_ontology(input.owl).load()
+		biomarker = [(i, i.evidenceSource, i.hasDisease, i.hasVariant) for i in onto['Biomarker'].subclasses()]
+		biomarker = pd.DataFrame(biomarker, columns=['biomarker','source','disease','variant']).astype('str')
+		biomarker['civic']=biomarker['source'].apply(lambda x: 'civic' in x)
+		biomarker['oncokb']=biomarker['source'].apply(lambda x: 'oncokb' in x)
+		biomarker.to_csv(output.biomarkers)
 
 
 

@@ -16,7 +16,6 @@ def main(maf_path: str, fusion_path: str, cna_path: str, output_path: str):
 		onto = therapies(onto)
 		onto = all_curated_genes(onto)
 		onto = add_oncotree(onto)
-		onto = add_oncotree(onto)
 		onto = parse_maf(onto, maf_path)
 		onto = add_fusions(onto,fusion_path)
 		onto = add_cnas(onto, cna_path)
