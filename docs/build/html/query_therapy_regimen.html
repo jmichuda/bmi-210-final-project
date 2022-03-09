@@ -1,0 +1,777 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Querying an OWL ontology using SPARQL commands &mdash; UniOnco  documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="genindex.html"/>
+        <link rel="search" title="Search" href="search.html"/>
+    <link rel="top" title="UniOnco  documentation" href="index.html"/>
+        <link rel="next" title="Modules" href="modules.html"/>
+        <link rel="prev" title="cBioPortal API Usage" href="cBioPortal_API_Usage.html"/> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> UniOnco
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <p class="caption"><span class="caption-text">Introduction</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="abstract.html">Abstract</a></li>
+<li class="toctree-l1"><a class="reference internal" href="background.html">Background</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Demos</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="CIViC_API_Usage.html">CIViC API Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cBioPortal_API_Usage.html">cBioPortal API Usage</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Query Ontology</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#Import-Modules">Import Modules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#Load-Ontology">Load Ontology</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#Load-cBioPortal-Mutation-Data">Load cBioPortal Mutation Data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#Load-Gene-List">Load Gene List</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#Generate-SPARQL-Query">Generate SPARQL Query</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#Custom-Command-Line-Tool">Custom Command Line Tool</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">Additional Resources</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="modules.html">Modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="references.html">References</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">UniOnco</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>Querying an OWL ontology using SPARQL commands</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/query_therapy_regimen.ipynb.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  
+<style>
+/* CSS for nbsphinx extension */
+
+/* remove conflicting styling from Sphinx themes */
+div.nbinput.container div.prompt *,
+div.nboutput.container div.prompt *,
+div.nbinput.container div.input_area pre,
+div.nboutput.container div.output_area pre,
+div.nbinput.container div.input_area .highlight,
+div.nboutput.container div.output_area .highlight {
+    border: none;
+    padding: 0;
+    margin: 0;
+    box-shadow: none;
+}
+
+div.nbinput.container > div[class*=highlight],
+div.nboutput.container > div[class*=highlight] {
+    margin: 0;
+}
+
+div.nbinput.container div.prompt *,
+div.nboutput.container div.prompt * {
+    background: none;
+}
+
+div.nboutput.container div.output_area .highlight,
+div.nboutput.container div.output_area pre {
+    background: unset;
+}
+
+div.nboutput.container div.output_area div.highlight {
+    color: unset;  /* override Pygments text color */
+}
+
+/* avoid gaps between output lines */
+div.nboutput.container div[class*=highlight] pre {
+    line-height: normal;
+}
+
+/* input/output containers */
+div.nbinput.container,
+div.nboutput.container {
+    display: -webkit-flex;
+    display: flex;
+    align-items: flex-start;
+    margin: 0;
+    width: 100%;
+}
+@media (max-width: 540px) {
+    div.nbinput.container,
+    div.nboutput.container {
+        flex-direction: column;
+    }
+}
+
+/* input container */
+div.nbinput.container {
+    padding-top: 5px;
+}
+
+/* last container */
+div.nblast.container {
+    padding-bottom: 5px;
+}
+
+/* input prompt */
+div.nbinput.container div.prompt pre {
+    color: #307FC1;
+}
+
+/* output prompt */
+div.nboutput.container div.prompt pre {
+    color: #BF5B3D;
+}
+
+/* all prompts */
+div.nbinput.container div.prompt,
+div.nboutput.container div.prompt {
+    width: 4.5ex;
+    padding-top: 5px;
+    position: relative;
+    user-select: none;
+}
+
+div.nbinput.container div.prompt > div,
+div.nboutput.container div.prompt > div {
+    position: absolute;
+    right: 0;
+    margin-right: 0.3ex;
+}
+
+@media (max-width: 540px) {
+    div.nbinput.container div.prompt,
+    div.nboutput.container div.prompt {
+        width: unset;
+        text-align: left;
+        padding: 0.4em;
+    }
+    div.nboutput.container div.prompt.empty {
+        padding: 0;
+    }
+
+    div.nbinput.container div.prompt > div,
+    div.nboutput.container div.prompt > div {
+        position: unset;
+    }
+}
+
+/* disable scrollbars on prompts */
+div.nbinput.container div.prompt pre,
+div.nboutput.container div.prompt pre {
+    overflow: hidden;
+}
+
+/* input/output area */
+div.nbinput.container div.input_area,
+div.nboutput.container div.output_area {
+    -webkit-flex: 1;
+    flex: 1;
+    overflow: auto;
+}
+@media (max-width: 540px) {
+    div.nbinput.container div.input_area,
+    div.nboutput.container div.output_area {
+        width: 100%;
+    }
+}
+
+/* input area */
+div.nbinput.container div.input_area {
+    border: 1px solid #e0e0e0;
+    border-radius: 2px;
+    /*background: #f5f5f5;*/
+}
+
+/* override MathJax center alignment in output cells */
+div.nboutput.container div[class*=MathJax] {
+    text-align: left !important;
+}
+
+/* override sphinx.ext.imgmath center alignment in output cells */
+div.nboutput.container div.math p {
+    text-align: left;
+}
+
+/* standard error */
+div.nboutput.container div.output_area.stderr {
+    background: #fdd;
+}
+
+/* ANSI colors */
+.ansi-black-fg { color: #3E424D; }
+.ansi-black-bg { background-color: #3E424D; }
+.ansi-black-intense-fg { color: #282C36; }
+.ansi-black-intense-bg { background-color: #282C36; }
+.ansi-red-fg { color: #E75C58; }
+.ansi-red-bg { background-color: #E75C58; }
+.ansi-red-intense-fg { color: #B22B31; }
+.ansi-red-intense-bg { background-color: #B22B31; }
+.ansi-green-fg { color: #00A250; }
+.ansi-green-bg { background-color: #00A250; }
+.ansi-green-intense-fg { color: #007427; }
+.ansi-green-intense-bg { background-color: #007427; }
+.ansi-yellow-fg { color: #DDB62B; }
+.ansi-yellow-bg { background-color: #DDB62B; }
+.ansi-yellow-intense-fg { color: #B27D12; }
+.ansi-yellow-intense-bg { background-color: #B27D12; }
+.ansi-blue-fg { color: #208FFB; }
+.ansi-blue-bg { background-color: #208FFB; }
+.ansi-blue-intense-fg { color: #0065CA; }
+.ansi-blue-intense-bg { background-color: #0065CA; }
+.ansi-magenta-fg { color: #D160C4; }
+.ansi-magenta-bg { background-color: #D160C4; }
+.ansi-magenta-intense-fg { color: #A03196; }
+.ansi-magenta-intense-bg { background-color: #A03196; }
+.ansi-cyan-fg { color: #60C6C8; }
+.ansi-cyan-bg { background-color: #60C6C8; }
+.ansi-cyan-intense-fg { color: #258F8F; }
+.ansi-cyan-intense-bg { background-color: #258F8F; }
+.ansi-white-fg { color: #C5C1B4; }
+.ansi-white-bg { background-color: #C5C1B4; }
+.ansi-white-intense-fg { color: #A1A6B2; }
+.ansi-white-intense-bg { background-color: #A1A6B2; }
+
+.ansi-default-inverse-fg { color: #FFFFFF; }
+.ansi-default-inverse-bg { background-color: #000000; }
+
+.ansi-bold { font-weight: bold; }
+.ansi-underline { text-decoration: underline; }
+
+
+div.nbinput.container div.input_area div[class*=highlight] > pre,
+div.nboutput.container div.output_area div[class*=highlight] > pre,
+div.nboutput.container div.output_area div[class*=highlight].math,
+div.nboutput.container div.output_area.rendered_html,
+div.nboutput.container div.output_area > div.output_javascript,
+div.nboutput.container div.output_area:not(.rendered_html) > img{
+    padding: 5px;
+    margin: 0;
+}
+
+/* fix copybtn overflow problem in chromium (needed for 'sphinx_copybutton') */
+div.nbinput.container div.input_area > div[class^='highlight'],
+div.nboutput.container div.output_area > div[class^='highlight']{
+    overflow-y: hidden;
+}
+
+/* hide copybtn icon on prompts (needed for 'sphinx_copybutton') */
+.prompt .copybtn {
+    display: none;
+}
+
+/* Some additional styling taken form the Jupyter notebook CSS */
+div.rendered_html table {
+  border: none;
+  border-collapse: collapse;
+  border-spacing: 0;
+  color: black;
+  font-size: 12px;
+  table-layout: fixed;
+}
+div.rendered_html thead {
+  border-bottom: 1px solid black;
+  vertical-align: bottom;
+}
+div.rendered_html tr,
+div.rendered_html th,
+div.rendered_html td {
+  text-align: right;
+  vertical-align: middle;
+  padding: 0.5em 0.5em;
+  line-height: normal;
+  white-space: normal;
+  max-width: none;
+  border: none;
+}
+div.rendered_html th {
+  font-weight: bold;
+}
+div.rendered_html tbody tr:nth-child(odd) {
+  background: #f5f5f5;
+}
+div.rendered_html tbody tr:hover {
+  background: rgba(66, 165, 245, 0.2);
+}
+</style>
+<div class="section" id="Querying-an-OWL-ontology-using-SPARQL-commands">
+<h1>Querying an OWL ontology using SPARQL commands<a class="headerlink" href="#Querying-an-OWL-ontology-using-SPARQL-commands" title="Permalink to this headline">¶</a></h1>
+<p>We will use owlready2 to access and query our ontology. Specifically, we will query for treatments matching variants in cBioPortal.</p>
+<p>We implement this functionality into functions in <code class="docutils literal notranslate"><span class="pre">query_ontology.py</span></code>, taking into account modularity and task decomposition. This notebook format is included just for demonstration purposes.</p>
+<div class="section" id="Import-Modules">
+<h2>Import Modules<a class="headerlink" href="#Import-Modules" title="Permalink to this headline">¶</a></h2>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">re</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">from</span> <span class="nn">owlready2</span> <span class="k">import</span> <span class="o">*</span>
+
+<span class="kn">from</span> <span class="nn">sample_patients</span> <span class="k">import</span> <span class="n">sample_patient_records</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="Load-Ontology">
+<h2>Load Ontology<a class="headerlink" href="#Load-Ontology" title="Permalink to this headline">¶</a></h2>
+<p><strong>Note:</strong> Update path to local ontology matching your local file structure.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">local_ontology</span> <span class="o">=</span> <span class="s2">&quot;github/bmi-210-final-project/ontology/oncokb.owl&quot;</span>
+<span class="n">onto</span> <span class="o">=</span> <span class="n">get_ontology</span><span class="p">(</span><span class="n">local_ontology</span><span class="p">)</span><span class="o">.</span><span class="n">load</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="Load-cBioPortal-Mutation-Data">
+<h2>Load cBioPortal Mutation Data<a class="headerlink" href="#Load-cBioPortal-Mutation-Data" title="Permalink to this headline">¶</a></h2>
+<p><strong>Note:</strong> Update path to cBioPortal mutation data to match your local file structure.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Sample mutation data for a subset of patients.</span>
+<span class="n">csv_path</span> <span class="o">=</span> <span class="s2">&quot;mutations.csv&quot;</span>
+<span class="n">out_path</span> <span class="o">=</span> <span class="s2">&quot;mutations_1000.csv&quot;</span>
+<span class="n">n_patients</span> <span class="o">=</span> <span class="mi">1000</span>
+<span class="n">sample_patient_records</span><span class="p">(</span><span class="n">csv_path</span><span class="p">,</span> <span class="n">out_path</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Done
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Load subset of patient data</span>
+<span class="n">cBioPortal_mutations</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">out_path</span><span class="p">)</span>
+<span class="n">cBioPortal_mutations</span> <span class="o">=</span> <span class="n">cBioPortal_mutations</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="p">[</span><span class="s2">&quot;patientId&quot;</span><span class="p">,</span> <span class="s2">&quot;proteinChange&quot;</span><span class="p">,</span> <span class="s2">&quot;entrezGeneId&quot;</span><span class="p">]]</span>
+<span class="n">cBioPortal_mutations</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
+</pre></div>
+</div>
+<div class="output_area rendered_html docutils container">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>patientId</th>
+      <th>proteinChange</th>
+      <th>entrezGeneId</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>Patient0001</td>
+      <td>G12C</td>
+      <td>3845</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>Patient0001</td>
+      <td>R216*</td>
+      <td>324</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>Patient0001</td>
+      <td>R505C</td>
+      <td>55294</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>Patient0001</td>
+      <td>E1286*</td>
+      <td>324</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>Patient0001</td>
+      <td>R4822H</td>
+      <td>58508</td>
+    </tr>
+  </tbody>
+</table>
+</div></div>
+</div>
+</div>
+<div class="section" id="Load-Gene-List">
+<h2>Load Gene List<a class="headerlink" href="#Load-Gene-List" title="Permalink to this headline">¶</a></h2>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Load genes matching Entrez Gene ID</span>
+<span class="n">gene_list</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;CancerGeneList.tsv&quot;</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s2">&quot;</span><span class="se">\t</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">usecols</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+<span class="n">cBioPortal_mutations</span> <span class="o">=</span> <span class="n">cBioPortal_mutations</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">gene_list</span><span class="p">,</span> <span class="n">left_on</span><span class="o">=</span><span class="s2">&quot;entrezGeneId&quot;</span><span class="p">,</span> <span class="n">right_on</span><span class="o">=</span><span class="s2">&quot;Entrez_Id&quot;</span><span class="p">,</span> <span class="n">how</span><span class="o">=</span><span class="s2">&quot;left&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="s2">&quot;Entrez_Id&quot;</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">cBioPortal_mutations</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
+</pre></div>
+</div>
+<div class="output_area rendered_html docutils container">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>patientId</th>
+      <th>proteinChange</th>
+      <th>entrezGeneId</th>
+      <th>Gene_Symbol</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>Patient0001</td>
+      <td>G12C</td>
+      <td>3845</td>
+      <td>KRAS</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>Patient0001</td>
+      <td>R216*</td>
+      <td>324</td>
+      <td>APC</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>Patient0001</td>
+      <td>R505C</td>
+      <td>55294</td>
+      <td>FBXW7</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>Patient0001</td>
+      <td>E1286*</td>
+      <td>324</td>
+      <td>APC</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>Patient0001</td>
+      <td>R4822H</td>
+      <td>58508</td>
+      <td>KMT2C</td>
+    </tr>
+  </tbody>
+</table>
+</div></div>
+</div>
+</div>
+<div class="section" id="Generate-SPARQL-Query">
+<h2>Generate SPARQL Query<a class="headerlink" href="#Generate-SPARQL-Query" title="Permalink to this headline">¶</a></h2>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">example_gene</span> <span class="o">=</span> <span class="s2">&quot;KRAS&quot;</span>
+<span class="n">example_variant</span> <span class="o">=</span> <span class="s2">&quot;G12C&quot;</span>
+<span class="n">evidence_level</span> <span class="o">=</span> <span class="mi">4</span>
+
+<span class="n">example_regimen</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span>
+    <span class="n">default_world</span><span class="o">.</span><span class="n">sparql</span><span class="p">(</span>
+        <span class="n">f</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">        SELECT distinct ?regimen</span>
+<span class="s2">        {{</span>
+<span class="s2">            ?biomarker rdfs:subClassOf oncokb:Biomarker.</span>
+<span class="s2">            ?biomarker rdfs:subClassOf ?r1.</span>
+<span class="s2">            ?r1 owl:onProperty oncokb:hasGene.</span>
+<span class="s2">            ?r1 owl:someValuesFrom oncokb:{re.escape(example_gene)}.</span>
+
+<span class="s2">            ?biomarker rdfs:subClassOf ?R2.</span>
+<span class="s2">            ?R2 owl:onProperty oncokb:hasVariant.</span>
+<span class="s2">            ?R2 owl:someValuesFrom oncokb:{re.escape(example_variant)}.</span>
+
+<span class="s2">            ?regimen rdfs:subClassOf oncokb:TherapyRegimen.</span>
+<span class="s2">            ?regimen rdfs:subClassOf ?restriction2.</span>
+<span class="s2">            ?restriction2 owl:onProperty oncokb:hasEvidenceLevel</span><span class="si">{evidence_level}</span><span class="s2">.</span>
+<span class="s2">            ?restriction2 owl:someValuesFrom ?biomarker.</span>
+<span class="s2">        }}</span>
+<span class="s2">        &quot;&quot;&quot;</span>
+    <span class="p">)</span>
+<span class="p">)</span>
+
+<span class="n">example_regimen</span> <span class="o">=</span> <span class="p">[</span><span class="n">regimen</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">regimen</span> <span class="ow">in</span> <span class="n">example_regimen</span><span class="p">]</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">example_regimen</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+[oncokb.Trametinib, oncokb.Binimetinib, oncokb.Cobimetinib]
+</pre></div></div>
+</div>
+</div>
+<div class="section" id="Custom-Command-Line-Tool">
+<h2>Custom Command Line Tool<a class="headerlink" href="#Custom-Command-Line-Tool" title="Permalink to this headline">¶</a></h2>
+<p>Query for and save the therapy regimen associated with each mutated gene in a specific patient. We will use “Patient1035” – the 1000th patient in our cBioPortal mutation output file – as an example.</p>
+<p><strong>Usage of command line tool:</strong> <code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">query_therapy_regimen.py</span> <span class="pre">&lt;ONTOLOGY_PATH&gt;</span> <span class="pre">&lt;MUTATION_TABLE_PATH&gt;</span> <span class="pre">&lt;GENE_LIST_PATH&gt;</span> <span class="pre">&lt;PATIENT_NAME&gt;</span> <span class="pre">&lt;REGIMEN_SAVE_PATH&gt;</span></code></p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>python query_therapy_regimen.py <span class="s2">&quot;github/bmi-210-final-project/ontology/oncokb.owl&quot;</span> <span class="s2">&quot;mutations.csv&quot;</span> <span class="s2">&quot;CancerGeneList.tsv&quot;</span> <span class="s2">&quot;Patient1035&quot;</span> <span class="s2">&quot;example_regimen_list.csv&quot;</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Patient &#39;Patient1035&#39; found!
+</pre></div></div>
+</div>
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="modules.html" class="btn btn-neutral float-right" title="Modules" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="cBioPortal_API_Usage.html" class="btn btn-neutral" title="cBioPortal API Usage" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2022, Jackson Michuda, Abby Pandya, Vinodh Rajapakse, Joseph Wakim.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> and ❤️  using a custom <a href="https://github.com/LinxiFan/Sphinx-theme">theme</a> based on <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+      <script type="text/javascript" src="_static/language_data.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+      <script type="text/javascript" src="None"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

@@ -1,0 +1,248 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Background &mdash; UniOnco  documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="genindex.html"/>
+        <link rel="search" title="Search" href="search.html"/>
+    <link rel="top" title="UniOnco  documentation" href="index.html"/>
+        <link rel="next" title="Using the CIViC API" href="CIViC_API_Usage.html"/>
+        <link rel="prev" title="Abstract" href="abstract.html"/> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> UniOnco
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <p class="caption"><span class="caption-text">Introduction</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="abstract.html">Abstract</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Background</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Demos</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="CIViC_API_Usage.html">CIViC API Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cBioPortal_API_Usage.html">cBioPortal API Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="query_therapy_regimen.html">Query Ontology</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Additional Resources</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="modules.html">Modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="references.html">References</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">UniOnco</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>Background</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/background.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="background">
+<h1>Background<a class="headerlink" href="#background" title="Permalink to this headline">¶</a></h1>
+<p>Genomic data are now routinely generated from cancer patient tumor samples and liquid biopsies. They allow assessment of diagnostic, prognostic, and predictive markers to direct both standard-of-care treatments, as well as a growing range of molecularly-targeted investigational approaches. A study by the developers of OncoKB, an FDA-recognized resource for precision oncology, showed that 41% of 5983 available primary tumor samples in The Cancer Genome Atlas harbored at least one potentially actionable genomic alteration (Chakravarty et al. 2017). While this proportion is expected to increase with ever-growing biomarker-directed therapies, clinicians recognize that many patients ultimately face limited therapeutic options. Additional previous attempts to aid clinical interpretation of variants and therapies include: “Gene Drug Knowledge Database, the Database of Curated Mutations, ClinVar, ClinGen, PharmGKB, Cancer Driver Log, My Cancer Genome… “ (Griffith et. al 2017). However, these resources have a limited range in utility and adoption including limited public access to content due to licensing or limitations in apis or bulk downloads.</p>
+<p>With genomic information and therapy options expanding rapidly, it is difficult to link this expanding insight to concrete action at the fingertips of clinicians/researchers. Accenture’s recent research encompassing 130 oncologists determined merely one in five oncologists routinely use clinical decision support (CDS) tools today, yet CDS is expected to emerge as standard tools in the next several years to inform treatment decisions faster and more precisely. To help suggest treatment avenues for patients, we develop an ontology for cancer genomics and therapeutics, and use this to construct a patient/sample knowledge base spanning nearly 10,000 participants in the TCGA Pan-Cancer study. By explicitly representing categories of genomic variants and their relation to patients, samples, cancer subtypes, and therapeutic options, we are also able to harmonize data from OncoKB, CIViC, and cBioPortal. The latter two resources are more expansive and dynamic in their inclusion of data and evidence for emerging biomarker-therapy relationships.</p>
+<p>We demonstrate the utility of our ontology and knowledge base through its support for complex queries drawing data from multiple sources. These work both directly through the knowledge graph, as well as through various graph embeddings. We also update and expand the sample-to-candidate therapy matching study conducted by the OncoKB team to a substantially larger TCGA data set, including both primary and metastatic tumor samples from 33 tumor subtypes (including 14 not evaluated in the earlier OncoKB study). Our knowledge base aims to provide clinicians with a wider range of investigational therapeutic options, to better serve the patients whose experiences will drive improved cancer treatments.</p>
+<p>We will develop an ontology for cancer genomics and use this to enhance the representation and utility of the MSK OncoKB resource for precision oncology. Specifically, we will generate a set of therapeutic recommendations based on clinician-provided patient attributes (tumor type/stage, genomic alterations). The represented knowledge will include genes, genomic alterations (SNVs, indels, copy number variants, fusion events), diagnoses, treatments, evidence levels, and evidence items. Technical requirements and challenges will include abstracting ontology classes and relations from data items distributed in tables or across the OncoKB site. We anticipate using elements of heuristic classification, proceeding from ontology-based patient features to template treatment refinement (potentially using rules complementing an OWL-based ontology).</p>
+<p>The target users for our tool include clinicians (oncologists, NPs, PAs) and researchers seeking treatment options based on genomic alterations, diagnoses, and previous therapy regimens for an individual patient. Some of the specific competency questions considered include:</p>
+<ul class="simple">
+<li><p>What therapies are relevant for my patient’s associated genes/variants and disease? What is the associated clinical and scientific support for each therapy?</p></li>
+<li><p>What second, third, or beyond line of therapy is available for my patient?</p></li>
+</ul>
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="CIViC_API_Usage.html" class="btn btn-neutral float-right" title="Using the CIViC API" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="abstract.html" class="btn btn-neutral" title="Abstract" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2022, Jackson Michuda, Abby Pandya, Vinodh Rajapakse, Joseph Wakim.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> and ❤️  using a custom <a href="https://github.com/LinxiFan/Sphinx-theme">theme</a> based on <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+      <script type="text/javascript" src="_static/language_data.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+      <script type="text/javascript" src="None"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>
